@@ -32,14 +32,15 @@
   // Function Syntax:
 
   function reduceRight(array, callback, initialValue) {
-    var startingIndex = 0;
+    var accumulator = initialValue;
+    var startingIndex = array.length - 1;
 
     if (arguments.length < 3) {
-      startingIndex++;
+      startingIndex--;
     }
 
-    for (var i = startingIndex; i < array.length; i++) {
-      callback();
+    for (var i = startingIndex; i >= 0; i--) {
+      callback(accumulator, array[i]);
     }
   }
 
@@ -57,6 +58,7 @@
     },
     "1b) If no initialValue it should call callback array.length - 1 times.": function() {
       var numberOfTimeCallbackHasRun = 0;
+      // debugger;
       reduceRight([1, 2, 3], function(accumulator) {
         numberOfTimeCallbackHasRun++;
       });
@@ -64,8 +66,6 @@
     },
 
     "2a) If initialValue accumulator will start with initialValue.": function() {
-      fail();
-      /*
       reduceRight(
         [1],
         function(accumulator) {
@@ -73,97 +73,73 @@
         },
         0
       );
-      */
     },
-    "2b) If initialValue currentValue will start with last value in array.": function() {
+
+    "2b) Callback should accept the ith element of the array.": function() {
+      reduceRight(
+        [1],
+        function(accumulator, currentValue) {
+          eq(currentValue, 1);
+        },
+        0
+      );
+    },
+    "3a) If initialValue currentValue will start with last value in array.": function() {
+      var isLastElementFirst = false;
+      var numberOfTimeCallbackHasRun = 0;
+      reduceRight(
+        [1, 2],
+        function(accumulator, currentValue) {
+          numberOfTimeCallbackHasRun++;
+          if (currentValue === 2 && numberOfTimeCallbackHasRun === 1) {
+            isLastElementFirst = true;
+          }
+        },
+        0
+      );
+      eq(isLastElementFirst, true);
+    },
+
+    "4a) If initialValue and the array is empty It should not call callback.": function() {
       fail();
     },
-    "2c) If initialValue and the array is empty It should not call callback.": function() {
-      fail();
-    },
-    "2d) If initialValue and the array is empty initialValue should be returned": function() {
+    "4b) If initialValue and the array is empty initialValue should be returned": function() {
       fail();
     },
 
     // Case D: :
-    "4a) If no initialValue accumulator will start with last element in the array.": function() {
+    "5a) If no initialValue accumulator will start with last element in the array.": function() {
       fail();
     },
-    "4b) If no initialValue currentValue will start with second to last element in the array.": function() {
+    "5b) If no initialValue currentValue will start with second to last element in the array.": function() {
       fail();
     },
-    "4c) If no initialValue and array has one element it should not call callback.": function() {
+    "5c) If no initialValue and array has one element it should not call callback.": function() {
       fail();
     },
-    "4d) If no initialValue and array has one element the only element should be returned.": function() {
+    "5d) If no initialValue and array has one element the only element should be returned.": function() {
       fail();
     },
-    "4e) If no initialValue and array is empty throw TypeError.": function() {
-      fail();
-    },
-
-    "5a) It should return a single value.": function() {
-      fail();
-    },
-    "5b) It should reduce.": function() {
+    "5e) If no initialValue and array is empty throw TypeError.": function() {
       fail();
     },
 
-    "2a) It should accept initialValue.": function() {
-      fail();
-      /*
-      reduceRight([1, 2], function () {
-        numberOfTimeCallbackHasRun++;
-      }, 0);
-      */
-    },
-    "2b) Callback should accept accumulator": function() {
-      fail();
-      // reduceRight([1], function(accumulator) {
-      //   eq(accumulator, 1);
-      // });
-    },
-    "2c) Callback should accept the ith element of the array.": function() {
+    "6a) It should return a single value.": function() {
       fail();
     },
-    "2d) Callback should accept index.": function() {
-      fail();
-    },
-    "2e) Callback should accept array.": function() {
+    "6b) It should reduce.": function() {
       fail();
     },
 
-    "1d) Callback should start with the last element of the array.": function() {
+    "8a) Callback should accept index.": function() {
       fail();
-      /*
-      var numberOfTimeCallbackHasRun = 0;
-      var reducedValue = reduceRight([1, 2, 3], function() {
-        return i;
-      });
-      eq(reducedValue, 3);
-      */
     },
-    "1b) It should call callback for all indexes in the array.": function() {
+    "8b) Callback should accept array.": function() {
       fail();
-      /*
-      var numberOfTimeCallbackHasRun = 0;
-      reduceRight([1, 2, 3], function() {
-        numberOfTimeCallbackHasRun++;
-      });
-      eq(numberOfTimeCallbackHasRun, 3);
-      */
     },
-    "1a) It should call callback.": function() {
-      fail();
-      /*
-      var numberOfTimeCallbackHasRun = 0;
-      reduceRight([1], function() {
-        numberOfTimeCallbackHasRun++;
-      });
-      eq(numberOfTimeCallbackHasRun, 1);
-      */
-    },
-    "1b) It should exclude holes.": function() {
+
+    "9a) It should exclude holes.": function() {
+      // will implement later
       fail();
       /*
       var numberOfTimeCallbackHasRun = 0;
