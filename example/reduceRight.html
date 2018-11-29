@@ -34,12 +34,18 @@
   function reduceRight(array, callback, initialValue) {
     var accumulator = initialValue;
     var startingIndex = array.length - 1;
+    var arrayIndexes = Object.keys(array);
 
     // If no intitialValue
     if (arguments.length < 3) {
       // Set accumulator to the last element in the array.
       accumulator = array[startingIndex];
       startingIndex--;
+    }
+
+    // If intialValue
+    if (arrayIndexes.length === 0) {
+      return initialValue;
     }
 
     for (var i = startingIndex; i >= 0; i--) {
@@ -156,11 +162,20 @@
       eq(isSecondToLastElementFirst, true);
     },
 
-    "5a) If initialValue and the array is empty It should not call callback.": function() {
-      fail();
+    "5a) If initialValue and the array is empty it should not call callback.": function() {
+      var numberOfTimeCallbackHasRun = 0;
+      var reduceResult = reduceRight(
+        [],
+        function() {
+          numberOfTimeCallbackHasRun++;
+        },
+        1
+      );
+      eq(numberOfTimeCallbackHasRun, 0);
     },
     "5b) If initialValue and the array is empty initialValue should be returned": function() {
-      fail();
+      var reduceResult = reduceRight([], function() {}, 1);
+      eq(reduceResult, 1);
     },
 
     "6a) If no initialValue and array has one element it should not call callback.": function() {
