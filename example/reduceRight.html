@@ -34,25 +34,40 @@
   function reduceRight(array, callback, initialValue) {
     var accumulator = initialValue;
     var startingIndex = array.length - 1;
-    var arrayIndexes = Object.keys(array);
+    var arrayIndexes = Object.keys(array).length;
 
     // If no intitialValue
     if (arguments.length < 3) {
-      // Set accumulator to the last element in the array.
+      // If array is empty
+      if (arrayIndexes === 0) {
+        throw new TypeError(" Reduce of empty array with no initial value");
+      }
+
+      // As long as the last element in array is a hole decrement startingIndex.
+      while (startingIndex in array === false && startingIndex > 0) {
+        startingIndex--;
+      }
+
       accumulator = array[startingIndex];
       startingIndex--;
+
+      if (arrayIndexes === 1) {
+        return accumulator;
+      }
     }
 
     // If intialValue
-    if (arrayIndexes.length === 0) {
+    if (arrayIndexes === 0) {
       return initialValue;
     }
 
     for (var i = startingIndex; i >= 0; i--) {
       if (i in array) {
-        callback(accumulator, array[i], i, array);
+        accumulator = callback(accumulator, array[i], i, array);
       }
     }
+
+    return accumulator;
   }
 
   tests({
@@ -84,7 +99,7 @@
         0
       );
     },
-    "2b) If no initialValue accumulator will start with last element in the array.": function() {
+    "2b) If no initialValue accumulator will start with array[array.length - 1].": function() {
       var isAccumulatorFirstElementInArray = false;
       var numberOfTimeCallbackHasRun = 0;
       reduceRight([1, 2], function(accumulator) {
@@ -96,7 +111,27 @@
       eq(isAccumulatorFirstElementInArray, true);
     },
 
-    "3a) It should pass the ith element of the array as the second argument to callback.": function() {
+    "3a) If initialValue, it should exclude holes.": function() {
+      var numberOfTimeCallbackHasRun = 0;
+      reduceRight(
+        [, , , 1, 2, ,],
+        function() {
+          numberOfTimeCallbackHasRun++;
+        },
+        0
+      );
+      eq(numberOfTimeCallbackHasRun, 2);
+    },
+    "3b) If no initialValue, it should exclude holes too.": function() {
+      debugger;
+      var numberOfTimeCallbackHasRun = 0;
+      reduceRight([, , 1, 2, ,], function() {
+        numberOfTimeCallbackHasRun++;
+      });
+      eq(numberOfTimeCallbackHasRun, 1);
+    },
+
+    "4a) It should pass the ith element of the array as the second argument to callback.": function() {
       reduceRight(
         [1],
         function(accumulator, currentValue) {
@@ -105,7 +140,7 @@
         0
       );
     },
-    "3b) It should pass index as the third argument to callback.": function() {
+    "4b) It should pass the index of the array as the third argument to callback.": function() {
       reduceRight(
         [1],
         function(previousValue, currentValue, index) {
@@ -114,7 +149,7 @@
         0
       );
     },
-    "3c) It should pass array as the fourth argument to callback.": function() {
+    "4c) It should pass array as the fourth argument to callback.": function() {
       var testArray = [1, 2];
       reduceRight(
         testArray,
@@ -124,18 +159,8 @@
         0
       );
     },
-    "3d) It should exclude holes.": function() {
-      var numberOfTimeCallbackHasRun = 0;
-      reduceRight(
-        [, , ,],
-        function() {
-          numberOfTimeCallbackHasRun++;
-        },
-        0
-      );
-      eq(numberOfTimeCallbackHasRun, 0);
-    },
-    "4a) If initialValue, currentValue will start with last value in array.": function() {
+
+    "5a) If initialValue, currentValue will start with array[array.length - 1].": function() {
       var isLastElementFirst = false;
       var numberOfTimeCallbackHasRun = 0;
       reduceRight(
@@ -150,7 +175,7 @@
       );
       eq(isLastElementFirst, true);
     },
-    "4b) If no initialValue currentValue will start with second to last element in the array.": function() {
+    "5b) If no initialValue currentValue will start with array[array.length - 2].": function() {
       var isSecondToLastElementFirst = false;
       var numberOfTimeCallbackHasRun = 0;
       reduceRight([1, 2], function(accumulator, currentValue) {
@@ -162,7 +187,7 @@
       eq(isSecondToLastElementFirst, true);
     },
 
-    "5a) If initialValue and the array is empty it should not call callback.": function() {
+    "6a) If initialValue and the array is empty it should not call callback.": function() {
       var numberOfTimeCallbackHasRun = 0;
       var reduceResult = reduceRight(
         [],
@@ -173,27 +198,43 @@
       );
       eq(numberOfTimeCallbackHasRun, 0);
     },
-    "5b) If initialValue and the array is empty initialValue should be returned": function() {
+    "6b) If initialValue and the array is empty initialValue should be returned": function() {
       var reduceResult = reduceRight([], function() {}, 1);
       eq(reduceResult, 1);
     },
 
-    "6a) If no initialValue and array has one element it should not call callback.": function() {
-      fail();
+    "7a) If no initialValue and array has one element it should not call callback.": function() {
+      var numberOfTimeCallbackHasRun = 0;
+      reduceRight([1], function() {
+        numberOfTimeCallbackHasRun++;
+      });
+      eq(numberOfTimeCallbackHasRun, 0);
     },
-    "6b) If no initialValue and array has one element the only element should be returned.": function() {
-      fail();
-    },
-
-    "7a) It should return a single value.": function() {
-      fail();
-    },
-    "7b) It should reduce.": function() {
-      fail();
+    "7b) If no initialValue and array has one element the only element should be returned.": function() {
+      var reduceResult = reduceRight([1], function() {});
+      eq(reduceResult, 1);
     },
 
-    "8a) If no initialValue and array is empty throw TypeError.": function() {
-      fail();
+    "8a) It should reduce.": function() {
+      var reduceResult = reduceRight(
+        [1, 2, 3],
+        function(accumulator, currentValue) {
+          return accumulator + currentValue;
+        },
+        0
+      );
+      eq(reduceResult, 6);
+    },
+
+    "9a) If no initialValue and array is empty throw TypeError.": function() {
+      // debugger;
+      var isTypeError = false;
+      try {
+        reduceRight([], function() {});
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     }
   });
 </script>
