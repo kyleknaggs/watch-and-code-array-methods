@@ -48,6 +48,7 @@
         startingIndex--;
       }
 
+      // Set accumulator and move startingIndex one more.
       accumulator = array[startingIndex];
       startingIndex--;
 
@@ -123,7 +124,6 @@
       eq(numberOfTimeCallbackHasRun, 2);
     },
     "3b) If no initialValue, it should exclude holes too.": function() {
-      debugger;
       var numberOfTimeCallbackHasRun = 0;
       reduceRight([, , 1, 2, ,], function() {
         numberOfTimeCallbackHasRun++;
