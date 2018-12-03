@@ -28,25 +28,13 @@
   // Function Syntax:
 
   function concat(originalArray, values) {
-    // Create a new array.
+    // Create a new array using originalArray.
     var resultSoFar = [];
-
-    // Add the values in originalArray to resultSoFar.
-    for (
-      var originalArrayIndex = 0;
-      originalArrayIndex < originalArray.length;
-      originalArrayIndex++
-    ) {
-      resultSoFar.push(originalArray[originalArrayIndex]);
-    }
+    resultSoFar = originalArray.slice(0);
 
     // For all of the remaining arguments:
-    for (
-      var argumentIndex = 1;
-      argumentIndex < arguments.length;
-      argumentIndex++
-    ) {
-      var currentArgument = arguments[argumentIndex];
+    for (var argIndex = 1; argIndex < arguments.length; argIndex++) {
+      var currentArgument = arguments[argIndex];
 
       // If currentArgument is not an array:
       if (Array.isArray(currentArgument) === false) {
