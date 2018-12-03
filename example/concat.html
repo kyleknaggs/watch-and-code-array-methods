@@ -26,11 +26,12 @@
   // A new array instance.
 
   // Function Syntax:
+
   function concat(originalArray, values) {
     // Create a new array.
     var resultSoFar = [];
 
-    // Add the values in originalArray.
+    // Add the values in originalArray to resultSoFar.
     for (
       var originalArrayIndex = 0;
       originalArrayIndex < originalArray.length;
@@ -39,7 +40,7 @@
       resultSoFar.push(originalArray[originalArrayIndex]);
     }
 
-    // For all values in the array
+    // For all of the remaining arguments:
     for (
       var argumentIndex = 1;
       argumentIndex < arguments.length;
@@ -61,23 +62,28 @@
   }
 
   tests({
-    /*
     "1a) It should not modify original array.": function() {
       var originalArray = [1];
       var duplicateArray = originalArray;
       concat(originalArray, 2);
       eq(originalArray, duplicateArray);
     },
-    "1b) It should not modify the values provided as arguments.": function() {
+    "1b) It should not modify the value(s) provided as arguments.": function() {
       var originalValue = 2;
       var duplicateValue = originalValue;
       concat([1], originalValue);
       eq(originalValue, duplicateValue);
     },
 
-    "2a) It should return a new array.": function() {
-      var concattedArray = concat([1], 2);
+    "2a) It should return an array.": function() {
+      var concattedArray = concat([1]);
       eq(Array.isArray(concattedArray), true);
+    },
+
+    "2b) It should return a new array, not the array provided as arguments.": function() {
+      var originalArray = [1];
+      var concattedArray = concat(originalArray);
+      eq(concattedArray !== originalArray, true);
     },
 
     "3a) It should prepend elements in originalArray to the beginning of returnedArray.": function() {
@@ -112,58 +118,6 @@
       var nestedArray = ["nestedArray"];
       var concattedArray = concat([1], [nestedArray]);
       eq(concattedArray[1][0], nestedArray);
-    }
-    */
-
-    // Kevin's tests
-
-    // Disagree with test as you always need an original array in native .concat()
-    /*
-    "It should return an array.": function() {
-      var returnedValue = concat();
-      eq(Array.isArray(returnedValue), true);
-    },
-    */
-    "It should return a new array, not the array(s) provided as argument(s).": function() {
-      var originalArray = [1, 2, 3];
-      var returnedArray = concat(originalArray);
-      eq(returnedArray !== originalArray, true);
-    },
-    "It should return a new array consisting of, in order of provided arguments, each argument's elements (for array arguments) or each argument itself (for non-array arguments).": function() {
-      var arr1 = [1, 2];
-      var arr2 = [3, 4];
-      var returnedArray = concat(arr1, arr2);
-      eq(arr1[0], returnedArray[0]);
-      eq(arr1[1], returnedArray[1]);
-      eq(arr2[0], returnedArray[2]);
-      eq(arr2[1], returnedArray[3]);
-    },
-    "It should copy any object references (and not the actual objects) from the array(s) provided as argument(s) into the new array.": function() {
-      var obj1 = { a: true };
-      var returnedArray = concat(obj1);
-      eq(returnedArray[0].a, true);
-      obj1.a = false;
-      eq(returnedArray[0].a, false);
-    },
-    "It should copy any primitive value(s) provided as argument(s) into the new array.": function() {
-      var returnedArray = concat(0, "string", true);
-      eq(returnedArray[0], 0);
-      eq(returnedArray[1], "string");
-      eq(returnedArray[2], true);
-    },
-    "It should not alter 'this'.": function() {
-      var returnedArray = concat(this);
-      eq(returnedArray[0], this);
-    },
-    "It should not mutate the array(s) provided as argument(s).": function() {
-      var arr1 = [1, 2, 3];
-      concat(arr1);
-      eq(JSON.stringify(arr1), JSON.stringify([1, 2, 3]));
-    },
-    "It should not recurse into nested array argument(s).": function() {
-      var returnedArray = concat([[0]]);
-      eq(Number.isInteger(returnedArray[0]), false);
-      eq(Array.isArray(returnedArray[0]), true);
     }
   });
 </script>
