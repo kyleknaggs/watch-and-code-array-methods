@@ -1,16 +1,15 @@
 <script src="../simpletest.js"></script>
 <script>
   // Summary:
+  // Used to merge two or more arrays.
 
   // Prototype implementation:
 
   // Function signature:
-
-  // Callback Parameters:
+  // concat(originalArray[value1[, value2[, ...[, valueN]]]])
 
   // Return value:
-
-  // Requirements:
+  // A new array instance.
 
   // Function Syntax:
 
@@ -18,7 +17,41 @@
   // }
 
   tests({
-    "Test 1": function() {},
-    "Test 2": function() {}
+    "1a) It should not modify original array.": function() {
+      fail();
+    },
+    "1b) It should not modify the original objects provided as arguments.": function() {
+      fail();
+    },
+    "1c) It should accept a value as an argument.": function() {
+      fail();
+    },
+    "1d) It should accept multiple values as arguments.": function() {
+      fail();
+    },
+
+    "2a) It should return a new array.": function() {
+      fail();
+    },
+
+    "3a)It should prepend all elements in originalArray to the beginning of returnedArray.": function() {
+      fail();
+    },
+    "3b) It should append arguments that are not an array to originalArray in returnedArray.": function() {
+      fail();
+    },
+    "3c) It should maintain the order of the elements when appending arguments to orignalArray.": function() {
+      fail();
+    },
+
+    "4a) It should flatten arrays in returnedArray.": function() {
+      fail();
+    },
+    "4b) It should not flatten nested arrays in returnedArray.": function() {
+      fail();
+    },
+    "4c) It should return shallow copies of all objects provided as arguments.": function() {
+      fail();
+    }
   });
 </script>
