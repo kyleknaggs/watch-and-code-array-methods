@@ -28,12 +28,12 @@
   // Function Syntax:
 
   function concat(originalArray, values) {
-    // Throw a TypeError if originalArray is not an array.
+    // Throw a SyntaxError if originalArray is not an array.
     if (Array.isArray(originalArray) === false) {
-      throw new TypeError(originalArray + ".concat is not a function");
+      throw new SyntaxError("Invalid or unexpected token");
     }
 
-    // Create a new array using originalArray.
+    // Create a new array that begins with originalArray.
     var resultSoFar = [];
     resultSoFar = originalArray.slice(0);
 
@@ -114,13 +114,13 @@
     },
 
     "6a) It should throw TypeError if originalArray is not an array.": function() {
-      var isTypeError = false;
+      var isSyntaxError = false;
       try {
         concat(1);
       } catch (e) {
-        isTypeError = e instanceof TypeError;
+        isSyntaxError = e instanceof SyntaxError;
       }
-      eq(isTypeError, true);
+      eq(isSyntaxError, true);
     }
   });
 </script>
