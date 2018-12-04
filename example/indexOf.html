@@ -1,14 +1,18 @@
 <script src="../simpletest.js"></script>
 <script>
   // Summary:
+  // Returns the first index at which a given element can be found in the array, or -1 if it is not present.
 
   // Prototype implementation:
 
   // Function signature:
+  // indexOf(array, searchElement[, fromIndex])
+
+  // searchElement: Element to locate in the array
+  // fromIndex: Index to begin searching for the element at
 
   // Return value:
-
-  // Requirements:
+  // The first index of the element in the array; -1 if not found.
 
   // Function Syntax:
 
@@ -16,7 +20,36 @@
   // }
 
   tests({
-    "": function() {},
-    "": function() {}
+    "1a) If fromIndex >= array.length, do not search array.": function() {
+      fail();
+    },
+    "1b) If fromIndex >= array.length, return -1.": function() {
+      fail();
+    },
+
+    "2a) If fromIndex === 0,  search all values in array.": function() {
+      fail();
+    },
+    "2b) If no fromIndex is provided, start search at index 0.": function() {
+      fail();
+    },
+
+    "3a) If searchElement exists, it should return the index at which searchElement occurs.": function() {
+      fail();
+    },
+    "3b) If > 1 searchElements exist, it should return ONLY the index of the first instance in array.": function() {
+      fail();
+    },
+    "3c) If should use strict equality to compare searchElement to elements in array.": function() {
+      fail();
+    },
+
+    "4a) If fromIndex < 0, begin search at array[array.length+fromIndex].": function() {
+      fail();
+    },
+
+    "5a) If searchElement does not exist, it should return -1.": function() {
+      fail();
+    }
   });
 </script>
