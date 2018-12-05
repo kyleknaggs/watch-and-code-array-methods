@@ -4,6 +4,21 @@
   // Returns the first index at which a given element can be found in the array, or -1 if it is not present.
 
   // Prototype implementation:
+  // function indexOf(array, searchElement, fromIndex){
+  //   var startingIndex = 0;
+
+  //   if(fromIndex){
+  //     startingIndex = fromIndex;
+  //   }
+
+  //   for (var i = startingIndex; i < array.length; i++) {
+  //     if (searchElement === array[i]){
+  //       return i;
+  //     }
+  //   }
+
+  //   return -1;
+  // }
 
   // Function signature:
   // indexOf(array, searchElement[, fromIndex])
@@ -16,40 +31,77 @@
 
   // Function Syntax:
 
-  // function indexOf() {
-  // }
+  function indexOf(array, searchElement, fromIndex) {
+    // Set default startingIndex to 0
+    var startingIndex = 0;
+
+    // If passed a fromIndex value.
+    if (fromIndex) {
+      if (fromIndex < 0) {
+        startingIndex = array.length + fromIndex;
+      }
+      if (fromIndex >= 0) {
+        startingIndex = fromIndex;
+      }
+    }
+
+    for (var i = startingIndex; i < array.length; i++) {
+      if (searchElement === array[i]) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
   tests({
-    "1a) If fromIndex >= array.length, do not search array.": function() {
-      fail();
+    "1a) If searchElement exists, it should return index at which searchElement occurs.": function() {
+      var indexOfElement = indexOf([0, 1, 2], 1);
+      eq(indexOfElement, 1);
     },
-    "1b) If fromIndex >= array.length, return -1.": function() {
-      fail();
+    "1b) If > 1 searchElements exist, it should return ONLY the index of the first instance in array.": function() {
+      var indexOfElement = indexOf([0, 1, 1, 1, 2], 1);
+      eq(indexOfElement, 1);
     },
-
-    "2a) If fromIndex === 0,  search all values in array.": function() {
-      fail();
-    },
-    "2b) If no fromIndex is provided, start search at index 0.": function() {
-      fail();
-    },
-
-    "3a) If searchElement exists, it should return the index at which searchElement occurs.": function() {
-      fail();
-    },
-    "3b) If > 1 searchElements exist, it should return ONLY the index of the first instance in array.": function() {
-      fail();
-    },
-    "3c) If should use strict equality to compare searchElement to elements in array.": function() {
-      fail();
+    "1c) If should use strict equality to compare searchElement to elements in array.": function() {
+      var indexOfElement = indexOf([0, "1", 1], 1);
+      eq(indexOfElement, 2);
     },
 
-    "4a) If fromIndex < 0, begin search at array[array.length+fromIndex].": function() {
-      fail();
+    "2a) If searchElement does not exist, it should return -1.": function() {
+      var indexOfElement = indexOf([0, 1], 2);
+      eq(indexOfElement, -1);
     },
 
-    "5a) If searchElement does not exist, it should return -1.": function() {
-      fail();
+    "3a) If fromIndex === 0, start search at index 0.": function() {
+      var indexOfElement = indexOf([0, 1], 0, 0);
+      eq(indexOfElement, 0);
+    },
+    "3b) If no fromIndex is provided, start search at index 0.": function() {
+      var indexOfElement = indexOf([0, 1], 0);
+      eq(indexOfElement, 0);
+    },
+
+    "4a) If fromIndex >= array.length, return -1.": function() {
+      var indexOfElement = indexOf([1], 1, 1);
+      eq(indexOfElement, -1);
+    },
+
+    "5a) If fromIndex < 0, begin search at array[array.length+fromIndex].": function() {
+      var indexOfFirstNegativeElement = indexOf([0, 1, 2], 1, -2);
+      var indexOfSecondNegativeElement = indexOf([0, 1, 2], 1, -1);
+      eq(indexOfFirstNegativeElement, 1);
+      eq(indexOfSecondNegativeElement, -1);
+    },
+
+    "6a) If no searchElement, return -1.": function() {
+      var indexOfElement = indexOf([0]);
+      eq(indexOfElement, -1);
     }
+
+    /*
+    // Do not know how to test this yet.
+    "7a) If fromIndex is negative, still search array from front to back.": function() {
+    }
+    */
   });
 </script>
