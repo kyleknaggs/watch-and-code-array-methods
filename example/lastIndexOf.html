@@ -1,23 +1,68 @@
 <script src="../simpletest.js"></script>
 <script>
   // Summary:
+  // Returns the last index at which a given element can be found in the array, or -1 if it is not present.
 
   // Prototype implementation:
 
   // Function signature:
+  // lastIndexOf(array, searchElement, optionalFromIndex)
+
+  // Arguments:
+  // searchElement: Element to locate in array.
+  // optionalFromIndex: The index at which to begin search.
 
   // Return value:
+  // The last index of the element in the array; -1 if not found.
 
   // Function Syntax:
 
-  function lastIndexOf() {}
+  // function lastIndexOf() {}
 
   tests({
-    "1)": function() {
+    "1a) If no searchElement it should return -1.": function() {
       fail();
+      // e.g. lastIndexOf([1]) >>> -1
     },
-    "2)": function() {
+
+    "2a) It should return the last index at searchElement occurs in array.": function() {
       fail();
+      // e.g. lastIndexOf([0,0],0); >>> 1
+    },
+    "2b) It should return -1 if searchElement is not present.": function() {
+      fail();
+      // e.g. lastIndexOf([0,0],1); >>> -1
+    },
+
+    "3a) It should search array from back to front.": function() {
+      fail();
+      // e.g. lastIndexOf([0,1,0], 0, 1); >>> 0
+    },
+    "3b) It should use === to compare searchElement to the elements in the array.": function() {
+      fail();
+      // e.g. lastIndexOf([0,'0'], 0); >>> 0
+    },
+    "3c) It should skip holes.": function() {
+      fail();
+      // lastIndexOf([,,,], undefined) >>> -1
+    },
+
+    "4a) If fromIndex, it should start search at fromIndex.": function() {
+      fail();
+      // e.g. lastIndexOf([0,1,0], 0, 1); >>> 0
+    },
+    "5a) If fromIndex < 0  take start search fromIndex amount of elements from the end of the array.": function() {
+      fail();
+      // e.g. lastIndexOf([0, 1, 0], 0, -1); >>> 2
+      // e.g. lastIndexOf([0, 1, 0], 0, -3); >>> 0
+    },
+    "5b) If fromIndex < 0, still search array from back to front.": function() {
+      fail();
+      // e.g. lastIndexOf([1, 0, 1], 1, -2); >>> 0
+    },
+    "5c) If the fromIndex < 0 && array.length + fromIndex < 0, return -1.": function() {
+      fail();
+      // lastIndexOf([1, 0, 1], 1, -4); >>> -1
     }
   });
 </script>
