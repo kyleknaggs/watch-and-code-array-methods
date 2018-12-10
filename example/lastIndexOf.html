@@ -17,52 +17,83 @@
 
   // Function Syntax:
 
-  // function lastIndexOf() {}
+  function lastIndexOf(array, searchElement, optionalFromIndex) {
+    // If no searchElement.
+    if (arguments.length === 1) {
+      return -1;
+    }
+
+    var startingIndex = array.length - 1;
+
+    // If optionalFromIndex.
+    if (arguments.length === 3) {
+      if (optionalFromIndex < 0) {
+        startingIndex = array.length + optionalFromIndex;
+      } else {
+        startingIndex = optionalFromIndex;
+      }
+    }
+
+    // Start search for searchElement.
+    for (var i = startingIndex; i >= 0; i--) {
+      if (i in array) {
+        if (array[i] === searchElement) {
+          return i;
+        }
+      }
+    }
+
+    // If searchElement is not found.
+    return -1;
+  }
 
   tests({
     "1a) If no searchElement it should return -1.": function() {
-      fail();
-      // e.g. lastIndexOf([1]) >>> -1
+      var returnedIndex = lastIndexOf([1]);
+      eq(returnedIndex, -1);
     },
 
-    "2a) It should return the last index at searchElement occurs in array.": function() {
-      fail();
-      // e.g. lastIndexOf([0,0],0); >>> 1
+    "2a) It should return the last index at which searchElement occurs in array.": function() {
+      var returnedIndex = lastIndexOf([0, 0], 0);
+      eq(returnedIndex, 1);
     },
     "2b) It should return -1 if searchElement is not present.": function() {
-      fail();
-      // e.g. lastIndexOf([0,0],1); >>> -1
+      var returnedIndex = lastIndexOf([0, 0], 1);
+      eq(returnedIndex, -1);
     },
 
-    "3a) It should search array from back to front.": function() {
-      fail();
-      // e.g. lastIndexOf([0,1,0], 0, 1); >>> 0
+    "3a) It should use === to compare searchElement to the elements in the array.": function() {
+      var returnedIndex = lastIndexOf([0, "0"], 0);
+      eq(returnedIndex, 0);
     },
-    "3b) It should use === to compare searchElement to the elements in the array.": function() {
-      fail();
-      // e.g. lastIndexOf([0,'0'], 0); >>> 0
-    },
-    "3c) It should skip holes.": function() {
-      fail();
-      // lastIndexOf([,,,], undefined) >>> -1
+    "3b) It should skip holes.": function() {
+      var returnedIndex = lastIndexOf([, , ,], undefined);
+      eq(returnedIndex, -1);
     },
 
     "4a) If fromIndex, it should start search at fromIndex.": function() {
-      fail();
-      // e.g. lastIndexOf([0,1,0], 0, 1); >>> 0
+      var returnedIndex = lastIndexOf([0, 1, 0], 0, 1);
+      eq(returnedIndex, 0);
     },
-    "5a) If fromIndex < 0  take start search fromIndex amount of elements from the end of the array.": function() {
-      fail();
-      // e.g. lastIndexOf([0, 1, 0], 0, -1); >>> 2
-      // e.g. lastIndexOf([0, 1, 0], 0, -3); >>> 0
+
+    "5a) It should search array from back to front.": function() {
+      var returnedIndex = lastIndexOf([0, 1, 0], 0, 1);
+      eq(returnedIndex, 0);
     },
-    "5b) If fromIndex < 0, still search array from back to front.": function() {
-      fail();
-      // e.g. lastIndexOf([1, 0, 1], 1, -2); >>> 0
+
+    "6a) If fromIndex < 0  take start search fromIndex amount of elements from the end of the array.": function() {
+      var firstReturnedIndex = lastIndexOf([0, 1, 0], 0, -1);
+      eq(firstReturnedIndex, 2);
+      var secondReturnedIndex = lastIndexOf([0, 1, 0], 0, -3);
+      eq(secondReturnedIndex, 0);
     },
-    "5c) If the fromIndex < 0 && array.length + fromIndex < 0, return -1.": function() {
-      fail();
-      // lastIndexOf([1, 0, 1], 1, -4); >>> -1
+    "6b) If fromIndex < 0, still search array from back to front.": function() {
+      var returnedIndex = lastIndexOf([1, 0, 1], 1, -2);
+      eq(returnedIndex, 0);
+    },
+    "6c) If the fromIndex < 0 && array.length + fromIndex < 0, return -1.": function() {
+      var returnedIndex = lastIndexOf([1, 0, 1], 1, -4);
+      eq(returnedIndex, -1);
     }
   });
 </script>
