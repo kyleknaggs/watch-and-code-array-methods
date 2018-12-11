@@ -1,0 +1,73 @@
+<script src="../simpletest.js"></script>
+<script>
+  // Summary:
+  // Determines whether an array includes a certain element.
+
+  // Prototype implementation:
+
+  // Function signature:
+  // includes(array, searchElement, optionalFromIndex)
+
+  // Arguments:
+  // searchElements
+  // optionalFromIndex
+
+  // Return value:
+  // True if the array includes the element; false if it does not.
+
+  // Function Syntax:
+
+  function includes() {}
+
+  tests({
+    "1a) If no searchElement, return false.": function() {
+      fail();
+      // var arrayIncludes = includes([1]);
+      // eq(arrayIncludes, false);
+    },
+    "2a) If searchElement and array contains searchElement return true.": function() {
+      fail();
+      // var arrayIncludes = includes([0], 0);
+      // eq(arrayIncludes, true);
+    },
+    "2b) If searchElement and array does not contain searchElement return false.": function() {
+      fail();
+      // var arrayIncludes = includes([0], 1);
+      // eq(arrayIncludes, false);
+    },
+    "2c) It should use strict equality when comparing searchElement to array[i].": function() {
+      fail();
+      // var arrayIncludes = includes([0], '0');
+      // eq(arrayIncludes, false);
+    },
+    "3a) It should not skip holes.": function() {
+      fail();
+      // var arrayIncludes = includes([,,,], undefined);
+      // eq(arrayIncludes, true);
+    },
+    "4a) If optionalFromIndex < array.length, begin search at array[index].": function() {
+      fail();
+      // var firstArrayIncludes = includes([0,1,2], 1,1);
+      // eq( firstArrayIncludes, true);
+      // var secondArrayIncludes = ([0,1,2], 1,2);
+      // eq( secondArrayIncludes, false);
+    },
+    "4b) If optionalFromIndex > array.length, return false.": function() {
+      fail();
+      // var arrayIncludes = includes([0,1,2], 1,3);
+      // eq(arrayIncludes, false);
+    },
+    "4c) If optionalFromIndex < 0, begin search at array.length + fromIndex.": function() {
+      fail();
+      // var firstArrayIncludes = includes([0,1,2], 1,-2);
+      // eq( firstArrayIncludes, true);
+      // var secondArrayIncludes = ([0,1,2], 1,-1);
+      // eq( secondArrayIncludes, false);
+    },
+    "4d) If optionalFromIndex < 0 and array.length + fromIndex < 0, search all elements in array.": function() {
+      fail();
+      // var arrayIncludes = includes([0, 1, 2], 1, -3);
+      // eq(arrayIncludes, true);
+    }
+  });
+</script>
