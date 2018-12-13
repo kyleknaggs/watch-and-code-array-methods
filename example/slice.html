@@ -1,0 +1,95 @@
+<script src="../simpletest.js"></script>
+<script>
+  // Summary:
+  // Returns a new array that is a shallow copy of originalArray by extracting a portion of originalArray.
+
+  // Prototype implementation:
+
+  // Function signature:
+  // slice(array, optionalStart, optionalEnd)
+
+  // Arguments:
+  // optionalStart - Starting point for extraction.
+  // optionalEnd - Ending point for extraction.
+
+  // Return value:
+  // A new array.
+
+  // Function Syntax:
+
+  // function slice() {}
+
+  tests({
+    "1a) It should not modify originalArray.": function() {
+      fail();
+      // var originalArray = [0];
+      // var duplicateArray = originalArray;
+      // slice(originalArray);
+      // duplicateArray === originalArray;
+    },
+    "1b) It should return an array.": function() {
+      fail();
+      // var slicedArray = slice([0]);
+      // Array.isArray(slicedArray);
+    },
+    "1c) It should return an array that is not equal to originalArray.": function() {
+      fail();
+      // var originalArray = [0];
+      // var slicedArray = slice(originalArray);
+      // slicedArray !== originalArray;
+    },
+    "1d) It should not exclude holes.": function() {
+      fail();
+      // var slicedArray = slice([,,,]);
+      // slicedArray.length === 3;
+    },
+    "2a) It should return a shallow copy of elements from originalArray.": function() {
+      fail();
+      // var testObject = {};
+      // var testArray = [0, testObject];
+      // var slicedArray = slice(testArray);
+      // slicedArray[0] === 0
+      // slicedArray[1] === testArray[1]
+    },
+    "3a) If no optionalStart, begin extraction at index 0.": function() {
+      fail();
+      // var slicedArray = slice([0,1]);
+      // slicedArray.length === 2
+    },
+    "4a) If optionalStart && optionalStart < array.length, begin extraction at array[optionalStart].": function() {
+      fail();
+      // var slicedArray = slice([0,1], 1);
+      // slicedArray.length === 1
+    },
+    "4b) If optionalStart && optionalStart > array.length, return an empty array.": function() {
+      fail();
+      // var slicedArray = slice([0,1], 10);
+      // slicedArray.length === 0;
+    },
+    "4c) If optionalStart < 0, begin extraction at array.length + optionalStart.": function() {
+      fail();
+      // var slicedArray = slice([0,1], -1);
+      // slicedArray.length === 1;
+    },
+    "5a) If no optionalEnd, extract all remaining values in array.": function() {
+      fail();
+      // var slicedArray = slice([0,1], 1);
+      // slicedArray.length === 1;
+    },
+    "6a) If optionalEnd && optionalEnd < array.length, last extracted value should be array[optionalEnd -1].": function() {
+      fail();
+      // var slicedArray = slice([0,1], 0, 1);
+      // slicedArray.length === 1
+    },
+    "6b) If optionalEnd && optionalEnd > array.length, extract all remaining values in array.": function() {
+      fail();
+      // var slicedArray = slice([0,1], 0, 10);
+      // slicedArray.length === 2
+    },
+    "6c) If optionalEnd < 0, end extraction at array.length + optionalEnd.": function() {
+      fail();
+      // var slicedArray = slice([0,1], 0, -1);
+      // slicedArray.length === 1
+    }
+  });
+</script>
