@@ -102,42 +102,42 @@
       eq(slicedArrayTwo.length, 3);
     },
 
-    "3a) If no optionalStart, begin extraction at index 0.": function() {
+    "4a) If no optionalStart, begin extraction at index 0.": function() {
       var slicedArray = slice([0, 1]);
       eq(slicedArray.length, 2);
     },
 
-    "4a) If optionalStart < originalLength, begin extraction at originalArray[optionalStart].": function() {
+    "5a) If optionalStart < originalLength, begin extraction at originalArray[optionalStart].": function() {
       var slicedArray = slice([0, 1], 1);
       eq(slicedArray.length, 1);
     },
-    "4b) If optionalStart > originalLength, return an empty array.": function() {
+    "5b) If optionalStart > originalLength, return an empty array.": function() {
       var slicedArray = slice([0, 1], 10);
       eq(slicedArray.length, 0);
     },
-    "4c) If optionalStart < 0 and optionalStart + originalLength > 0, begin extraction at originalLength + optionalStart.": function() {
+    "5c) If optionalStart < 0 and optionalStart + originalLength > 0, begin extraction at originalLength + optionalStart.": function() {
       var slicedArray = slice([0, 1], -1);
       eq(slicedArray.length, 1);
     },
-    "4d) If optionalStart < 0 and optionalStart + originalLength < 0, slice begins from index 0.": function() {
+    "5d) If optionalStart < 0 and optionalStart + originalLength < 0, slice begins from index 0.": function() {
       var slicedArray = slice([1, 2, 3], -6);
       eq(slicedArray.length, 3);
     },
 
-    "5a) If no optionalEnd, extract all remaining values in originalArray.": function() {
+    "6a) If no optionalEnd, extract all remaining values in originalArray.": function() {
       var slicedArray = slice([0, 1], 1);
       eq(slicedArray.length, 1);
     },
 
-    "6a) If optionalEnd < originalLength, last extracted value should be originalArray[optionalEnd -1].": function() {
+    "7a) If optionalEnd < originalLength, last extracted value should be originalArray[optionalEnd -1].": function() {
       var slicedArray = slice([0, 1], 0, 1);
       eq(slicedArray.length, 1);
     },
-    "6b) If optionalEnd > originalLength, extract all remaining values in originalArray.": function() {
+    "7b) If optionalEnd > originalLength, extract all remaining values in originalArray.": function() {
       var slicedArray = slice([0, 1], 0, 10);
       eq(slicedArray.length, 2);
     },
-    "6c) If optionalEnd < 0, end extraction at originalLength + optionalEnd.": function() {
+    "7c) If optionalEnd < 0, end extraction at originalLength + optionalEnd.": function() {
       var slicedArray = slice([0, 1], 0, -1);
       eq(slicedArray.length, 1);
     }
