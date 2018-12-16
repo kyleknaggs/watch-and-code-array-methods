@@ -1,24 +1,146 @@
 <script src="../simpletest.js"></script>
 <script>
   // Summary:
+  // Returns a new string that contains all the elements in an array or an array-like object).
+  // Each element in the new string will be separated by commas or a specified separator string.
+
+  // Example:
+  // join(["Fire", "Wind", "Rain"]); >>> "Fire,Wind,Rain"
 
   // Prototype implementation:
+  // function join(array, optionalSeparator) {
+  //   var arrayIndex = 0;
+  //   var joinedString = "";
+
+  //   if (array.length > 0) {
+  //     joinedString = joinedString.concat(array[0]);
+  //     arrayIndex++;
+
+  //     for (var i = arrayIndex; i < array.length; i++) {
+  //       joinedString = joinedString.concat(",", array[i]);
+  //     }
+  //   }
+
+  //   return joinedString;
+  // }
 
   // Function signature:
+  // join(array, optionalSeparator);
 
   // Arguments:
+  // optionalSeparator - A string to separate each pair of elements in the array.
 
   // Return value:
+  // A String.
+
+  // Requirements:
 
   // // Function Syntax:
   function join() {}
 
   tests({
-    "1a) Test 1.": function() {
+    "1a) If array is empty, it should return an empty string.": function() {
       fail();
+      // var joinedString = join([]);
+      // joinedString === "";
     },
-    "2a) Test 2.": function() {
+
+    "2a) If no optionalSeparator, it should join indexes of array and separate elements with a comma.": function() {
+      fail();
+      // var joinedString = join(['a', 'b']);
+      // joinedString === "a,b";
+    },
+
+    "3a) It should convert array indexes that are numbers, booleans or NaN to strings.": function() {
+      fail();
+      // var joinedNumbersBooleanNaNString = join([0, 1, 2, true, false, NaN]);
+      // joinedNumbersBooleanNaNString === "0,1,2,true,false,NaN";
+    },
+    "3b) It should convert array indexes that are null, undefined or empty to empty strings.": function() {
+      fail();
+      // var joinedEmptyNullUndefinedString = join(/*emptyIndex*/,null, undefined);
+      // joinedEmptyNullUndefinedString === ",,";
+    },
+    "3c) It should join nested arrays like parent array.": function() {
+      fail();
+      // var joinedNestedArray = join([[1, NaN, true, {}, undefined, null]]);
+      // joinedNestedArray === "1,NaN,true,[object Object],,";
+    },
+    "3d) It should convert array indexes that are objects to '[object Object]'.": function() {
+      fail();
+      // var joinedEmptyObjectString = join([{}]);
+      // joinedEmptyObjectString === "[object Object]";
+      // var joinedObjectWithKeyString = join([{ key: "value" }]);
+      // joinedObjectWithKeyString === "[object Object]";
+    },
+
+    "4a) If optionalSeparator, it should separate elements with optionalSeparator.": function() {
+      fail();
+      // var joinedString = join(['a', 'b'],'-');
+      // joinedString === "a-b"
+    },
+
+    "5a) If optionalSeparator is undefined, it should separate elements with a comma.": function() {
+      fail();
+      // var joinedString = join(['a', 'b'], undefined);
+      // joinedString === "a,b"
+    },
+    "5b) If optionalSeparator is a number, boolean, NaN, or null, it should convert optionalSeparator to a string.": function() {
+      fail();
+      // var joinedNumberString = join(['a', 'b'], 1);
+      // joinedNumberString === "a1b"
+      // var joinedBooleanString = join(['a', 'b'], true);
+      // joinedBooleanString === "atrueb"
+      // var joinedNaNString = join(['a', 'b'], NaN);
+      // joinedNaNString === "aNaNb"
+      // var joinedNullString = join(['a', 'b'], null);
+      // joinedNullString === "anullb"
+    },
+    "5c) If optionalSeparator is an array, it should join optionalSeparator.": function() {
+      fail();
+      // var joinedString = join(["a", "b"], [1, NaN, true, {}, undefined, null]);
+      // joinedString === "a1,NaN,true,[object Object],,b";
+    },
+
+    // Question: How do you even test for array like objects?
+    "6a) It should join indexes of an array like object.": function() {
+      // Question: Has somebody confirmed that .join() works on array like objects as stated in:
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+
+      // Test 1 to see if .join() runs on arguments object in console:
+      // function createArgumentsObject() {
+      //   return arguments;
+      // }
+      // var argumentsObject = createArgumentsObject();
+      // arguments.join(); /* >>> Uncaught TypeError: arguments.join is not a function */
+
+      // Test 2 to see if .join() runs on array-like object returned by DOM methods such as 'document.getElementsByTagName' in console:
+
+      // Insert test code that
+      // 1) Creates a list that gets inserted into DOM. Each item in the list should contain a string.
+      // 2) DOM elements should be exracted from page, fulfilling the criteria for the creation of an array like object.
+      // 3) An attempt should be made to run the native .join() on the array like object.
+      // If test fails: Bring up question during Watch and Code Daily Accountability meeting.
+
       fail();
     }
   });
+
+  // Questions:
+  // 1) What is an "array-like object"?
+
+  // Some objects in JS look like arrays, but they are not.
+  // e.g. 1: The NodeList returned by document.getElementsByTagName() & many other DOM methods.
+  // e.g. 2: The arguments object.
+  // ...these array-like objects look like arrays but do not share all of their methods.
+  // e.g. arguments has a length property but does not implement .forEach()
+
+  // An array-like object:
+  // Has: indexed access to elements and the property length.
+  // Does not have: Array methods. (e.g. .push(), .forEach(), .indexOf() etc.)
+  // However: array methods can be used on array like objects
+  ///...if they are borrowed from arrays via call().
+
+  // 2) What is the call() method?
+  // A predefined JS method that allows an object to call method belonging to another object.
 </script>
