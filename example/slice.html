@@ -18,29 +18,29 @@
   // // Function Syntax:
   function slice(originalArray, optionalStart, optionalEnd) {
     var slicedArray = [];
-    var length = originalArray.length;
     var startingIndex = 0;
-    var stoppingIndex = length;
+    var slicedArrayIndex = 0;
+    var originalArrayLength = originalArray.length;
+    var stoppingIndex = originalArrayLength;
 
-    if (optionalStart > length) {
+    if (optionalStart > originalArrayLength) {
       return [];
     }
 
     if (optionalStart >= 0) {
       startingIndex = optionalStart;
-    } else if (optionalStart + length >= 1) {
-      startingIndex = length + optionalStart;
+    } else if (optionalStart + originalArrayLength > 0) {
+      startingIndex = originalArrayLength + optionalStart;
     }
 
     if (optionalEnd < 0) {
-      stoppingIndex = length + optionalEnd;
-    } else if (optionalEnd < length) {
+      stoppingIndex = originalArrayLength + optionalEnd;
+    } else if (optionalEnd < originalArrayLength) {
       stoppingIndex = optionalEnd;
     }
 
     slicedArray.length = stoppingIndex - startingIndex;
 
-    var slicedArrayIndex = 0;
     for (var i = startingIndex; i < stoppingIndex; i++) {
       if (i in originalArray) {
         var elementToCopy = originalArray[i];
