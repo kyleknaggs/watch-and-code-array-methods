@@ -15,49 +15,33 @@
   // Return value:
   // A new array.
 
-  // Function Syntax:
-
+  // // Function Syntax:
   function slice(originalArray, optionalStart, optionalEnd) {
-    //TODO: Refactor code to use computedIndex.
-    var originalStartingIndex = 0;
-    var originalLength = originalArray.length;
-    var originalStoppingIndex = originalLength;
+    var slicedArray = [];
+    var length = originalArray.length;
+    var startingIndex = 0;
+    var stoppingIndex = length;
 
-    // If optionalStart
-    if (arguments.length > 1) {
-      if (optionalStart < 0) {
-        if (optionalStart + originalLength < 0) {
-          originalStartingIndex = 0;
-        } else {
-          originalStartingIndex = originalLength + optionalStart;
-        }
-      } else {
-        originalStartingIndex = optionalStart;
-      }
-    }
-
-    // If optionalEnd
-    if (arguments.length > 2) {
-      if (optionalEnd < 0) {
-        originalStoppingIndex = originalLength + optionalEnd;
-      }
-      if (optionalEnd > 0 && optionalEnd < originalLength) {
-        originalStoppingIndex = optionalEnd;
-      }
-    }
-
-    if (optionalStart > originalLength) {
+    if (optionalStart > length) {
       return [];
     }
 
-    // Calculate length of slicedArray after setting final start and stop values:
-    var slicedArray;
-    var slicedArrayLength = originalStoppingIndex - originalStartingIndex;
-    slicedArray = new Array(slicedArrayLength);
+    if (optionalStart >= 0) {
+      startingIndex = optionalStart;
+    } else if (optionalStart + length >= 1) {
+      startingIndex = length + optionalStart;
+    }
 
-    // For every value that should be copied:
+    if (optionalEnd < 0) {
+      stoppingIndex = length + optionalEnd;
+    } else if (optionalEnd < length) {
+      stoppingIndex = optionalEnd;
+    }
+
+    slicedArray.length = stoppingIndex - startingIndex;
+
     var slicedArrayIndex = 0;
-    for (var i = originalStartingIndex; i < originalStoppingIndex; i++) {
+    for (var i = startingIndex; i < stoppingIndex; i++) {
       if (i in originalArray) {
         var elementToCopy = originalArray[i];
         slicedArray[slicedArrayIndex] = elementToCopy;
@@ -107,20 +91,21 @@
       eq(slicedArray.length, 2);
     },
 
-    "5a) If optionalStart < originalLength, begin extraction at originalArray[optionalStart].": function() {
-      var slicedArray = slice([0, 1], 1);
-      eq(slicedArray.length, 1);
-    },
-    "5b) If optionalStart > originalLength, return an empty array.": function() {
+    "5a) If optionalStart > length, return an empty array.": function() {
       var slicedArray = slice([0, 1], 10);
       eq(slicedArray.length, 0);
     },
-    "5c) If optionalStart < 0 and optionalStart + originalLength > 0, begin extraction at originalLength + optionalStart.": function() {
+    "5b) If optionalStart < length, begin extraction at originalArray[optionalStart].": function() {
+      var slicedArray = slice([0, 1], 1);
+      eq(slicedArray.length, 1);
+    },
+    "5c) If optionalStart < 0 and optionalStart + length >= 1, begin extraction at length + optionalStart.": function() {
       var slicedArray = slice([0, 1], -1);
       eq(slicedArray.length, 1);
     },
-    "5d) If optionalStart < 0 and optionalStart + originalLength < 0, slice begins from index 0.": function() {
-      var slicedArray = slice([1, 2, 3], -6);
+    "5d) If optionalStart < 0 and optionalStart + length < 1, begin slice from index 0.": function() {
+      // debugger;
+      var slicedArray = slice([1, 2, 3], -3);
       eq(slicedArray.length, 3);
     },
 
@@ -129,15 +114,16 @@
       eq(slicedArray.length, 1);
     },
 
-    "7a) If optionalEnd < originalLength, last extracted value should be originalArray[optionalEnd -1].": function() {
+    "7a) If optionalEnd < length, last extracted value should be originalArray[optionalEnd -1].": function() {
+      debugger;
       var slicedArray = slice([0, 1], 0, 1);
       eq(slicedArray.length, 1);
     },
-    "7b) If optionalEnd > originalLength, extract all remaining values in originalArray.": function() {
+    "7b) If optionalEnd > length, extract all remaining values in originalArray.": function() {
       var slicedArray = slice([0, 1], 0, 10);
       eq(slicedArray.length, 2);
     },
-    "7c) If optionalEnd < 0, end extraction at originalLength + optionalEnd.": function() {
+    "7c) If optionalEnd < 0, end extraction at length + optionalEnd.": function() {
       var slicedArray = slice([0, 1], 0, -1);
       eq(slicedArray.length, 1);
     }
