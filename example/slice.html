@@ -27,7 +27,7 @@
       return slicedArray;
     }
 
-    if (optionalStart >= 0) {
+    if (optionalStart > -1) {
       startingIndex = optionalStart;
     } else if (optionalStart + originalArrayLength > 0) {
       startingIndex = originalArrayLength + optionalStart;
