@@ -42,22 +42,15 @@
     var joinedString = "";
     var stringSeparator = ",";
 
-    // If array has more than one element:
     if (array.length > 0) {
-      if (currentElement === null || currentElement === undefined) {
-        joinedString = joinedString.concat("");
-      } else {
+      if (currentElement || currentElement === 0) {
         joinedString = joinedString.concat(currentElement);
       }
 
       arrayIndex++;
 
-      if (Number.isNaN(optionalSeparator)) {
-        stringSeparator = optionalSeparator.toString();
-      } else if (optionalSeparator === null) {
-        stringSeparator = "null";
-      } else if (optionalSeparator) {
-        stringSeparator = optionalSeparator;
+      if (arguments.length > 1 && optionalSeparator !== undefined) {
+        stringSeparator = "".concat(optionalSeparator);
       }
 
       for (var i = arrayIndex; i < array.length; i++) {
@@ -113,7 +106,11 @@
       var joinedString = join(["a", "b"], undefined);
       eq(joinedString, "a,b");
     },
-    "5b) If optionalSeparator is a number, boolean, NaN, or null, it should convert optionalSeparator to a string.": function() {
+    "5b) If optionalSeparator is an empty string, it should have no separator between elements.": function() {
+      var joinedString = join(["a", "b"], "");
+      eq(joinedString, "ab");
+    },
+    "5c) If optionalSeparator is a number, boolean, NaN, or null, it should convert optionalSeparator to a string.": function() {
       var joinedNumberString = join(["a", "b"], 1);
       eq(joinedNumberString, "a1b");
       var joinedBooleanString = join(["a", "b"], true);
@@ -123,7 +120,7 @@
       var joinedNullString = join(["a", "b"], null);
       eq(joinedNullString, "anullb");
     },
-    "5c) If optionalSeparator is an array, it should join optionalSeparator.": function() {
+    "5d) If optionalSeparator is an array, it should join optionalSeparator.": function() {
       var joinedString = join(["a", "b"], [1, NaN, true, {}, undefined, null]);
       eq(joinedString, "a1,NaN,true,[object Object],,b");
     },
