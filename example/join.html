@@ -125,45 +125,58 @@
       eq(joinedString, "a1,NaN,true,[object Object],,b");
     },
 
-    // Question: How do you even test for array like objects?
     "6a) It should join indexes of an array like object.": function() {
+      fail();
+
       // Question: Has somebody confirmed that .join() works on array like objects as stated in:
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
 
-      // Test 1 to see if .join() runs on arguments object in console:
+      // Test 1) Does .join() runs on arguments object in console:
+
       // function createArgumentsObject() {
       //   return arguments;
       // }
+
       // var argumentsObject = createArgumentsObject();
+      // var isArgumentsObjectArray = Array.isArray(argumentsObject);
+      // console.log(isArgumentsObjectArray);
+
       // arguments.join(); /* >>> Uncaught TypeError: arguments.join is not a function */
 
-      // Test 2 to see if .join() runs on array-like object returned by DOM methods such as 'document.getElementsByTagName' in console:
+      // Test 2) Does .join() runs on array-like object returned by DOM methods:
 
-      // Insert test code that
-      // 1) Creates a list that gets inserted into DOM. Each item in the list should contain a string.
-      // 2) DOM elements should be exracted from page, fulfilling the criteria for the creation of an array like object.
-      // 3) An attempt should be made to run the native .join() on the array like object.
-      // If test fails: Bring up question during Watch and Code Daily Accountability meeting.
+      // var unorderedList = document.createElement("ul");
+      // var body = document.querySelector("body");
 
-      fail();
+      // body.appendChild(unorderedList);
+      // var list = document.querySelector("ul");
+
+      // for (var i = 1; i < 4; i++) {
+      //   var listItem = document.createElement("li");
+      //   var textNode = document.createTextNode("list item: " + i);
+      //   listItem.appendChild(textNode);
+      //   list.appendChild(listItem);
+      // }
+
+      // var listItems = document.querySelectorAll("li");
+      // var isDOMNodeArray = Array.isArray(listItems);
+      // console.log(isDOMNodeArray);
+
+      // listItems.join(); /* >>> Uncaught TypeError: listItems.join is not a function */
     }
   });
 
-  // Questions:
-  // 1) What is an "array-like object"?
+  // Notes on the requirements of an "array-like object":
 
-  // Some objects in JS look like arrays, but they are not.
+  // They look like arrays, but they are not actually arrays.
+
+  // Examples of array-like objects:
   // e.g. 1: The NodeList returned by document.getElementsByTagName() & many other DOM methods.
   // e.g. 2: The arguments object.
   // ...these array-like objects look like arrays but do not share all of their methods.
   // e.g. arguments has a length property but does not implement .forEach()
 
-  // An array-like object:
-  // Has: indexed access to elements and the property length.
-  // Does not have: Array methods. (e.g. .push(), .forEach(), .indexOf() etc.)
-  // However: array methods can be used on array like objects
-  ///...if they are borrowed from arrays via call().
-
-  // 2) What is the call() method?
-  // A predefined JS method that allows an object to call method belonging to another object.
+  // It should have indexed access to elements and the property length.
+  // It should not have Array methods. (e.g. .push(), .forEach(), .indexOf() etc.)
+  // It is possible that array methods can be used on array like objects if they are borrowed from arrays via call().
 </script>
