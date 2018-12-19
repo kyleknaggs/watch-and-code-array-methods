@@ -36,70 +36,96 @@
   // Requirements:
 
   // // Function Syntax:
-  function join() {}
+  function join(array, optionalSeparator) {
+    var arrayIndex = 0;
+    var currentElement = array[arrayIndex];
+    var joinedString = "";
+    var stringSeparator = ",";
+
+    // If array has more than one element:
+    if (array.length > 0) {
+      if (currentElement === null || currentElement === undefined) {
+        joinedString = joinedString.concat("");
+      } else {
+        joinedString = joinedString.concat(currentElement);
+      }
+
+      arrayIndex++;
+
+      if (Number.isNaN(optionalSeparator)) {
+        stringSeparator = optionalSeparator.toString();
+      } else if (optionalSeparator === null) {
+        stringSeparator = "null";
+      } else if (optionalSeparator) {
+        stringSeparator = optionalSeparator;
+      }
+
+      for (var i = arrayIndex; i < array.length; i++) {
+        currentElement = array[i];
+
+        if (currentElement === null || currentElement === undefined) {
+          joinedString = joinedString.concat(stringSeparator, "");
+        } else {
+          joinedString = joinedString.concat(stringSeparator, currentElement);
+        }
+      }
+    }
+
+    return joinedString;
+  }
 
   tests({
     "1a) If array is empty, it should return an empty string.": function() {
-      fail();
-      // var joinedString = join([]);
-      // joinedString === "";
+      var joinedString = join([]);
+      eq(joinedString, "");
     },
 
     "2a) If no optionalSeparator, it should join indexes of array and separate elements with a comma.": function() {
-      fail();
-      // var joinedString = join(['a', 'b']);
-      // joinedString === "a,b";
+      var joinedString = join(["a", "b"]);
+      eq(joinedString, "a,b");
     },
 
     "3a) It should convert array indexes that are numbers, booleans or NaN to strings.": function() {
-      fail();
-      // var joinedNumbersBooleanNaNString = join([0, 1, 2, true, false, NaN]);
-      // joinedNumbersBooleanNaNString === "0,1,2,true,false,NaN";
+      var joinedNumbersBooleanNaNString = join([0, 1, 2, true, false, NaN]);
+      eq(joinedNumbersBooleanNaNString, "0,1,2,true,false,NaN");
     },
     "3b) It should convert array indexes that are null, undefined or empty to empty strings.": function() {
-      fail();
-      // var joinedEmptyNullUndefinedString = join(/*emptyIndex*/,null, undefined);
-      // joinedEmptyNullUndefinedString === ",,";
+      var joinedEmptyNullUndefinedString = join([, null, undefined]);
+      eq(joinedEmptyNullUndefinedString, ",,");
     },
     "3c) It should join nested arrays like parent array.": function() {
-      fail();
-      // var joinedNestedArray = join([[1, NaN, true, {}, undefined, null]]);
-      // joinedNestedArray === "1,NaN,true,[object Object],,";
+      var joinedNestedArray = join([[1, NaN, true, {}, undefined, null]]);
+      eq(joinedNestedArray, "1,NaN,true,[object Object],,");
     },
     "3d) It should convert array indexes that are objects to '[object Object]'.": function() {
-      fail();
-      // var joinedEmptyObjectString = join([{}]);
-      // joinedEmptyObjectString === "[object Object]";
-      // var joinedObjectWithKeyString = join([{ key: "value" }]);
-      // joinedObjectWithKeyString === "[object Object]";
+      var joinedEmptyObjectString = join([{}]);
+      eq(joinedEmptyObjectString, "[object Object]");
+      var joinedObjectWithKeyString = join([{ key: "value" }]);
+      eq(joinedObjectWithKeyString, "[object Object]");
     },
 
     "4a) If optionalSeparator, it should separate elements with optionalSeparator.": function() {
-      fail();
-      // var joinedString = join(['a', 'b'],'-');
-      // joinedString === "a-b"
+      var joinedString = join(["a", "b"], "-");
+      eq(joinedString, "a-b");
     },
 
     "5a) If optionalSeparator is undefined, it should separate elements with a comma.": function() {
-      fail();
-      // var joinedString = join(['a', 'b'], undefined);
-      // joinedString === "a,b"
+      var joinedString = join(["a", "b"], undefined);
+      eq(joinedString, "a,b");
     },
     "5b) If optionalSeparator is a number, boolean, NaN, or null, it should convert optionalSeparator to a string.": function() {
-      fail();
-      // var joinedNumberString = join(['a', 'b'], 1);
-      // joinedNumberString === "a1b"
-      // var joinedBooleanString = join(['a', 'b'], true);
-      // joinedBooleanString === "atrueb"
-      // var joinedNaNString = join(['a', 'b'], NaN);
-      // joinedNaNString === "aNaNb"
-      // var joinedNullString = join(['a', 'b'], null);
-      // joinedNullString === "anullb"
+      var joinedNumberString = join(["a", "b"], 1);
+      eq(joinedNumberString, "a1b");
+      var joinedBooleanString = join(["a", "b"], true);
+      eq(joinedBooleanString, "atrueb");
+      var joinedNaNString = join(["a", "b"], NaN);
+      eq(joinedNaNString, "aNaNb");
+      var joinedNullString = join(["a", "b"], null);
+      eq(joinedNullString, "anullb");
     },
     "5c) If optionalSeparator is an array, it should join optionalSeparator.": function() {
-      fail();
-      // var joinedString = join(["a", "b"], [1, NaN, true, {}, undefined, null]);
-      // joinedString === "a1,NaN,true,[object Object],,b";
+      var joinedString = join(["a", "b"], [1, NaN, true, {}, undefined, null]);
+      eq(joinedString, "a1,NaN,true,[object Object],,b");
     },
 
     // Question: How do you even test for array like objects?
