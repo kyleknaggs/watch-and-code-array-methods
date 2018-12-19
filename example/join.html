@@ -42,22 +42,15 @@
     var joinedString = "";
     var stringSeparator = ",";
 
-    // If array has more than one element:
     if (array.length > 0) {
-      if (currentElement === null || currentElement === undefined) {
-        joinedString = joinedString.concat("");
-      } else {
+      if (currentElement || currentElement === 0) {
         joinedString = joinedString.concat(currentElement);
       }
 
       arrayIndex++;
 
-      if (Number.isNaN(optionalSeparator)) {
-        stringSeparator = optionalSeparator.toString();
-      } else if (optionalSeparator === null) {
-        stringSeparator = "null";
-      } else if (optionalSeparator) {
-        stringSeparator = optionalSeparator;
+      if (arguments.length > 1 && optionalSeparator !== undefined) {
+        stringSeparator = "".concat(optionalSeparator);
       }
 
       for (var i = arrayIndex; i < array.length; i++) {
