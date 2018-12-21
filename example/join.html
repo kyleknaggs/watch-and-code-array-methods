@@ -93,6 +93,7 @@
     "3d) It should convert array indexes that are objects to '[object Object]'.": function() {
       var joinedEmptyObjectString = join([{}]);
       eq(joinedEmptyObjectString, "[object Object]");
+
       var joinedObjectWithKeyString = join([{ key: "value" }]);
       eq(joinedObjectWithKeyString, "[object Object]");
     },
@@ -113,10 +114,13 @@
     "5c) If optionalSeparator is a number, boolean, NaN, or null, it should convert optionalSeparator to a string.": function() {
       var joinedNumberString = join(["a", "b"], 1);
       eq(joinedNumberString, "a1b");
+
       var joinedBooleanString = join(["a", "b"], true);
       eq(joinedBooleanString, "atrueb");
+
       var joinedNaNString = join(["a", "b"], NaN);
       eq(joinedNaNString, "aNaNb");
+
       var joinedNullString = join(["a", "b"], null);
       eq(joinedNullString, "anullb");
     },
@@ -126,57 +130,18 @@
     },
 
     "6a) It should join indexes of an array like object.": function() {
-      fail();
+      function getJoinedStringFromArguments(argument1, argument2, argument3) {
+        var arrayLikeObject = arguments;
 
-      // Question: Has somebody confirmed that .join() works on array like objects as stated in:
-      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+        // Test for presence of array-like object:
+        eq(Array.isArray(arrayLikeObject), false);
+        eq(arrayLikeObject.length, 3);
 
-      // Test 1) Does .join() runs on arguments object in console:
-
-      // function createArgumentsObject() {
-      //   return arguments;
-      // }
-
-      // var argumentsObject = createArgumentsObject();
-      // var isArgumentsObjectArray = Array.isArray(argumentsObject);
-      // console.log(isArgumentsObjectArray);
-
-      // arguments.join(); /* >>> Uncaught TypeError: arguments.join is not a function */
-
-      // Test 2) Does .join() runs on array-like object returned by DOM methods:
-
-      // var unorderedList = document.createElement("ul");
-      // var body = document.querySelector("body");
-
-      // body.appendChild(unorderedList);
-      // var list = document.querySelector("ul");
-
-      // for (var i = 1; i < 4; i++) {
-      //   var listItem = document.createElement("li");
-      //   var textNode = document.createTextNode("list item: " + i);
-      //   listItem.appendChild(textNode);
-      //   list.appendChild(listItem);
-      // }
-
-      // var listItems = document.querySelectorAll("li");
-      // var isDOMNodeArray = Array.isArray(listItems);
-      // console.log(isDOMNodeArray);
-
-      // listItems.join(); /* >>> Uncaught TypeError: listItems.join is not a function */
+        var joinedString = join(arrayLikeObject);
+        return joinedString;
+      }
+      var joinedArgumentsString = getJoinedStringFromArguments(1, "a", true);
+      eq(joinedArgumentsString, "1,a,true");
     }
   });
-
-  // Notes on the requirements of an "array-like object":
-
-  // They look like arrays, but they are not actually arrays.
-
-  // Examples of array-like objects:
-  // e.g. 1: The NodeList returned by document.getElementsByTagName() & many other DOM methods.
-  // e.g. 2: The arguments object.
-  // ...these array-like objects look like arrays but do not share all of their methods.
-  // e.g. arguments has a length property but does not implement .forEach()
-
-  // It should have indexed access to elements and the property length.
-  // It should not have Array methods. (e.g. .push(), .forEach(), .indexOf() etc.)
-  // It is possible that array methods can be used on array like objects if they are borrowed from arrays via call().
 </script>
