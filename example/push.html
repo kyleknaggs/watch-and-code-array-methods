@@ -1,21 +1,99 @@
 <script src="../simpletest.js"></script>
 <script>
   // Summary:
+  // Adds one or more elements to the end of an array.
 
   // Example:
-  // push(); >>> ""
+  // var array = [1, 2, 3];
+  // push(array, 4) >>> array === [1, 2, 3, 4];
 
   // Prototype implementation:
-  // function push() {}
+  // var array = [1, 2, 3];
+
+  // function push(array, optionalElements) {
+  //   var indexToPushElement = array.length;
+
+  //   for (var i = 1; i < arguments.length; i++) {
+  //     var elementToPush = arguments[i];
+  //     array[indexToPushElement] = elementToPush;
+  //     indexToPushElement++;
+  //   }
+
+  //   return array.length;
+  // }
+
+  // push(array, 4, 5);
+  // console.log(array);
+  // console.log(array.length);
 
   // Function signature:
-  // push();
+  // push(array, optionalElements);
 
   // Arguments:
+  // optionalElements: Sequence of elements to add to the end of array.
+  // e.g. push([1], 2, 3, 4);
 
   // Return value:
+  // The new length of array.
 
   // Requirements:
+
+  // 1a) It should return the new length of array.
+  // var pushedValue = push([1]);
+  // eq(pushedValue, 1)
+
+  // 2a) It should add an element to the end of array.
+  // var array = [1];
+  // push(array, 2);
+  // eq(array.length, 2);
+  // eq(array[1], 2);
+
+  // 3a) It should modify array, instead of creating a new array.
+  // var array = [1];
+  // var duplicateArray = array;
+  // push(array, 2);
+  // eq(array, duplicateArray);
+
+  // 3b) It should add multiple elements to the end of array.
+  // var array = [1];
+  // push(array, 2, 3);
+  // eq(array[1], 2);
+  // eq(array[2], 3);
+  // eq(array.length, 3);
+
+  // 4a) If array is array-like object, it should work.
+  // TODO: Figure out how to get push() to work on an array-like object.
+
+  // 4b) If array is arguments, it should return typeError.
+  // var isTypeError = false;
+  // try {
+  //   function pushArguments() {
+  //     arguments.push(1);
+  //   }
+  //   pushArguments();
+  // } catch (e) {
+  //   isTypeError = e instanceof TypeError;
+  // }
+  // eq(isTypeError, true);
+
+  // 5a) If array is object, it should work.
+  // var testObject = {};
+  // var pushedObject = push(testObject, 1);
+  // eq(pushedObject[0], 1);
+
+  // 5b) It should be able to be used with apply().
+  // TODO: Figure out how to get push() to work with apply.
+
+  // It should rely on a length property to determine where to start inserting values.
+  // If length is not a number, use the index 0.
+  // If length is nonexistent, length will be created.
+
+  // Questions:
+  // TODO: 2) What is the apply() method?
+  // TODO: 3) Why or how does it rely on the length property to start inserting values?
+  // TODO: 4) How would length not be a number?
+  // TODO: 5) How would length be non-existent and how would length be created?
+  // TODO: 6) What does "strings are native" mean?
 
   // // Function Syntax:
   // function push() {}
