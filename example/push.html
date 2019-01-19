@@ -38,73 +38,108 @@
 
   // Requirements:
 
-  // 1a) It should return the new length of array.
-  // var pushedValue = push([1]);
-  // eq(pushedValue, 1)
-
-  // 2a) It should add an element to the end of array.
-  // var array = [1];
-  // push(array, 2);
-  // eq(array.length, 2);
-  // eq(array[1], 2);
-
-  // 3a) It should modify array, instead of creating a new array.
-  // var array = [1];
-  // var duplicateArray = array;
-  // push(array, 2);
-  // eq(array, duplicateArray);
-
-  // 3b) It should add multiple elements to the end of array.
-  // var array = [1];
-  // push(array, 2, 3);
-  // eq(array[1], 2);
-  // eq(array[2], 3);
-  // eq(array.length, 3);
-
-  // 4a) If array is array-like object, it should work.
-  // TODO: Figure out how to get push() to work on an array-like object.
-
-  // 4b) If array is arguments, it should return typeError.
-  // var isTypeError = false;
-  // try {
-  //   function pushArguments() {
-  //     arguments.push(1);
-  //   }
-  //   pushArguments();
-  // } catch (e) {
-  //   isTypeError = e instanceof TypeError;
-  // }
-  // eq(isTypeError, true);
-
-  // 5a) If array is object, it should work.
-  // var testObject = {};
-  // var pushedObject = push(testObject, 1);
-  // eq(pushedObject[0], 1);
-
-  // 5b) It should be able to be used with apply().
-  // TODO: Figure out how to get push() to work with apply.
-
-  // It should rely on a length property to determine where to start inserting values.
-  // If length is not a number, use the index 0.
-  // If length is nonexistent, length will be created.
-
-  // Questions:
-  // TODO: 2) What is the apply() method?
-  // TODO: 3) Why or how does it rely on the length property to start inserting values?
-  // TODO: 4) How would length not be a number?
-  // TODO: 5) How would length be non-existent and how would length be created?
-  // TODO: 6) What does "strings are native" mean?
-
   // // Function Syntax:
   // function push() {}
-
   tests({
-    "1": function() {
+    "1a) It should return the new length of the modified array.": function() {
       fail();
+      // var pushedValue = push([1]);
+      // eq(pushedValue, 1)
     },
-
-    "2": function() {
+    "2a) It should add an element to the end of array.": function() {
       fail();
+      // var array = [1];
+      // push(array, 2);
+      // eq(array.length, 2);
+      // eq(array[1], 2);
+    },
+    "3a) It should modify array, instead of creating a new array.": function() {
+      fail();
+      // var array = [1];
+      // var duplicateArray = array;
+      // push(array, 2);
+      // eq(array, duplicateArray);
+    },
+    "3b) It should add multiple elements to the end of array.": function() {
+      fail();
+      // var array = [1];
+      // push(array, 2, 3);
+      // eq(array[1], 2);
+      // eq(array[2], 3);
+      // eq(array.length, 3);
+    },
+    "4b) If array is an array like object, it should return typeError.": function() {
+      fail();
+      // var isTypeError = false;
+      // try {
+      //   function pushArguments() {
+      //     arguments.push(1);
+      //   }
+      //   pushArguments();
+      // } catch (e) {
+      //   isTypeError = e instanceof TypeError;
+      // }
+      // eq(isTypeError, true);
+    },
+    "5a) It should be able to be used with apply().": function() {
+      fail();
+      // var array = [0];
+      // var argumentArray = [1]
+      // array.push.apply(argumentArray)
+      // eq(array.length, 2);
+      // eq(array[0], 0);
+      // eq(array[1], 1);
+    },
+    "5b) It should be able to be used with call().": function() {
+      fail();
+      // var array = [0];
+      // array.push.call(1);
+      // eq(array.length, 2);
+      // eq(array[0], 0);
+      // eq(array[1], 1);
+    },
+    "6a) If array is object, it should work when used with call.": function() {
+      fail();
+      // var testObject = {};
+      // var pushedObject = push.call(testObject, 0);
+      // eq(pushedObject[0], 0);
+      // eq(pushedObject.length, 1);
+    },
+    "7a) It object has length, and length is a number, use the index length.": function() {
+      fail();
+      // var testObjectWhereLengthNotZero = {
+      //   length: 10
+      // };
+      // push.call(testObjectWhereLengthNotZero, "a");
+      // eq(testObjectWhereLengthNotZero[10], "a");
+      // eq(testObjectWhereLengthNotZero.length, 11);
+    },
+    "7b) It object has length, and length is 0, use the index 0.": function() {
+      fail();
+      // var testObjectWhereLengthIsZero = {
+      //   length: 0
+      // };
+      // push.call(testObjectWhereLengthIsZero, "a");
+      // eq(testObjectWhereLengthIsZero[0], "a");
+      // eq(testObjectWhereLengthIsZero.length, 1);
+    },
+    "7c) If object has length, but length is not a number, use the index 0.": function() {
+      fail();
+      // var testObjectWhereLengthNotNumber = {
+      //   length: "string"
+      // };
+      // push.call(testObjectWhereLengthNotNumber, "a");
+      // eq(testObjectWhereLengthNotNumber[0], "a");
+      // eq(testObjectWhereLengthNotNumber.length, 1);
+    },
+    "7d) If object does not have length, create length property.": function() {
+      fail();
+      // var testObjectWithoutLength = {
+      //   key: 'value'
+      // };
+      // eq(testObjectWithoutLength, undefined);
+      // push.call(testObjectWithoutLength, 'a');
+      // eq(testObjectWithoutLength.length, 1);
     }
   });
 </script>
