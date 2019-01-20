@@ -39,56 +39,80 @@
   // Requirements:
 
   // // Function Syntax:
-  // function push() {}
+  function push(array, element) {
+    if (Array.isArray(array) === false) {
+      // Unsure of what messages to trigger along with typeError
+      throw new TypeError("");
+    }
+
+    var indexToPushElement = array.length;
+
+    for (var i = 1; i < arguments.length; i++) {
+      var elementToPush = arguments[i];
+      array[indexToPushElement] = elementToPush;
+      indexToPushElement++;
+    }
+
+    return array.length;
+  }
+
   tests({
-    "1a) It should return the new length of the modified array.": function() {
-      fail();
-      // var pushedValue = push([1]);
-      // eq(pushedValue, 1)
+    "1a) It should return a number.": function() {
+      var pushedValue = push([1]);
+      eq(typeof pushedValue === "number", true);
     },
-    "2a) It should add an element to the end of array.": function() {
-      fail();
-      // var array = [1];
-      // push(array, 2);
-      // eq(array.length, 2);
-      // eq(array[1], 2);
+
+    "2a) If array.length === 1, it should add an element to the end of array.": function() {
+      var arrayWithOneElement = [1];
+      push(arrayWithOneElement, 2);
+      eq(arrayWithOneElement.length, 2);
+      eq(arrayWithOneElement[1], 2);
     },
+    "2b) If array.length > 1, it should add an element to the end of array.": function() {
+      var arrayWithMultipleElements = [1, 2];
+      push(arrayWithMultipleElements, 3);
+      eq(arrayWithMultipleElements.length, 3);
+      eq(arrayWithMultipleElements[2], 3);
+    },
+    "2c) It should add multiple elements to the end of array.": function() {
+      var array = [1];
+      push(array, 2, 3);
+      eq(array[1], 2);
+      eq(array[2], 3);
+      eq(array.length, 3);
+    },
+
     "3a) It should modify array, instead of creating a new array.": function() {
-      fail();
-      // var array = [1];
-      // var duplicateArray = array;
-      // push(array, 2);
-      // eq(array, duplicateArray);
+      var array = [1];
+      var duplicateArray = array;
+      push(array, 2);
+      eq(array, duplicateArray);
     },
-    "3b) It should add multiple elements to the end of array.": function() {
-      fail();
-      // var array = [1];
-      // push(array, 2, 3);
-      // eq(array[1], 2);
-      // eq(array[2], 3);
-      // eq(array.length, 3);
+    "3b) It should return the new length of the modified array.": function() {
+      var pushedValue = push([1, 2]);
+      eq(pushedValue, 2);
     },
+
     "4b) If array is an array like object, it should return typeError.": function() {
-      fail();
-      // var isTypeError = false;
-      // try {
-      //   function pushArguments() {
-      //     arguments.push(1);
-      //   }
-      //   pushArguments();
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      // TODO: Test different possible messages to be triggered with typeError.
+      var isTypeError = false;
+      try {
+        function pushArguments() {
+          push(arguments, 1);
+        }
+        pushArguments();
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     },
     "5a) It should be able to be used with apply().": function() {
-      fail();
-      // var array = [0];
-      // var argumentArray = [1]
-      // array.push.apply(argumentArray)
-      // eq(array.length, 2);
-      // eq(array[0], 0);
-      // eq(array[1], 1);
+      var array = [0];
+      var argumentArray = [1];
+      array.push.apply(argumentArray);
+      eq(array.length, 2);
+      eq(array[0], 0);
+      eq(array[1], 1);
     },
     "5b) It should be able to be used with call().": function() {
       fail();
