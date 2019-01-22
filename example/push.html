@@ -38,11 +38,14 @@
 
   // Requirements:
 
-  // // Function Syntax:
+  // Function Syntax:
   function push(array, element) {
-    if (Array.isArray(array) === false) {
-      // Unsure of what messages to trigger along with typeError
-      throw new TypeError("");
+
+    // if this argument is not window because it has been manually set
+    if () {
+      // copy arguments array
+      // add this to the beginning of the arguments array
+      // run the function
     }
 
     var indexToPushElement = array.length;
@@ -88,40 +91,28 @@
       push(array, 2);
       eq(array, duplicateArray);
     },
-    "3b) It should return the new length of the modified array.": function() {
+    "4a) It should return the new length of the modified array.": function() {
       var pushedValue = push([1, 2]);
       eq(pushedValue, 2);
     },
 
-    "4b) If array is an array like object, it should return typeError.": function() {
-      // TODO: Test different possible messages to be triggered with typeError.
-      var isTypeError = false;
-      try {
-        function pushArguments() {
-          push(arguments, 1);
-        }
-        pushArguments();
-      } catch (e) {
-        isTypeError = e instanceof TypeError;
-      }
-      eq(isTypeError, true);
-    },
-    "5a) It should be able to be used with apply().": function() {
+    "5a) It should be able to be used with call().": function() {
       var array = [0];
-      var argumentArray = [1];
-      array.push.apply(argumentArray);
+      push.call(array, 1);
       eq(array.length, 2);
       eq(array[0], 0);
       eq(array[1], 1);
     },
-    "5b) It should be able to be used with call().": function() {
+    "5b) It should be able to be used with apply().": function() {
       fail();
       // var array = [0];
-      // array.push.call(1);
+      // var argumentArray = [1];
+      // array.push.apply(argumentArray);
       // eq(array.length, 2);
       // eq(array[0], 0);
       // eq(array[1], 1);
     },
+
     "6a) If array is object, it should work when used with call.": function() {
       fail();
       // var testObject = {};
@@ -129,7 +120,8 @@
       // eq(pushedObject[0], 0);
       // eq(pushedObject.length, 1);
     },
-    "7a) It object has length, and length is a number, use the index length.": function() {
+
+    "7a) It object has length, and length is a number, begin insertion at index length.": function() {
       fail();
       // var testObjectWhereLengthNotZero = {
       //   length: 10
@@ -164,6 +156,67 @@
       // eq(testObjectWithoutLength, undefined);
       // push.call(testObjectWithoutLength, 'a');
       // eq(testObjectWithoutLength.length, 1);
+    },
+
+    "8a) If array is a string, null or undefined, it should return typeError.": function() {
+      // TODO: Test different possible messages to be triggered with typeError.
+      fail();
+      // var isTypeError = false;
+      // debugger;
+
+      // try {
+      //   function pushArguments() {
+      //     push.call(null, 1);
+      //   }
+      //   pushArguments();
+      // } catch (e) {
+      //   isTypeError = e instanceof TypeError;
+      // }
+      // eq(isTypeError, true);
     }
   });
+
+  /*
+
+  // SPECS:
+
+  // 1) Let O be the result of calling ToObject passing the this value as an argument
+  // TODO: What is ToObject?
+  let O = toObject(this);
+  // 2) Let lenVal be the result of calling the [[Get]] internal method of O with argument "length".
+  // TODO: What is an internal method?
+  // TODO: What is a get method?
+  let lenVal = O.get(O.length);
+  // 3) Let n be ToUint32(lenVal).
+  // TODO: What is ToUnit32?
+  n = ToUint32(lenVal);
+  // 4) Let items be an internal List whose elements are, in left to right order, the arguments that were passed to this function invocation
+  let items = arguments;
+  // 5) Repeat, while items is not empty
+  while (items.length < 0) {
+    // a. Remove the first element from items and let E be the value of the element.
+    let E = items[i];
+    items.shift();
+    // b. Call the [[Put]] internal method of O with arguments ToString(n), E, and true.
+    // TODO: What is the Put internal method?
+    O.put(ToString(n), E, true);
+    // c. Increase n by 1.
+    n++;
+  }
+  // 6) Call the [[Put]] internal method of O with arguments "length", n, and true.
+  // TODO: What does the bold "length" text mean?
+  O.put(O.length, n, true);
+  // 7) Return n.
+  return n;
+
+  // var testArray = [0, 1];
+  // var testNumberElement = 0;
+  // var testStringElement = "string";
+  // var testBooleanElement = true;
+  // var testNullElement = null;
+  // var testUndefinedElement = undefined;
+  // var testArrayElement = [];
+  // var testObjectElement = {};
+
+  */
 </script>
