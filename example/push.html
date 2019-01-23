@@ -43,7 +43,9 @@
     var indexOfElementToBePushed, objectToModify;
 
     // If .call() or .apply was used to manually set the this value:
-    if (Object.prototype.toString.call(this) !== "[object Window]") {
+    if (Object.prototype.toString.call(this) !== "[object String]") {
+      throw new TypeError("");
+    } else if (Object.prototype.toString.call(this) !== "[object Window]") {
       objectToModify = this;
       indexOfElementToBePushed = 0;
     } else {
@@ -62,9 +64,9 @@
       var elementToPush = arguments[i];
       objectToModify[indexToPushElement] = elementToPush;
       indexToPushElement++;
+      objectToModify.length = indexToPushElement;
     }
 
-    objectToModify.length = indexToPushElement;
     return objectToModify.length;
   }
 
@@ -162,21 +164,17 @@
       eq(testObjectWithoutLength.length, 1);
     },
 
-    "8a) If array is a string, null or undefined, it should return typeError.": function() {
-      // TODO: Test different possible messages to be triggered with typeError.
-      fail();
-      // var isTypeError = false;
-      // debugger;
-
-      // try {
-      //   function pushArguments() {
-      //     push.call(null, 1);
-      //   }
-      //   pushArguments();
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+    "8a) If array is a string it should return typeError.": function() {
+      var isTypeError = false;
+      try {
+        function pushArguments() {
+          push.call("string", 1);
+        }
+        pushArguments();
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     }
   });
 
