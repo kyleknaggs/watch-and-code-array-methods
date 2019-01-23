@@ -39,24 +39,33 @@
   // Requirements:
 
   // Function Syntax:
-  function push(array, element) {
+  function push(originalArguments) {
+    var indexOfElementToBePushed, objectToModify;
 
-    // if this argument is not window because it has been manually set
-    if () {
-      // copy arguments array
-      // add this to the beginning of the arguments array
-      // run the function
+    // If .call() or .apply was used to manually set the this value:
+    if (Object.prototype.toString.call(this) !== "[object Window]") {
+      objectToModify = this;
+      indexOfElementToBePushed = 0;
+    } else {
+      objectToModify = arguments[0];
+      indexOfElementToBePushed = 1;
     }
 
-    var indexToPushElement = array.length;
+    // If the length property is not a number:
+    if (isNaN(objectToModify.length)) {
+      objectToModify.length = 0;
+    }
 
-    for (var i = 1; i < arguments.length; i++) {
+    var indexToPushElement = objectToModify.length;
+
+    for (var i = indexOfElementToBePushed; i < arguments.length; i++) {
       var elementToPush = arguments[i];
-      array[indexToPushElement] = elementToPush;
+      objectToModify[indexToPushElement] = elementToPush;
       indexToPushElement++;
     }
 
-    return array.length;
+    objectToModify.length = indexToPushElement;
+    return objectToModify.length;
   }
 
   tests({
@@ -104,58 +113,53 @@
       eq(array[1], 1);
     },
     "5b) It should be able to be used with apply().": function() {
-      fail();
-      // var array = [0];
-      // var argumentArray = [1];
-      // array.push.apply(argumentArray);
-      // eq(array.length, 2);
-      // eq(array[0], 0);
-      // eq(array[1], 1);
+      var array = [0];
+      var argumentArray = [1, 2];
+      push.apply(array, argumentArray);
+      eq(array.length, 3);
+      eq(array[0], 0);
+      eq(array[1], 1);
+      eq(array[2], 2);
     },
 
     "6a) If array is object, it should work when used with call.": function() {
-      fail();
-      // var testObject = {};
-      // var pushedObject = push.call(testObject, 0);
-      // eq(pushedObject[0], 0);
-      // eq(pushedObject.length, 1);
+      var testObject = {};
+      push.call(testObject, 0);
+      eq(testObject[0], 0);
+      eq(testObject.length, 1);
     },
 
     "7a) It object has length, and length is a number, begin insertion at index length.": function() {
-      fail();
-      // var testObjectWhereLengthNotZero = {
-      //   length: 10
-      // };
-      // push.call(testObjectWhereLengthNotZero, "a");
-      // eq(testObjectWhereLengthNotZero[10], "a");
-      // eq(testObjectWhereLengthNotZero.length, 11);
+      var testObjectWhereLengthNotZero = {
+        length: 10
+      };
+      push.call(testObjectWhereLengthNotZero, "a");
+      eq(testObjectWhereLengthNotZero[10], "a");
+      eq(testObjectWhereLengthNotZero.length, 11);
     },
     "7b) It object has length, and length is 0, use the index 0.": function() {
-      fail();
-      // var testObjectWhereLengthIsZero = {
-      //   length: 0
-      // };
-      // push.call(testObjectWhereLengthIsZero, "a");
-      // eq(testObjectWhereLengthIsZero[0], "a");
-      // eq(testObjectWhereLengthIsZero.length, 1);
+      var testObjectWhereLengthIsZero = {
+        length: 0
+      };
+      push.call(testObjectWhereLengthIsZero, "a");
+      eq(testObjectWhereLengthIsZero[0], "a");
+      eq(testObjectWhereLengthIsZero.length, 1);
     },
     "7c) If object has length, but length is not a number, use the index 0.": function() {
-      fail();
-      // var testObjectWhereLengthNotNumber = {
-      //   length: "string"
-      // };
-      // push.call(testObjectWhereLengthNotNumber, "a");
-      // eq(testObjectWhereLengthNotNumber[0], "a");
-      // eq(testObjectWhereLengthNotNumber.length, 1);
+      var testObjectWhereLengthNotNumber = {
+        length: "string"
+      };
+      push.call(testObjectWhereLengthNotNumber, "a");
+      eq(testObjectWhereLengthNotNumber[0], "a");
+      eq(testObjectWhereLengthNotNumber.length, 1);
     },
     "7d) If object does not have length, create length property.": function() {
-      fail();
-      // var testObjectWithoutLength = {
-      //   key: 'value'
-      // };
-      // eq(testObjectWithoutLength, undefined);
-      // push.call(testObjectWithoutLength, 'a');
-      // eq(testObjectWithoutLength.length, 1);
+      var testObjectWithoutLength = {
+        key: "value"
+      };
+      eq(testObjectWithoutLength.length, undefined);
+      push.call(testObjectWithoutLength, "a");
+      eq(testObjectWithoutLength.length, 1);
     },
 
     "8a) If array is a string, null or undefined, it should return typeError.": function() {
