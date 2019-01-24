@@ -175,48 +175,4 @@
       eq(isTypeError, true);
     }
   });
-
-  /*
-
-  // SPECS:
-
-  // 1) Let O be the result of calling ToObject passing the this value as an argument
-  // TODO: What is ToObject?
-  let O = toObject(this);
-  // 2) Let lenVal be the result of calling the [[Get]] internal method of O with argument "length".
-  // TODO: What is an internal method?
-  // TODO: What is a get method?
-  let lenVal = O.get(O.length);
-  // 3) Let n be ToUint32(lenVal).
-  // TODO: What is ToUnit32?
-  n = ToUint32(lenVal);
-  // 4) Let items be an internal List whose elements are, in left to right order, the arguments that were passed to this function invocation
-  let items = arguments;
-  // 5) Repeat, while items is not empty
-  while (items.length < 0) {
-    // a. Remove the first element from items and let E be the value of the element.
-    let E = items[i];
-    items.shift();
-    // b. Call the [[Put]] internal method of O with arguments ToString(n), E, and true.
-    // TODO: What is the Put internal method?
-    O.put(ToString(n), E, true);
-    // c. Increase n by 1.
-    n++;
-  }
-  // 6) Call the [[Put]] internal method of O with arguments "length", n, and true.
-  // TODO: What does the bold "length" text mean?
-  O.put(O.length, n, true);
-  // 7) Return n.
-  return n;
-
-  // var testArray = [0, 1];
-  // var testNumberElement = 0;
-  // var testStringElement = "string";
-  // var testBooleanElement = true;
-  // var testNullElement = null;
-  // var testUndefinedElement = undefined;
-  // var testArrayElement = [];
-  // var testObjectElement = {};
-
-  */
 </script>
