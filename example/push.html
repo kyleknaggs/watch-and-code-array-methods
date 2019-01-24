@@ -40,17 +40,15 @@
 
   // Function Syntax:
   function push(originalArguments) {
-    var indexOfElementToBePushed, objectToModify;
+    var objectToModify = arguments[0];
+    var indexOfElementToBePushed = 1;
 
-    // If .call() or .apply was used to manually set the this value:
-    if (Object.prototype.toString.call(this) !== "[object String]") {
+    // If call or apply was used to manually set this:
+    if (Object.prototype.toString.call(this) === "[object String]") {
       throw new TypeError("");
     } else if (Object.prototype.toString.call(this) !== "[object Window]") {
       objectToModify = this;
       indexOfElementToBePushed = 0;
-    } else {
-      objectToModify = arguments[0];
-      indexOfElementToBePushed = 1;
     }
 
     // If the length property is not a number:
