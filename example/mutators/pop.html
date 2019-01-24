@@ -1,23 +1,99 @@
 <script src="../../simpletest.js"></script>
 <script>
   // Summary:
+  // Removes the last element from an array and returns that element.
 
   // Example:
+  // pop([0, 1]);
 
   // Prototype implementation:
   // function pop() {
   // }
 
-  // pop();
+  // pop(array);
 
   // Function signature:
-  // pop();
+  // pop(array);
 
   // Arguments:
+  // None
 
   // Return value:
+  // If the array is empty pop() should return undefined.
+  // Else pop() should return the element that has been removed.
 
   // Requirements:
+
+  // 1a) It should remove the last element from the array.
+
+  // 2a) If array is not empty, it should return the value of the element that was removed.
+  // 2b) If array is empty it should return undefined.
+
+  // 3a) If the element that was removed was an empty index , it should return undefined.
+
+  // 4a) It should be possible to call pop() using call().
+  // 4b) It should be possible to call pop() using apply ().
+
+  // TODO: Refactor statements into requirements
+  // pop() is intentionally generic; it can be used with .call() or .apply() on objects that resemble arrays
+  // Objects which do not contain a length property reflecting the last in a series of consecutive, zero-based numerical properties may not behave in any meaningful manner.
+
+  // 7a) If object has no length property, set object.length to 0 and return undefined.
+  // var object = {};
+  // Array.prototype.pop.call(object);
+  // >>> object = {length: 0} && return undefined
+
+  // 7b) If object.length <= 1, return undefined.
+  // var object = {length: 1};
+  // Array.prototype.pop.call(object);
+  // >>> object.length === 0 && return undefined
+
+  // 7c) If object.length > 1, round object.length down to nearest whole number, reduce by 1 and return undefined.
+  // var object = {length: 2.1};
+  // Array.prototype.pop.call(object);
+  // >>> object.length === 1 && return undefined
+
+  // 7d) If called on string throw TypeError.
+  // var string = "string";
+  // Array.prototype.pop.call(string);
+  // >>> "Uncaught TypeError: Cannot delete property '5' of [object String]"
+
+  // 7e) If called on arguments throw TypeError.
+  // function printArgume nts() {
+  //   arguments.pop();
+  // }
+  // printArguments(1, 2, 3);
+  // >>> Uncaught TypeError: arguments.pop is not a function
+
+  // Note: It removes the value at the index specified by the value of object.length.
+
+  // 7f)
+  // var object = {
+  //   0: 0,
+  //   length: 1
+  // };
+  // Array.prototype.pop.call(object);
+  // {
+  //   length: 0;
+  // }
+
+  // 7g)
+  // var object = {
+  //   0: 0,
+  //   length: 2
+  // };
+  // {0: 0, length: 1}
+
+  // TODO:
+  // 1) What is an array-like object?
+  // Look like arrays, but are objects, not arrays.
+  // Have various numbered elements and a length property.
+  // Do not have any of array's native functions and they do not work when used with a for in loop.
+  // Examples of array-like objects: arguments, DOM methods that return a list of items.
+  // 2)What if called on arguments?
+  // Throws a TypeErrror
+
+  //
 
   // Function Syntax:
   // function pop() {}
@@ -31,4 +107,23 @@
       fail();
     }
   });
+
+  /*
+  var object = {};
+
+  Array.prototype.push.call(object, 0);
+  // console.log(object); >>> { 0: 0, length: 1 }
+  Array.prototype.pop.call(object);
+  // console.log(object); >>> { 0: 0, length: 1 }
+
+  // -----------
+  var object = {};
+
+  object[0] = 0;
+  // console.log(object); >>> {0: 0}
+  Array.prototype.pop.call(object);
+  // console.log(object); >>> {0: 0, length: 0}
+  object[0] = 1;
+  // console.log(object); >>> {0: 0, length: 0}
+  */
 </script>
