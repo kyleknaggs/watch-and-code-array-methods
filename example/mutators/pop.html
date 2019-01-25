@@ -4,126 +4,190 @@
   // Removes the last element from an array and returns that element.
 
   // Example:
-  // pop([0, 1]);
+  // var array = [0,1]
+  // pop(array);
+  // >>> returns 1
+  // >>> array = [0]
 
   // Prototype implementation:
-  // function pop() {
-  // }
+  // function pop(array) {
+  //   var indexOfElementToPop = array.length - 1;
+  //   var poppedElement = array[indexOfElementToPop];
 
-  // pop(array);
+  //   array.length = indexOfElementToPop;
+
+  //   return poppedElement;
+  // }
 
   // Function signature:
   // pop(array);
 
   // Arguments:
-  // None
+  // Array
 
   // Return value:
-  // If the array is empty pop() should return undefined.
-  // Else pop() should return the element that has been removed.
-
-  // Requirements:
-
-  // 1a) It should remove the last element from the array.
-
-  // 2a) If array is not empty, it should return the value of the element that was removed.
-  // 2b) If array is empty it should return undefined.
-
-  // 3a) If the element that was removed was an empty index , it should return undefined.
-
-  // 4a) It should be possible to call pop() using call().
-  // 4b) It should be possible to call pop() using apply ().
-
-  // TODO: Refactor statements into requirements
-  // pop() is intentionally generic; it can be used with .call() or .apply() on objects that resemble arrays
-  // Objects which do not contain a length property reflecting the last in a series of consecutive, zero-based numerical properties may not behave in any meaningful manner.
-
-  // 7a) If object has no length property, set object.length to 0 and return undefined.
-  // var object = {};
-  // Array.prototype.pop.call(object);
-  // >>> object = {length: 0} && return undefined
-
-  // 7b) If object.length <= 1, return undefined.
-  // var object = {length: 1};
-  // Array.prototype.pop.call(object);
-  // >>> object.length === 0 && return undefined
-
-  // 7c) If object.length > 1, round object.length down to nearest whole number, reduce by 1 and return undefined.
-  // var object = {length: 2.1};
-  // Array.prototype.pop.call(object);
-  // >>> object.length === 1 && return undefined
-
-  // 7d) If called on string throw TypeError.
-  // var string = "string";
-  // Array.prototype.pop.call(string);
-  // >>> "Uncaught TypeError: Cannot delete property '5' of [object String]"
-
-  // 7e) If called on arguments throw TypeError.
-  // function printArgume nts() {
-  //   arguments.pop();
-  // }
-  // printArguments(1, 2, 3);
-  // >>> Uncaught TypeError: arguments.pop is not a function
-
-  // Note: It removes the value at the index specified by the value of object.length.
-
-  // 7f)
-  // var object = {
-  //   0: 0,
-  //   length: 1
-  // };
-  // Array.prototype.pop.call(object);
-  // {
-  //   length: 0;
-  // }
-
-  // 7g)
-  // var object = {
-  //   0: 0,
-  //   length: 2
-  // };
-  // {0: 0, length: 1}
-
-  // TODO:
-  // 1) What is an array-like object?
-  // Look like arrays, but are objects, not arrays.
-  // Have various numbered elements and a length property.
-  // Do not have any of array's native functions and they do not work when used with a for in loop.
-  // Examples of array-like objects: arguments, DOM methods that return a list of items.
-  // 2)What if called on arguments?
-  // Throws a TypeErrror
-
-  //
+  // If no element has been removed, pop should return undefined.
+  // If an element has been removed, pop() should return that element.
 
   // Function Syntax:
   // function pop() {}
 
+  // Requirements:
+
   tests({
-    "1a)": function() {
+    "1a) It should remove the last element from array.": function() {
       fail();
+      // var array = [0, 1];
+      // pop(array);
+      // eq(array.length, 1);
+      // eq(array[0], 0);
     },
 
-    "2a)": function() {
+    "2a) If array is not empty, it should return the value of the element that was removed.": function() {
+      fail();
+      // var array = [0, 1];
+      // var popppedElement = pop(array);
+      // eq(popppedElement, 1);
+    },
+    "2b) If array is empty it should return undefined.": function() {
+      fail();
+      // var array = [];
+      // var popppedElement = pop(array);
+      // eq(array.length, 0);
+      // eq(popppedElement, undefined);
+    },
+
+    "3a) If the element that was removed was an empty index, it should remove the empty index.": function() {
+      fail();
+      // var array = [0,,];
+      // pop(array);
+      // eq(array.length, 1);
+    },
+    "3b) If the element that was removed was an empty index, it should return undefined.": function() {
+      fail();
+      // var array = [0,,];
+      // var poppedElement = pop(array);
+      // eq(poppedElement, undefined);
+    },
+
+    "4a) It should pop when invoked using call().": function() {
+      fail();
+      // var array = [0, 1];
+      // var poppedElement = pop.call(array);
+      // eq(array[0], 0);
+      // eq(array.length, 1);
+      // eq(poppedElement, 1);
+    },
+    "4b) It should pop when invoked using apply().": function() {
+      fail();
+      // var array = [0, 1];
+      // var poppedElement = pop.apply(array);
+      // eq(array[0], 0);
+      // eq(array.length, 1);
+      // eq(poppedElement, 1);
+    },
+
+    // When used with array-like objects:
+
+    "5a) If object.length does not exist, set object.length to 0.": function() {
+      fail();
+      // var object = {};
+      // pop.call(object);
+      // eq(object.length, 0);
+    },
+
+    "6a) If object.length exists, object.length is a number and object.length > 0, reduce the length key by 1.": function() {
+      fail();
+      // var object = {length: 1};
+      // pop.call(object);
+      // eq(object.length, 0);
+    },
+    "6b) If object.length exists, object.length is a number and object.length <= 0, set object.length to 0.": function() {
+      fail();
+      // var object = {length: -10};
+      // pop.call(object);
+      // eq(object.length, 0)
+    },
+    "6c) If object.length exists and object.length is not a number, convert object.length to number and reduce object.length by 1.": function() {
+      fail();
+      // var object = {length: '10'};
+      // pop.call(object);
+      // eq(object.length, 9)
+    },
+    "6d) If object.length exists, object.length is not a number, and object.length cannot be converted to a number set object.length to 0.": function() {
+      fail();
+      // var object = {length: 'string'};
+      // pop.call(object);
+      // eq(object.length, 0)
+    },
+
+    // var object = {
+    //   0: 0,
+    //   1: 1,
+    //   length: 2
+    // };
+    // pop.call(object);
+    // var keysInObject = Object.keys(object);
+    // eq(keysInObject.length, 2);
+    // eq(keysInObject[0], 0);
+    // eq(keysInObject[1], length);
+    // eq(object.length, 1);
+
+    "7a) If object[length-1] exists, it remove last numerated key from object.": function() {
+      fail();
+      // var object = {
+      //   0: 0,
+      //   1: 1,
+      //   length: 2
+      // };
+      // pop.call(object);
+      // eq(object[2], undefined);
+    },
+    "7b) If object[length-1] does not exist, it should not remove last numerated key from object": function() {
+      fail();
+      // var object = {
+      //   0: 0,
+      //   1: 1,
+      //   length: 3
+      // };
+      // pop.call(object);
+      // eq(object[1], 1);
+    },
+
+    "8a) If object[length-1] exists, return value of key that was removed.": function() {
+      fail();
+      // var object = {
+      //   0: 0,
+      //   1: 1,
+      //   length: 2
+      // };
+      // var poppedElement = pop.call(object);
+      // eq(poppedElement, 1);
+    },
+    "8b) If object[length-1] does not exist, it should return undefined.": function() {
+      fail();
+      // var object = {
+      //   0: 0,
+      //   1: 1,
+      //   length: 3
+      // };
+      // var poppedElement = pop.call(object);
+      // eq(poppedElement, undefined);
+    },
+
+    // Edge cases:
+
+    "9a) It should throw a type error when called on a string.": function() {
+      fail();
+    },
+    "9b) It should throw a type error when called on null.": function() {
+      fail();
+    },
+    "9c) It should throw a type error when called on undefined.": function() {
+      fail();
+    },
+    "9d) It should throw a type error when called on arguments.": function() {
       fail();
     }
   });
-
-  /*
-  var object = {};
-
-  Array.prototype.push.call(object, 0);
-  // console.log(object); >>> { 0: 0, length: 1 }
-  Array.prototype.pop.call(object);
-  // console.log(object); >>> { 0: 0, length: 1 }
-
-  // -----------
-  var object = {};
-
-  object[0] = 0;
-  // console.log(object); >>> {0: 0}
-  Array.prototype.pop.call(object);
-  // console.log(object); >>> {0: 0, length: 0}
-  object[0] = 1;
-  // console.log(object); >>> {0: 0, length: 0}
-  */
 </script>
