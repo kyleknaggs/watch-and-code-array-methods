@@ -30,83 +30,97 @@
   // If an element has been removed, pop() should return that element.
 
   // Function Syntax:
-  // function pop() {}
+  function pop(array) {
+    var objectToModify;
+
+    // If the value of this is manually set using .call() or .apply()
+    if (this.toString() !== "[object Window]") {
+      objectToModify = this;
+    } else {
+      objectToModify = array;
+    }
+
+    // If object.length does not exist set object.length to 0.
+    if (!objectToModify.length || objectToModify.length <= 0) {
+      objectToModify.length = 0;
+    }
+
+    var indexOfElementToPop = objectToModify.length - 1;
+    var poppedElement = objectToModify[indexOfElementToPop];
+
+    // If array is not empty remove element.
+    if (indexOfElementToPop >= 0) {
+      objectToModify.length = indexOfElementToPop;
+    }
+
+    return poppedElement;
+  }
 
   // Requirements:
 
   tests({
     "1a) It should remove the last element from array.": function() {
-      fail();
-      // var array = [0, 1];
-      // pop(array);
-      // eq(array.length, 1);
-      // eq(array[0], 0);
+      var array = [0, 1];
+      pop(array);
+      eq(array.length, 1);
+      eq(array[0], 0);
     },
 
     "2a) If array is not empty, it should return the value of the element that was removed.": function() {
-      fail();
-      // var array = [0, 1];
-      // var popppedElement = pop(array);
-      // eq(popppedElement, 1);
+      var array = [0, 1];
+      var popppedElement = pop(array);
+      eq(popppedElement, 1);
     },
     "2b) If array is empty it should return undefined.": function() {
-      fail();
-      // var array = [];
-      // var popppedElement = pop(array);
-      // eq(array.length, 0);
-      // eq(popppedElement, undefined);
+      var array = [];
+      var popppedElement = pop(array);
+      eq(array.length, 0);
+      eq(popppedElement, undefined);
     },
 
     "3a) If the element that was removed was an empty index, it should remove the empty index.": function() {
-      fail();
-      // var array = [0,,];
-      // pop(array);
-      // eq(array.length, 1);
+      var array = [0, ,];
+      pop(array);
+      eq(array.length, 1);
     },
     "3b) If the element that was removed was an empty index, it should return undefined.": function() {
-      fail();
-      // var array = [0,,];
-      // var poppedElement = pop(array);
-      // eq(poppedElement, undefined);
+      var array = [0, ,];
+      var poppedElement = pop(array);
+      eq(poppedElement, undefined);
     },
 
     "4a) It should pop when invoked using call().": function() {
-      fail();
-      // var array = [0, 1];
-      // var poppedElement = pop.call(array);
-      // eq(array[0], 0);
-      // eq(array.length, 1);
-      // eq(poppedElement, 1);
+      var array = [0, 1];
+      var poppedElement = pop.call(array);
+      eq(array[0], 0);
+      eq(array.length, 1);
+      eq(poppedElement, 1);
     },
     "4b) It should pop when invoked using apply().": function() {
-      fail();
-      // var array = [0, 1];
-      // var poppedElement = pop.apply(array);
-      // eq(array[0], 0);
-      // eq(array.length, 1);
-      // eq(poppedElement, 1);
+      var array = [0, 1];
+      var poppedElement = pop.apply(array);
+      eq(array[0], 0);
+      eq(array.length, 1);
+      eq(poppedElement, 1);
     },
 
     // When used with array-like objects:
 
     "5a) If object.length does not exist, set object.length to 0.": function() {
-      fail();
-      // var object = {};
-      // pop.call(object);
-      // eq(object.length, 0);
+      var object = {};
+      pop.call(object);
+      eq(object.length, 0);
     },
 
     "6a) If object.length exists, object.length is a number and object.length > 0, reduce the length key by 1.": function() {
-      fail();
-      // var object = {length: 1};
-      // pop.call(object);
-      // eq(object.length, 0);
+      var object = { length: 1 };
+      pop.call(object);
+      eq(object.length, 0);
     },
     "6b) If object.length exists, object.length is a number and object.length <= 0, set object.length to 0.": function() {
-      fail();
-      // var object = {length: -10};
-      // pop.call(object);
-      // eq(object.length, 0)
+      var object = { length: -10 };
+      pop.call(object);
+      eq(object.length, 0);
     },
     "6c) If object.length exists and object.length is not a number, convert object.length to number and reduce object.length by 1.": function() {
       fail();
