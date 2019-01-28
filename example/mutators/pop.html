@@ -31,13 +31,13 @@
 
   // Function Syntax:
   function pop(array) {
-    var objectToModify;
+    var objectToModify = array;
 
     // If the value of this is manually set using .call() or .apply()
-    if (this.toString() !== "[object Window]") {
+    if (Object.prototype.toString.call(this) === "[object String]") {
+      throw new TypeError("");
+    } else if (Object.prototype.toString.call(this) !== "[object Window]") {
       objectToModify = this;
-    } else {
-      objectToModify = array;
     }
 
     var numberedLength = Number(objectToModify.length);
@@ -183,34 +183,31 @@
     // Edge cases:
 
     "9a) It should throw a type error when called on a string.": function() {
-      fail();
-      // var isTypeError = false;
-      // try {
-      //   pop.call("string");
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      var isTypeError = false;
+      try {
+        pop.call("string");
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     },
     "9b) It should throw a type error when called on null.": function() {
-      fail();
-      // var isTypeError = false;
-      // try {
-      //   pop.call(null);
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      var isTypeError = false;
+      try {
+        pop.call(null);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     },
     "9c) It should throw a type error when called on undefined.": function() {
-      fail();
-      // var isTypeError = false;
-      // try {
-      //   pop.call(undefined);
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      var isTypeError = false;
+      try {
+        pop.call(undefined);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     }
   });
 </script>
