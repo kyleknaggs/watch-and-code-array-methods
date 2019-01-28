@@ -11,10 +11,10 @@
 
   // Prototype implementation:
   // function pop(array) {
-  //   var indexOfElementToPop = array.length - 1;
-  //   var poppedElement = array[indexOfElementToPop];
+  //   var indexOfKeyToDelete = array.length - 1;
+  //   var poppedElement = array[indexOfKeyToDelete];
 
-  //   array.length = indexOfElementToPop;
+  //   array.length = indexOfKeyToDelete;
 
   //   return poppedElement;
   // }
@@ -40,20 +40,29 @@
       objectToModify = array;
     }
 
-    // If object.length does not exist set object.length to 0.
-    if (!objectToModify.length || objectToModify.length <= 0) {
+    var numberedLength = Number(objectToModify.length);
+
+    // If object.length does not exist, is negative, or is < 0, set object.length to 0.
+    if (isNaN(numberedLength) || numberedLength <= 0) {
       objectToModify.length = 0;
+    } else if (
+      numberedLength > 0 &&
+      Object.prototype.toString.call(objectToModify.length) !==
+        "[object Number]"
+    ) {
+      objectToModify.length = numberedLength;
     }
 
-    var indexOfElementToPop = objectToModify.length - 1;
-    var poppedElement = objectToModify[indexOfElementToPop];
+    var indexOfKeyToDelete = numberedLength - 1;
+    var elementToRemove = objectToModify[indexOfKeyToDelete];
 
-    // If array is not empty remove element.
-    if (indexOfElementToPop >= 0) {
-      objectToModify.length = indexOfElementToPop;
+    // If element needs to be removed set length and delete key from objectToModify.
+    if (indexOfKeyToDelete >= 0) {
+      delete objectToModify[indexOfKeyToDelete];
+      objectToModify.length = indexOfKeyToDelete;
     }
 
-    return poppedElement;
+    return elementToRemove;
   }
 
   // Requirements:
@@ -123,70 +132,52 @@
       eq(object.length, 0);
     },
     "6c) If object.length exists and object.length is not a number, convert object.length to number and reduce object.length by 1.": function() {
-      fail();
-      // var object = {length: '10'};
-      // pop.call(object);
-      // eq(object.length, 9)
+      var object = { length: "10" };
+      pop.call(object);
+      eq(object.length, 9);
     },
     "6d) If object.length exists, object.length is not a number, and object.length cannot be converted to a number set object.length to 0.": function() {
-      fail();
-      // var object = {length: 'string'};
-      // pop.call(object);
-      // eq(object.length, 0)
+      var object = { length: "string" };
+      pop.call(object);
+      eq(object.length, 0);
     },
-
-    // var object = {
-    //   0: 0,
-    //   1: 1,
-    //   length: 2
-    // };
-    // pop.call(object);
-    // var keysInObject = Object.keys(object);
-    // eq(keysInObject.length, 2);
-    // eq(keysInObject[0], 0);
-    // eq(keysInObject[1], length);
-    // eq(object.length, 1);
 
     "7a) If object[length-1] exists, it remove last numerated key from object.": function() {
-      fail();
-      // var object = {
-      //   0: 0,
-      //   1: 1,
-      //   length: 2
-      // };
-      // pop.call(object);
-      // eq(object[2], undefined);
+      var object = {
+        0: 0,
+        1: 1,
+        length: 2
+      };
+      pop.call(object);
+      eq(object[1], undefined);
     },
     "7b) If object[length-1] does not exist, it should not remove last numerated key from object": function() {
-      fail();
-      // var object = {
-      //   0: 0,
-      //   1: 1,
-      //   length: 3
-      // };
-      // pop.call(object);
-      // eq(object[1], 1);
+      var object = {
+        0: 0,
+        1: 1,
+        length: 3
+      };
+      pop.call(object);
+      eq(object[1], 1);
     },
 
     "8a) If object[length-1] exists, return value of key that was removed.": function() {
-      fail();
-      // var object = {
-      //   0: 0,
-      //   1: 1,
-      //   length: 2
-      // };
-      // var poppedElement = pop.call(object);
-      // eq(poppedElement, 1);
+      var object = {
+        0: 0,
+        1: 1,
+        length: 2
+      };
+      var poppedElement = pop.call(object);
+      eq(poppedElement, 1);
     },
     "8b) If object[length-1] does not exist, it should return undefined.": function() {
-      fail();
-      // var object = {
-      //   0: 0,
-      //   1: 1,
-      //   length: 3
-      // };
-      // var poppedElement = pop.call(object);
-      // eq(poppedElement, undefined);
+      var object = {
+        0: 0,
+        1: 1,
+        length: 3
+      };
+      var poppedElement = pop.call(object);
+      eq(poppedElement, undefined);
     },
 
     // Edge cases:
