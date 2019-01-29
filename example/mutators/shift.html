@@ -34,76 +34,83 @@
   // 2) If no element has been removed from the array, it should return undefined.
 
   // Function Syntax:
-  // function shift() {}
+  function shift(array) {
+    var elementToBeRemoved = array[0];
+    var originalLength = array.length;
+    var indexOfElementToBeMoved = 1;
+
+    while (indexOfElementToBeMoved < originalLength) {
+      array[indexOfElementToBeMoved - 1] = array[indexOfElementToBeMoved];
+      indexOfElementToBeMoved++;
+    }
+
+    if (originalLength > 0) {
+      array.length = originalLength - 1;
+    }
+
+    return elementToBeRemoved;
+  }
 
   // Requirements:
 
   tests({
-    "1a) If array is empty is should return undefined.": function() {
-      fail();
-      // var array = [];
-      // var shiftedElement = shift(array);
-      // eq(shiftedElement, undefined)
+    "1a) If array is not empty, and array[0] is not an empty index, it should return array[0].": function() {
+      var array = [0, 1];
+      var shiftedElement = shift(array);
+      eq(shiftedElement, 0);
+    },
+    "1b) If array is not empty, and array[0] is an empty index, it should return undefined.": function() {
+      var array = [, 0, 1];
+      var shiftedElement = shift(array);
+      eq(shiftedElement, undefined);
+    },
+    "1c) If array is empty is should return undefined.": function() {
+      var array = [];
+      var shiftedElement = shift(array);
+      eq(shiftedElement, undefined);
     },
 
-    "2a) If array is not empty, and array[0] is not an empty index it should remove array[0] from array.": function() {
-      fail();
-      // var array = [0,1];
-      // shift(array);
-      // eq(array[0], 1);
+    "2a) If array is not empty, and array[0] is not an empty index it should move the value in array[1] to array[0].": function() {
+      var array = [0, 1];
+      shift(array);
+      eq(array[0], 1);
     },
-    "2b) If array is not empty, and array[0] is an empty index, it should remove the empty index.": function() {
-      fail();
-      // var array = [,0,1];
-      // shift(array);
-      // eq(array[0], 0);
+    "2b) If array is not empty, and array[0] is an empty index, it should move the value in array[1] to array[0].": function() {
+      var array = [, 0, 1];
+      shift(array);
+      eq(array[0], 0);
     },
 
-    "3a) If array is not empty, and array[0] is not an empty index, it should return array[0].": function() {
-      fail();
-      // var array = [0,1];
-      // var shiftedElement = shift(array);
-      // eq(shiftedElement, 0);
-    },
-    "3b) If array is not empty, and array[0] is an empty index, it should return undefined.": function() {
-      fail();
-      // var array = [,0,1];
-      // var shiftedElement = shift(array);
-      // eq(shiftedElement, undefined);
+    "3a) If an element's index is more than 0, it should reduce the index of the element by 1.": function() {
+      var array = [0, 1, 2];
+      shift(array);
+      eq(array.indexOf(1), 0);
+      eq(array.indexOf(2), 1);
     },
 
-    "4b) It should reduce array.length by 1.": function() {
-      fail();
-      // var array = [0,1];
-      // shift(array);
-      // eq(array.length, 1);
+    "4a) It should reduce array.length by 1.": function() {
+      var array = [0, 1];
+      shift(array);
+      eq(array.length, 1);
     },
 
-    "5a) If an element's index is more than 0, it should reduce the index of the element by 1.": function() {
-      fail();
-      // var array = [0,1];
-      // shift(array);
-      // eq(array.indexOf(1), 0);
-    },
-
-    "6a) It return the same array, not a different array": function() {
-      fail();
-      // var originalArray = [0, 1];
-      // var copyOfOriginalArray = originalArray;
-      // shift.call(originalArrayy);
-      // eq(originalArray, copyOfOriginalArray);
+    "5a) It modify the originalArray, instead of creating a new array": function() {
+      var originalArray = [0, 1];
+      var copyOfOriginalArray = originalArray;
+      shift(originalArray);
+      eq(originalArray, copyOfOriginalArray);
     },
 
     // When used with call() or apply():
 
-    "7a) It should shift when used with call().": function() {
+    "6a) It should shift when used with call().": function() {
       fail();
       // var array = [0,1];
       // shift.call(array);
       // eq(array.length , 1);
       // eq(array[0], 1);
     },
-    "7b) It should shift when used with apply().": function() {
+    "6b) It should shift when used with apply().": function() {
       fail();
       // var array = [0,1];
       // shift.call(array);
@@ -113,39 +120,39 @@
 
     // When used with objects:
 
-    "8a) If object.length does not exist, set object.length to 0": function() {
+    "7a) If object.length does not exist, set object.length to 0": function() {
       fail();
       // var object = {};
       // shift.call(object);
       // eq(object.length, 0);
     },
 
-    "9a) If object.length exists, object.length is a number and object.length > 0, reduce the length key by 1.": function() {
+    "8a) If object.length exists, object.length is a number and object.length > 0, reduce the length key by 1.": function() {
       fail();
       // var object = { length: 1 };
       // shift.call(object);
       // eq(object.length, 0);
     },
-    "9b) If object.length exists, object.length is a number and object.length <= 0, set object.length to 0.": function() {
+    "8b) If object.length exists, object.length is a number and object.length <= 0, set object.length to 0.": function() {
       fail();
-      // var object = { length: -10 };
+      // var object = { length: 0 };
       // shift.call(object);
       // eq(object.length, 0);
     },
-    "9c) If object.length exists and object.length is not a number, convert object.length to number and reduce object.length by 1.": function() {
+    "8c) If object.length exists and object.length is not a number, convert object.length to number and reduce object.length by 1.": function() {
       fail();
-      // var object = { length: "10" };
+      // var object = { length: 0" };
       // shift.call(object);
       // eq(object.length, 9);
     },
-    "9d) If object.length exists, object.length is not a number, and object.length cannot be converted to a number set object.length to 0.": function() {
+    "8d) If object.length exists, object.length is not a number, and object.length cannot be converted to a number set object.length to 0.": function() {
       fail();
       // var object = { length: "string" };
       // shift.call(object);
       // eq(object.length, 0);
     },
 
-    "10a) If object[0] exists, it remove first numerated key from object.": function() {
+    "0a) If object[0] exists, it remove first numerated key from object.": function() {
       fail();
       // var object = {
       //   0: 0,
@@ -155,7 +162,7 @@
       // shift.call(object);
       // eq(object[0], 1);
     },
-    "10b) If object[0] does not exist, reduce index of remaining keys by 1": function() {
+    "0b) If object[0] does not exist, reduce index of remaining keys by 1": function() {
       fail();
       // var object = {
       //   1: 1,
@@ -167,7 +174,7 @@
       // eq(object[1], 2);
     },
 
-    "11a) If object[0] exists, return value of key that was removed.": function() {
+    "10a) If object[0] exists, return value of key that was removed.": function() {
       fail();
       // var object = {
       //   0: 0,
@@ -177,7 +184,7 @@
       // var shiftedElement = shift.call(object);
       // eq(shiftedElement, 0);
     },
-    "11b) If object[0] does not exist, it should return undefined.": function() {
+    "10b) If object[0] does not exist, it should return undefined.": function() {
       fail();
       // var object = {
       //   1: 1,
@@ -190,7 +197,7 @@
 
     // Incorrect Uses:
 
-    "12a) It should throw a Type Error when called on a string.": function() {
+    "11a) It should throw a Type Error when called on a string.": function() {
       fail();
       // var isTypeError = false;
       // try {
@@ -200,7 +207,7 @@
       // }
       // eq(isTypeError, true);
     },
-    "12b) It should throw a Type Error when called on a null value.": function() {
+    "11b) It should throw a Type Error when called on a null value.": function() {
       fail();
       // var isTypeError = false;
       // try {
@@ -210,7 +217,7 @@
       // }
       // eq(isTypeError, true);
     },
-    "12c) It should throw a Type Error when called on an undefined value.": function() {
+    "11c) It should throw a Type Error when called on an undefined value.": function() {
       fail();
       // var isTypeError = false;
       // try {
@@ -220,7 +227,7 @@
       // }
       // eq(isTypeError, true);
     },
-    "12d) It should throw a Type Error when called on a function.": function() {
+    "11d) It should throw a Type Error when called on a function.": function() {
       fail();
       // var isTypeError = false;
       // try {
@@ -233,7 +240,7 @@
 
     // When used in a common use case:
 
-    "13a) It should work when used within a while loop.var array = [0,1,2];": function() {
+    "12a) It should work when used within a while loop.var array = [0,1,2];": function() {
       fail();
       // var array = [0, 1, 2];
       // while (array[0] !== undefined) {
