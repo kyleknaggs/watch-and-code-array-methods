@@ -35,17 +35,27 @@
 
   // Function Syntax:
   function shift(array) {
-    var elementToBeRemoved = array[0];
-    var originalLength = array.length;
+    var objectToModify = array;
+
+    // If used with .call() or .apply()
+    if (Object.prototype.toString.call(this) !== "[object Window]") {
+      objectToModify = this;
+    }
+
+    var elementToBeRemoved = objectToModify[0];
+    var originalLength = objectToModify.length;
     var indexOfElementToBeMoved = 1;
 
+    // Reduce index of items in element by 1 beginning at objectToModify[1]
     while (indexOfElementToBeMoved < originalLength) {
-      array[indexOfElementToBeMoved - 1] = array[indexOfElementToBeMoved];
+      objectToModify[indexOfElementToBeMoved - 1] =
+        objectToModify[indexOfElementToBeMoved];
       indexOfElementToBeMoved++;
     }
 
+    // Reduce length of objectToModify.
     if (originalLength > 0) {
-      array.length = originalLength - 1;
+      objectToModify.length = originalLength - 1;
     }
 
     return elementToBeRemoved;
@@ -104,18 +114,16 @@
     // When used with call() or apply():
 
     "6a) It should shift when used with call().": function() {
-      fail();
-      // var array = [0,1];
-      // shift.call(array);
-      // eq(array.length , 1);
-      // eq(array[0], 1);
+      var array = [0, 1];
+      shift.call(array);
+      eq(array.length, 1);
+      eq(array[0], 1);
     },
     "6b) It should shift when used with apply().": function() {
-      fail();
-      // var array = [0,1];
-      // shift.call(array);
-      // eq(array.length , 1);
-      // eq(array[0], 1);
+      var array = [0, 1];
+      shift.apply(array);
+      eq(array.length, 1);
+      eq(array[0], 1);
     },
 
     // When used with objects:
