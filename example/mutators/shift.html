@@ -36,22 +36,25 @@
   // Function Syntax:
   function shift(array) {
     var objectToModify = array;
+    var classOfThis = Object.prototype.toString.call(this);
 
-    // If used with .call() or .apply() check class of this object:
+    // If used with .call() or .apply() check classOfThis:
     if (
-      Object.prototype.toString.call(this) === "[object String]" ||
-      Object.prototype.toString.call(this) === "[object Function]"
+      classOfThis === "[object String]" ||
+      classOfThis === "[object Undefined]" ||
+      classOfThis === "[object Function]"
     ) {
       throw new TypeError("");
-    } else if (Object.prototype.toString.call(this) !== "[object Window]") {
+    } else if (classOfThis !== "[object Window]") {
       objectToModify = this;
     }
 
     var numberedLength = Number(objectToModify.length);
 
-    // If objectToModify.length cannot be converted to a number or is less than zero:
-    if (isNaN(numberedLength) || numberedLength < 0) {
+    // If length could not be converted to a number or is less than zero:
+    if (isNaN(numberedLength) || numberedLength <= 0) {
       objectToModify.length = 0;
+      return;
     }
 
     var elementToBeRemoved = objectToModify[0];
