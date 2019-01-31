@@ -37,25 +37,31 @@
   function shift(array) {
     var objectToModify = array;
 
-    // If used with .call() or .apply()
+    // If used with .call() or .apply():
     if (Object.prototype.toString.call(this) !== "[object Window]") {
       objectToModify = this;
     }
 
+    var numberedLength = Number(objectToModify.length);
+
+    // If objectToModify.length cannot be converted to a number or is less than zero:
+    if (isNaN(numberedLength) || numberedLength < 0) {
+      objectToModify.length = 0;
+    }
+
     var elementToBeRemoved = objectToModify[0];
-    var originalLength = objectToModify.length;
     var indexOfElementToBeMoved = 1;
 
-    // Reduce index of items in element by 1 beginning at objectToModify[1]
-    while (indexOfElementToBeMoved < originalLength) {
+    // Reduce index of items in element by 1 beginning at objectToModify[1]:
+    while (indexOfElementToBeMoved <= numberedLength) {
       objectToModify[indexOfElementToBeMoved - 1] =
-        objectToModify[indexOfElementToBeMoved];
+        objectToModify[indexOfElementToBeMoved]; // objectToModify[0] = objectToModify[1] >>> objectToModify [0] = 1
       indexOfElementToBeMoved++;
     }
 
     // Reduce length of objectToModify.
-    if (originalLength > 0) {
-      objectToModify.length = originalLength - 1;
+    if (numberedLength > 0) {
+      objectToModify.length = numberedLength - 1;
     }
 
     return elementToBeRemoved;
@@ -129,78 +135,69 @@
     // When used with objects:
 
     "7a) If object.length does not exist, set object.length to 0": function() {
-      fail();
-      // var object = {};
-      // shift.call(object);
-      // eq(object.length, 0);
+      var object = {};
+      shift.call(object);
+      eq(object.length, 0);
     },
 
     "8a) If object.length exists, object.length is a number and object.length > 0, reduce the length key by 1.": function() {
-      fail();
-      // var object = { length: 1 };
-      // shift.call(object);
-      // eq(object.length, 0);
+      var object = { length: 1 };
+      shift.call(object);
+      eq(object.length, 0);
     },
-    "8b) If object.length exists, object.length is a number and object.length <= 0, set object.length to 0.": function() {
-      fail();
-      // var object = { length: 0 };
-      // shift.call(object);
-      // eq(object.length, 0);
+    "8b) If object.length exists, object.length is a number and object.length < 0, set object.length to 0.": function() {
+      var objectWithNegativeLength = { length: -10 };
+      shift.call(objectWithNegativeLength);
+      eq(objectWithNegativeLength.length, 0);
     },
     "8c) If object.length exists and object.length is not a number, convert object.length to number and reduce object.length by 1.": function() {
-      fail();
-      // var object = { length: 0" };
-      // shift.call(object);
-      // eq(object.length, 9);
+      var object = { length: "10" };
+      shift.call(object);
+      eq(object.length, 9);
     },
     "8d) If object.length exists, object.length is not a number, and object.length cannot be converted to a number set object.length to 0.": function() {
-      fail();
-      // var object = { length: "string" };
-      // shift.call(object);
-      // eq(object.length, 0);
+      var object = { length: "string" };
+      shift.call(object);
+      eq(object.length, 0);
     },
 
-    "0a) If object[0] exists, it remove first numerated key from object.": function() {
-      fail();
-      // var object = {
-      //   0: 0,
-      //   1: 1,
-      //   length: 2
-      // };
-      // shift.call(object);
-      // eq(object[0], 1);
+    "9a) If object[0] exists, it remove first numerated key from object.": function() {
+      var object = {
+        0: 0,
+        1: 1,
+        length: 2
+      };
+      shift.call(object);
+      eq(object[0], 1);
     },
-    "0b) If object[0] does not exist, reduce index of remaining keys by 1": function() {
-      fail();
-      // var object = {
-      //   1: 1,
-      //   2: 2,
-      //   length: 2
-      // };
-      // shift.call(object);
-      // eq(object[0], 1);
-      // eq(object[1], 2);
+    "9b) If object[0] does not exist, reduce index of remaining keys by 1": function() {
+      var object = {
+        1: 1,
+        2: 2,
+        length: 2
+      };
+      shift.call(object);
+      eq(object[0], 1);
+      eq(object[1], 2);
     },
 
     "10a) If object[0] exists, return value of key that was removed.": function() {
-      fail();
-      // var object = {
-      //   0: 0,
-      //   1: 1,
-      //   length: 2
-      // };
-      // var shiftedElement = shift.call(object);
-      // eq(shiftedElement, 0);
+      var object = {
+        0: 0,
+        1: 1,
+        length: 2
+      };
+      var shiftedElement = shift.call(object);
+      eq(shiftedElement, 0);
     },
     "10b) If object[0] does not exist, it should return undefined.": function() {
-      fail();
-      // var object = {
-      //   1: 1,
-      //   2: 2,
-      //   length: 2
-      // };
-      // var shiftedElement = shift.call(object);
-      // eq(shiftedElement, undefined);
+      var object = {
+        1: 1,
+        2: 2,
+        length: 2
+      };
+      var shiftedElement = shift.call(object);
+      eq(shiftedElement, undefined);
     },
 
     // Incorrect Uses:
