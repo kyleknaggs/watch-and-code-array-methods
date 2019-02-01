@@ -41,11 +41,11 @@
     // For allPagesAsStrings[0] up to allPagesAsStrings[indexOfCurrentPage]:
     if (pagesBetweenFirstAndCurrentPage > 3) {
       pageLinks[1] = "...";
-      for (var i = indexOfCurrentPage - 2; i < indexOfCurrentPage; i++) {
+      for (var i = indexOfCurrentPage - 2; i <= indexOfCurrentPage; i++) {
         pageLinks.push(allPagesAsStrings[i]);
       }
     } else {
-      for (var i = 1; i < indexOfCurrentPage; i++) {
+      for (var i = 1; i <= indexOfCurrentPage; i++) {
         pageLinks.push(allPagesAsStrings[i]);
       }
     }
@@ -123,25 +123,22 @@
     },
 
     "6a) If (indexOfCurrentPage - 1) > 3, pageLinks[4] === pageList[indexOfCurrentPage].": function() {
-      fail();
-      // var allPages = [1, 2, 3, 4, 5, 6];
-      // var indexOfCurrentPage = 6;
-      // var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
-      // eq(pageLinks[4], pageList[indexOfCurrentPage]);
+      var allPages = [1, 2, 3, 4, 5, 6];
+      var indexOfCurrentPage = 5;
+      var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
+      eq(pageLinks[4], allPages[indexOfCurrentPage]);
     },
     "6b) If ((pageList.length-1) - indexOfCurrentPage) > 3, pageLinks[pageLinks.length-4] === pageList[indexOfCurrentPage].": function() {
-      fail();
-      // var allPages = [1, 2, 3, 4, 5, 6];
-      // var indexOfCurrentPage = 1;
-      // var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
-      // eq(pageLinks[pageLinks.length-4], pageList[indexOfCurrentPage]);
+      var allPages = [1, 2, 3, 4, 5, 6];
+      var indexOfCurrentPage = 0;
+      var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
+      eq(pageLinks[pageLinks.length - 4], allPages[indexOfCurrentPage]);
     },
     "6c) It should never return an array with more than 9 elements.": function() {
-      fail();
-      // var allPages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-      // var indexOfCurrentPage = 6;
-      // var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
-      // eq(pageLinks.length, 9)
+      var allPages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+      var indexOfCurrentPage = 6;
+      var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
+      eq(pageLinks.length, 9);
     }
   });
 
