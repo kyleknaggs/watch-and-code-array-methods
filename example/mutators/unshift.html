@@ -1,26 +1,28 @@
 <script src="../../simpletest.js"></script>
 <script>
   // Summary:
+  // Adds one or more elements to the beginning of an array.
 
   // Example:
-  // var array = [1,2]
-  // unshift(array);
-  // >>> returns ?
-  // >>> array = ?
+  // var array = [0];
+  // unshift(array, 1);
+  // >>> returns 2
+  // >>> array = [1,0];
 
   // Prototype implementation:
-  // function unshift(array) {
+  // function unshift(array, elementsToAdd) {
   // }
 
   // Function signature:
-  // unshift(array);
+  // unshift(array, elementsToAdd);
 
   // Arguments:
-  // array - ?
+  // array - The array that will be modified.
+  // elementsToAdd - The element/elements to add to the beginning of array.
 
   // Return value:
-  // 1) ?
-  // 2) ?
+  // 1) The new length of the array after the element has been added.
+  // 2) TODO: Does it ever return undefined?
 
   // Function Syntax:
   // function unshift(array) {}
@@ -28,14 +30,181 @@
   // Requirements:
 
   tests({
-    "1a) ?": function() {
+    "1a) It should return a number.": function() {
       fail();
+      // var array = [];
+      // var returnedValue = array.unshift();
+      // >>> Object.prototype.toString.call(returnedValue) === "[object Number]"
     },
 
-    // ?
+    "2a) It should return the length of array.": function() {
+      fail();
+      // var array = [0];
+      // var originalArrayLength = array.length
+      // var unshiftedArray = unshift(array);
+      // >>> unshiftedArray === originalArrayLength
+    },
 
-    "2a) ?": function() {
+    "3a) If no elementsToAdd, array should remain unchanged.": function() {
+      fail();
+      // var array = [0];
+      // var originalArrayLength = array.length;
+      // var firstValueInOriginalArray = array[0];
+      // unshift(array);
+      // >>> originalArrayLength === array.length;
+      // >>> firstValueInOriginalArray === array[0];
+    },
+
+    // 1 elementToAdd:
+    "4a) If 1 elementToAdd, and elementToAdd is a primitive, or an object, it should add one element to the beginning of array.": function() {
+      fail();
+      // var primitiveToAdd = 1;
+      // var objectToAdd = {};
+      // var array = [0];
+      // unshift(array, primitiveToAdd);
+      // unshift(array, objectToAdd);
+      // >>> objectToAdd === array[0];
+      // >>> primitiveToAdd === array[1];
+    },
+    "4b) If 1 elementToAdd, it should increase array.length by 1.": function() {
+      fail();
+      // var array = [0];
+      // var originalArrayLength = array.length;
+      // unshift(array, 1);
+      // >>> array.length === originalArrayLength + 1;
+    },
+
+    // Multiple elementsToAdd:
+    "5a) If multiple elementsToAdd, it should add multiple elementsToAdd to the beginning of array.": function() {
+      fail();
+      // var array = [0];
+      // var firstElementToAdd = 1;
+      // var secondElementToAdd = 2;
+      // var originalElementInArray = array[0];
+      // unshift(array, firstElementToAdd, secondElementToAdd);
+      // firstElementToAdd === array[0];
+      // secondElementToAdd === array[1];
+      // originalElementInArray === array[2];
+    },
+    "5b) If multiple elementsToAdd, it should increase array.length by the number of elementsToAdd.": function() {
+      fail();
+      // var array = [0];
+      // var originalArrayLength = array.length;
+      // unshift(array, 1, 2);
+      // >>> array.length === originalArrayLength + 2;
+    },
+    "5c) It should add elements in the same order as they were passed into unshift as arguments.": function() {
+      fail();
+      // var array = [0];
+      // var firstArgument = 1;
+      // var secondArgument = 2;
+      // unshift(array, firstArgument,secondArgument);
+      // >>> array[0] === firstArgument
+      // >>> array[1] === secondArgument
+    },
+
+    // When used with .call() or .apply():
+    "6a) It should unshift when used with call().": function() {
+      fail();
+      // var array = [0];
+      // var firstElementToAdd = 1;
+      // var secondElementToAdd = 2;
+      // unshift.call(firstElementToAdd, secondnElementToAdd));
+      // eq(array.length, 3);
+      // eq(array[0], firstElementToAdd);
+      // eq(array[1], secondElementToAdd);
+    },
+    "6b) It should unshift when used with apply().": function() {
+      fail();
+      // var array = [0];
+      // var firstElementToAdd = 1;
+      // var secondElementToAdd = 2;
+      // unshift.apply(firstElementToAdd, secondElementToAdd));
+      // eq(array.length, 3);
+      // eq(array[0], firstElementToAdd);
+      // eq(array[1], secondElementToAdd);
+    },
+
+    // The value of object.length if noElementsToAdd:
+    "7a) If no elementsToAdd and object.length does not exist, set object.length to 0": function() {
+      var object = {};
+      unshift.call(object);
+      eq(object.length, 0);
+    },
+    "7b) If no elementsToAdd, object.length exists, object.length is a number and object.length < 0, set object.length to 0.": function() {
+      var objectWithNegativeLength = { length: -10 };
+      unshift.call(objectWithNegativeLength);
+      eq(objectWithNegativeLength.length, 0);
+    },
+    "7c) If no elementsToAdd, object.length exists and object.length is not a number, convert object.length to number.": function() {
+      var object = { length: "10" };
+      unshift.call(object);
+      eq(object.length, 10);
+    },
+    "7d) If no elementsToAdd, object.length exists, object.length is not a number, and object.length cannot be converted to a number set object.length to 0.": function() {
+      var object = { length: "string" };
+      unshift.call(object);
+      eq(object.length, 0);
+    },
+
+    // The value of numerated keys if elementsToAdd:
+    "8a) If elementsToAdd, and object.length - 1 does not equal to the value of the last numerated key, add numerated keys to object beginning at object[0].": function() {
+      var object = {
+        10: 10,
+        length: 10
+      };
+      unshift.call(object, 1, 2);
+      eq(object[0], 1);
+      eq(object[1], 2);
+    },
+    "8b) If elementsToAdd, and object.length - 1 is equal to the value of the last numerated key, add numerated keys to object beginning at the last numerated key.": function() {
+      var object = {
+        0: 0,
+        length: 1
+      };
+      unshift.call(object, 1, 2);
+      eq(object[0], 1);
+      eq(object[1], 2);
+      eq(object[2], 0);
+    },
+
+    // The value of object.length if elementsToAdd && no object.length exists:
+    "9a) If elementsToAdd, no object.length exists set object.length to number of elementsToAdd.": function() {
+      var object = { length: 0 };
+      unshift.call(object, 1);
+      eq(object.length, 1);
+    },
+
+    // The value of object.length if elementsToAdd && object.length exists:
+    "10a) If elementsToAdd and object.length is >=0, increase object.length by number of elementsToAdd.": function() {
+      var object = { length: 0 };
+      unshift.call(object, 1, 2);
+      eq(object.length, 2);
+    },
+    "10b) If elementsToAdd, object.length is a number and object.length < 0, set object.length to number of elementsToAdd.": function() {
+      var objectWithNegativeLength = { length: -10 };
+      unshift.call(objectWithNegativeLength, 1, 2);
+      eq(objectWithNegativeLength.length, 2);
+    },
+    "10c) If elementsToAdd, object.length is not a number, set object.length to number of elementsToAdd.": function() {
+      var object = { length: "10" };
+      unshift.call(object, 1, 2);
+      eq(object.length, 2);
+    },
+    "10d) If elementsToAdd, object.length is not a number, and object.length cannot be converted to a number set object.length to number of elementsToAdd.": function() {
+      var object = { length: "string" };
+      unshift.call(object, 1, 2);
+      eq(object.length, 2);
+    }
+
+    // Incorrect uses that may throw an error:
+
+    /*
+
+    "?a) ?": function() {
       fail();
     }
+
+    */
   });
 </script>
