@@ -25,14 +25,12 @@
 
   // Function Syntax:
   function setPageLinks(allPages, indexOfCurrentPage) {
-    var allPagesAsStrings = allPages.map(function(page) {
-      return String(page);
-    });
-    var pageLinks = [];
-    var numberOfPages = allPagesAsStrings.length;
+    const allPagesAsStrings = allPages.map(page => String(page));
+    const pageLinks = [];
+    const numberOfPages = allPagesAsStrings.length;
 
     function pushLinksToPageLinksArray(startingIndex, endingIndex) {
-      for (var i = startingIndex; i < endingIndex; i++) {
+      for (let i = startingIndex; i < endingIndex; i++) {
         pageLinks.push(allPagesAsStrings[i]);
       }
     }
