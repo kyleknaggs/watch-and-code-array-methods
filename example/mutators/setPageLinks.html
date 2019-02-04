@@ -28,41 +28,37 @@
     var allPagesAsStrings = allPages.map(function(page) {
       return String(page);
     });
-
-    // Create new pageLinks array:
     var pageLinks = [];
     var numberOfPages = allPagesAsStrings.length;
 
-    // For all elements before current page:
+    function pushLinksToPageLinksArray(startingIndex, endingIndex) {
+      for (var i = startingIndex; i < endingIndex; i++) {
+        pageLinks.push(allPagesAsStrings[i]);
+      }
+    }
+
+    // If current page is not the first page:
     if (indexOfCurrentPage > 0) {
       pageLinks.push("1");
       if (indexOfCurrentPage > 3) {
         pageLinks.push("...");
-        for (var i = indexOfCurrentPage - 2; i < indexOfCurrentPage; i++) {
-          pageLinks.push(allPagesAsStrings[i]);
-        }
+        pushLinksToPageLinksArray(indexOfCurrentPage - 2, indexOfCurrentPage);
       } else {
-        for (var i = 1; i < indexOfCurrentPage; i++) {
-          pageLinks.push(allPagesAsStrings[i]);
-        }
+        // Does this need to exist?
+        pushLinksToPageLinksArray(1, indexOfCurrentPage);
       }
     }
 
     // For current page:
     pageLinks.push(allPagesAsStrings[indexOfCurrentPage]);
 
-    // If the current page is not the last page:
+    // If current page is not the last page:
     if (numberOfPages - indexOfCurrentPage > 1) {
-      // If there are more than 3 pages between the current page and the last page:
       if (numberOfPages - indexOfCurrentPage > 4) {
-        for (var i = indexOfCurrentPage; i < indexOfCurrentPage + 2; i++) {
-          pageLinks.push(allPagesAsStrings[i]);
-        }
+        pushLinksToPageLinksArray(indexOfCurrentPage, indexOfCurrentPage + 2);
         pageLinks.push("...");
       } else {
-        for (var i = indexOfCurrentPage + 1; i < numberOfPages - 1; i++) {
-          pageLinks.push(allPagesAsStrings[i]);
-        }
+        pushLinksToPageLinksArray(indexOfCurrentPage + 1, numberOfPages - 1);
       }
       pageLinks.push(allPagesAsStrings[numberOfPages - 1]);
     }
