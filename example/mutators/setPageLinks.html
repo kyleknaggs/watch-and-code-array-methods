@@ -37,22 +37,20 @@
       }
     }
 
-    // If current page is not the first page:
+    // For pages before the current page:
     if (indexOfCurrentPage > 0) {
       pageLinks.push("1");
       if (indexOfCurrentPage > 3) {
         pageLinks.push("...");
         pushLinksToPageLinksArray(indexOfCurrentPage - 2, indexOfCurrentPage);
       } else {
-        // Does this need to exist?
         pushLinksToPageLinksArray(1, indexOfCurrentPage);
       }
     }
 
-    // For current page:
     pageLinks.push(allPagesAsStrings[indexOfCurrentPage]);
 
-    // If current page is not the last page:
+    // For pages after the current page:
     if (numberOfPages - indexOfCurrentPage > 1) {
       if (numberOfPages - indexOfCurrentPage > 4) {
         pushLinksToPageLinksArray(indexOfCurrentPage, indexOfCurrentPage + 2);
@@ -76,24 +74,24 @@
       var pageLinks = setPageLinks(allPages, 0);
       eq(Object.prototype.toString.call(pageLinks), "[object Array]");
     },
-    "1b) The returned array should be a new array, not originalArray": function() {
+    "1b) It should return a new array, not the array that was used as an argument.": function() {
       var allPages = [1, 2];
       var copyOfOriginalArray = allPages;
       var pageLinks = setPageLinks(allPages, 0);
       eq(pageLinks === copyOfOriginalArray, false);
     },
 
-    "2a) The returned array should only contain strings.": function() {
+    "2a) It should return an array of strings.": function() {
       var allPages = [1, 2];
       var pageLinks = setPageLinks(allPages, 0);
       eq(Object.prototype.toString.call(pageLinks[0]), "[object String]");
     },
 
-    "3a) The returned array should always begin with 1.": function() {
+    "3a) It shoud return an array that always begins with 1.": function() {
       var pageList = setPageLinks([1, 2], 0);
       eq(pageList[0], 1);
     },
-    "3b) The returned array should always end with the allPages[allPages.length-1].": function() {
+    "3b) It should return an array whose last element is equal to the value in allPages[allPages.length-1].": function() {
       var lastElementInPageList = 2;
       var pageList = setPageLinks([1, lastElementInPageList], 0);
       eq(pageList[pageList.length - 1], lastElementInPageList);
@@ -107,30 +105,49 @@
       eq(pageLinks.length, 4);
     },
 
-    // If allPages.length > 4: location of "..." in the returned array:
+    // If "..." does not need to be injected into array:
 
-    "5a) If (indexOfCurrentPage - 1) > 3, replace all elements between pageLinks[1] and pageLinks[indexOfCurrentPage-3] with a single '...' element.": function() {
+    "5a) If indexOfCurrentPage <= 3, display all elements before allPages[indexOfCurrentPage].": function() {
       var allPages = [1, 2, 3, 4, 5, 6];
-      var indexOfCurrentPage = 5;
+      var indexOfCurrentPage = 3;
+      var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
+      eq(pageLinks[1], "2");
+      eq(pageLinks[2], "3");
+      eq(pageLinks[3], "4");
+    },
+    "5b) If <= 3 indicies between indexOfCurrentPage and last element in allPages, do not add '...' after allPages[indexOfCurrentPage]": function() {
+      var allPages = [1, 2, 3, 4, 5, 6];
+      var indexOfCurrentPage = 2;
+      var indexOfLastElement = allPages.length - 1;
+      var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
+      eq(indexOfLastElement - indexOfCurrentPage <= 3, true);
+      eq(pageLinks[pageLinks.length - 2], "5");
+    },
+
+    // If "..." does need to be injected into array:
+
+    "6a) If indexOfCurrentPage > 3, replace all elements between pageLinks[1] and pageLinks[indexOfCurrentPage-3] with a single '...' element.": function() {
+      var allPages = [1, 2, 3, 4, 5, 6];
+      var indexOfCurrentPage = 4;
       var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
       eq(pageLinks[1], "...");
     },
-    "5b) If ((pageList.length-1) - indexOfCurrentPage) > 3, replace all elements between pageLinks(indexOfCurrentPage) and pageLinks[pageLinks.length-1] with a single '...' element.": function() {
+    "6b) If > 3 indicies between indexOfCurrentPage and last element in allPages, replace all elements between pageLinks(indexOfCurrentPage) and pageLinks[pageLinks.length-1] with a single '...' element.": function() {
       var allPages = [1, 2, 3, 4, 5, 6];
-      var indexOfCurrentPage = 0;
+      var indexOfCurrentPage = 1;
       var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
       eq(pageLinks[pageLinks.length - 2], "...");
     },
 
     // If allPages.length > 4: location of allPages[indexOfCurrentPage] in the returned array:
 
-    "6a) If indexOfCurrentPage is more than 3 elements after the first element in array , the fifth element in pageLinks is equal to pageList[indexOfCurrentPage].": function() {
+    "7a) If indexOfCurrentPage is more than 3 elements after the first element in array , the fifth element in pageLinks is equal to pageList[indexOfCurrentPage].": function() {
       var allPages = [1, 2, 3, 4, 5, 6];
       var indexOfCurrentPage = 5;
       var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
       eq(pageLinks[4], allPages[indexOfCurrentPage]);
     },
-    "6b) If indexOfCurrentPage is more than 3 elements before the last element in array, the third to last element in pageLinks is equal to pageList[indexOfCurrentPage].": function() {
+    "7b) If indexOfCurrentPage is more than 3 elements before the last element in array, the third to last element in pageLinks is equal to pageList[indexOfCurrentPage].": function() {
       var allPages = [1, 2, 3, 4, 5, 6];
       var indexOfCurrentPage = 0;
       var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
@@ -139,7 +156,7 @@
 
     // If allPages.length > 4: the length of the returned array:
 
-    "7a) It should never return an array with more than 9 elements.": function() {
+    "8a) It should never return an array with more than 9 elements.": function() {
       var allPages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
       var indexOfCurrentPage = 6;
       var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
