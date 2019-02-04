@@ -32,35 +32,39 @@
     // Create new pageLinks array:
     var pageLinks = [];
     var numberOfPages = allPagesAsStrings.length;
-    var pagesBetweenFirstAndCurrentPage = indexOfCurrentPage;
-    var pagesBetweenLastAndCurrentPage = numberOfPages - indexOfCurrentPage - 2;
 
-    // For allPagesAsStrings[0]:
-    pageLinks.push(allPagesAsStrings[0]);
-
-    // For allPagesAsStrings[0] up to allPagesAsStrings[indexOfCurrentPage]:
-    if (pagesBetweenFirstAndCurrentPage > 3) {
-      pageLinks[1] = "...";
-      for (var i = indexOfCurrentPage - 2; i <= indexOfCurrentPage; i++) {
-        pageLinks.push(allPagesAsStrings[i]);
-      }
-    } else {
-      for (var i = 1; i <= indexOfCurrentPage; i++) {
-        pageLinks.push(allPagesAsStrings[i]);
+    // For all elements before current page:
+    if (indexOfCurrentPage > 0) {
+      pageLinks.push("1");
+      if (indexOfCurrentPage > 3) {
+        pageLinks.push("...");
+        for (var i = indexOfCurrentPage - 2; i < indexOfCurrentPage; i++) {
+          pageLinks.push(allPagesAsStrings[i]);
+        }
+      } else {
+        for (var i = 1; i < indexOfCurrentPage; i++) {
+          pageLinks.push(allPagesAsStrings[i]);
+        }
       }
     }
 
-    // For allPagesAsStrings[indexOfCurrentPage] up to allPagesAsStrings[allPagesAsStrings.length-1]:
-    if (pagesBetweenLastAndCurrentPage > 3) {
-      for (var i = indexOfCurrentPage; i < indexOfCurrentPage + 2; i++) {
-        pageLinks.push(allPagesAsStrings[i]);
+    // For current page:
+    pageLinks.push(allPagesAsStrings[indexOfCurrentPage]);
+
+    // If the current page is not the last page:
+    if (numberOfPages - indexOfCurrentPage > 1) {
+      // If there are more than 3 pages between the current page and the last page:
+      if (numberOfPages - indexOfCurrentPage > 4) {
+        for (var i = indexOfCurrentPage; i < indexOfCurrentPage + 2; i++) {
+          pageLinks.push(allPagesAsStrings[i]);
+        }
+        pageLinks.push("...");
+      } else {
+        for (var i = indexOfCurrentPage + 1; i < numberOfPages - 1; i++) {
+          pageLinks.push(allPagesAsStrings[i]);
+        }
       }
-      pageLinks.push("...");
       pageLinks.push(allPagesAsStrings[numberOfPages - 1]);
-    } else {
-      for (var i = indexOfCurrentPage + 1; i < numberOfPages; i++) {
-        pageLinks.push(allPagesAsStrings[i]);
-      }
     }
 
     return pageLinks;
@@ -69,7 +73,7 @@
   // Requirements:
 
   tests({
-    // Requirements that define the shape of the returned array:
+    // Basic requirements of returned array:
 
     "1a) It should return an array.": function() {
       var allPages = [1, 2];
@@ -107,7 +111,7 @@
       eq(pageLinks.length, 4);
     },
 
-    // If allPages.length > 4:
+    // If allPages.length > 4: location of "..." in the returned array:
 
     "5a) If (indexOfCurrentPage - 1) > 3, replace all elements between pageLinks[1] and pageLinks[indexOfCurrentPage-3] with a single '...' element.": function() {
       var allPages = [1, 2, 3, 4, 5, 6];
@@ -122,19 +126,24 @@
       eq(pageLinks[pageLinks.length - 2], "...");
     },
 
-    "6a) If (indexOfCurrentPage - 1) > 3, pageLinks[4] === pageList[indexOfCurrentPage].": function() {
+    // If allPages.length > 4: location of allPages[indexOfCurrentPage] in the returned array:
+
+    "6a) If indexOfCurrentPage is more than 3 elements after the first element in array , the fifth element in pageLinks is equal to pageList[indexOfCurrentPage].": function() {
       var allPages = [1, 2, 3, 4, 5, 6];
       var indexOfCurrentPage = 5;
       var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
       eq(pageLinks[4], allPages[indexOfCurrentPage]);
     },
-    "6b) If ((pageList.length-1) - indexOfCurrentPage) > 3, pageLinks[pageLinks.length-4] === pageList[indexOfCurrentPage].": function() {
+    "6b) If indexOfCurrentPage is more than 3 elements before the last element in array, the third to last element in pageLinks is equal to pageList[indexOfCurrentPage].": function() {
       var allPages = [1, 2, 3, 4, 5, 6];
       var indexOfCurrentPage = 0;
       var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
       eq(pageLinks[pageLinks.length - 4], allPages[indexOfCurrentPage]);
     },
-    "6c) It should never return an array with more than 9 elements.": function() {
+
+    // If allPages.length > 4: the length of the returned array:
+
+    "7a) It should never return an array with more than 9 elements.": function() {
       var allPages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
       var indexOfCurrentPage = 6;
       var pageLinks = setPageLinks(allPages, indexOfCurrentPage);
