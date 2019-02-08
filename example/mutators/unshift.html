@@ -9,6 +9,7 @@
   // >>> returns 2
   // >>> array = [1,0];
 
+  // TODO: Finish writing prototype implementation of function.
   // Prototype implementation:
   // function unshift(array, elementsToAdd) {
   // }
@@ -24,7 +25,9 @@
   // 1) The new length of the array after the element has been added.
 
   // Function Syntax:
-  // function unshift(array, elementsToAdd) {}
+  function unshift(array, elementsToAdd) {
+    return array.length;
+  }
 
   // Requirements:
   // i.e. What are the different arguments and combinations of these arguments that can be passed into the function's parameters.
@@ -32,38 +35,35 @@
 
   tests({
     "1a) It should return a number.": function() {
-      fail();
-      // var emptyArray = [];
-      // var returnedValue = unshift(emptyArray);
-      // eq(Object.prototype.toString.call(returnedValue),"[object Number]");
+      var emptyArray = [];
+      var returnedValue = unshift(emptyArray);
+      eq(Object.prototype.toString.call(returnedValue), "[object Number]");
     },
 
     "2a) It should return the length of array.": function() {
-      fail();
-      // var emptyArray = [];
-      // var unshiftedEmptyArray = unshift(emptyArray);
-      // eq(unshiftedEmptyArray, emptyArray.length);
+      var emptyArray = [];
+      var unshiftedEmptyArray = unshift(emptyArray);
+      eq(unshiftedEmptyArray, emptyArray.length);
 
-      // var array = [0];
-      // var unshiftedArray = unshift(array);
-      // eq(unshiftedArray, array.length);
+      var array = [0];
+      var unshiftedArray = unshift(array);
+      eq(unshiftedArray, array.length);
     },
 
     "3a) If no elementsToAdd, array should remain unchanged.": function() {
-      fail();
-      // var emptyArray = [];
-      // var emptyArrayLength = emptyArray.length;
-      // var firstElementInEmptyArray = emptyArray[0];
-      // unshift(emptyArray);
-      // eq(emptyArrayLength, emptyArray.length);
-      // eq(firstElementInEmptyArray, emptyArray[0]);
+      var emptyArray = [];
+      var emptyArrayLength = emptyArray.length;
+      var firstElementInEmptyArray = emptyArray[0];
+      unshift(emptyArray);
+      eq(emptyArrayLength, emptyArray.length);
+      eq(firstElementInEmptyArray, emptyArray[0]);
 
-      // var array = [0];
-      // var originalArrayLength = array.length;
-      // var firstElementInOriginalArray = array[0];
-      // unshift(array);
-      // eq(originalArrayLength, array.length);
-      // eq(firstElementInOriginalArray, array[0]);
+      var array = [0];
+      var originalArrayLength = array.length;
+      var firstElementInOriginalArray = array[0];
+      unshift(array);
+      eq(originalArrayLength, array.length);
+      eq(firstElementInOriginalArray, array[0]);
     },
 
     "4a) If elementsToAdd, it should add number of elementsToAdd to the beginning of array.": function() {
