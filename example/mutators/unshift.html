@@ -11,8 +11,24 @@
 
   // TODO: Finish writing prototype implementation of function.
   // Prototype implementation:
-  // function unshift(array, elementsToAdd) {
-  // }
+  function unshift(array, elementsToAdd) {
+    // TODO: Develop way of extracting elementsToAdd out of arguments and into separate array.
+    function getAllArgumentsButFirstInArray() {
+      var allArguments = Object.values(arguments);
+      var allArgumentsButFirst = [];
+
+      for (var i = 0; i < allArguments.length - 1; i++) {
+        allArgumentsButFirst[i] = allArguments[i + 1];
+      }
+
+      return allArgumentsButFirst;
+    }
+
+    var allArgumentsButFirst = getAllArgumentsButFirstInArray(arguments);
+    // getAllArgumentsButFirstInArray("a", 1, 2);
+
+    return array.length;
+  }
 
   // Function signature:
   // unshift(array, elementsToAdd);
