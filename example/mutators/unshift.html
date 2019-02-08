@@ -10,25 +10,62 @@
   // >>> array = [1,0];
 
   // TODO: Finish writing prototype implementation of function.
+
+  // Inside of parent loop, write child loop that starts at end of array
+
+  // Write loop that starts at the end of the array:
+  // Set i = array.length
+  // if i !== 0
+  // Retrive the value stored in array[i] and copy it to array[i+1]
+  // Decrement i by 1
+  // else
+  // Store the value in elementToAdd in array[0]
+
+  // Repeat the loop
+
+  // Add the last element in the elementToAdd array
+  // Starting at
+
+  // TODO: Refactor sytax and remove console tests for prototype implementation.
+  // Start -----------------------------
+
   // Prototype implementation:
-  function unshift(array, elementsToAdd) {
-    // TODO: Develop way of extracting elementsToAdd out of arguments and into separate array.
-    function getAllArgumentsButFirstInArray() {
-      var allArguments = Object.values(arguments);
-      var allArgumentsButFirst = [];
 
-      for (var i = 0; i < allArguments.length - 1; i++) {
-        allArgumentsButFirst[i] = allArguments[i + 1];
-      }
+  // function unshift(array, elements) {
+  //   // Extract elementsToAdd from arguments array.
+  //   var elementsToAdd = [];
 
-      return allArgumentsButFirst;
-    }
+  //   for (var i = 0; i < arguments.length - 1; i++) {
+  //     elementsToAdd[i] = arguments[i + 1];
+  //   }
 
-    var allArgumentsButFirst = getAllArgumentsButFirstInArray(arguments);
-    // getAllArgumentsButFirstInArray("a", 1, 2);
+  //   // Go through every element in elementsToAdd, starting with the last one:
+  //   for (var i = elementsToAdd.length - 1; i > -1; i--) {
+  //     var elementToAdd = elementsToAdd[i];
 
-    return array.length;
-  }
+  //     // Starting with the last element in array:
+  //     for (var j = array.length - 1; j > -2; j--) {
+  //       // Increase the index of every element by one.
+  //       if (j > -1) {
+  //         var elementToCopy = array[j];
+  //         array[j + 1] = elementToCopy;
+  //         // And replace the value at array[0] with elementToAdd
+  //       } else {
+  //         array[0] = elementToAdd;
+  //       }
+  //     }
+  //   }
+
+  //   return array.length;
+  // }
+
+  // Console tests for prototype implementation:
+  // debugger;
+
+  // var testArray = [0];
+  // unshift(testArray, 1, 2);
+
+  // End -----------------------------
 
   // Function signature:
   // unshift(array, elementsToAdd);
