@@ -42,22 +42,37 @@
 
   // Function Syntax:
   function unshift(array, elements) {
-    // Extract elementsToAdd from arguments array.
+    var objectToModify, indexOfFirstArgumentToAdd;
+
+    // if this !== window, store the value in this in the variable objectToModify
+    if (Object.prototype.toString.call(this) !== "[object Window]") {
+      objectToModify = this;
+      indexOfFirstArgumentToAdd = 0;
+    } else {
+      objectToModify = array;
+      indexOfFirstArgumentToAdd = 1;
+    }
+
+    // Extract the list of values to add to array:
     var elementsToAdd = [];
-    for (var i = 0; i < arguments.length - 1; i++) {
-      elementsToAdd[i] = arguments[i + 1];
+    var numberOfElementsToAdd = arguments.length - indexOfFirstArgumentToAdd;
+
+    for (var i = 0; i < numberOfElementsToAdd; i++) {
+      elementsToAdd[i] = arguments[i + indexOfFirstArgumentToAdd];
     }
 
-    // Starting with the last elementToAdd:
+    // Starting with the last elementToAdd, copy all elements in array to the index above them:
     for (var i = elementsToAdd.length - 1; i >= 0; i--) {
-      // Copy the value of all elements in array to the index above them:
-      for (var j = array.length - 1; j >= 0; j--) {
-        array[j + 1] = array[j];
+      objectToModify.length = objectToModify.length + 1;
+      for (var j = objectToModify.length - 1; j >= 0; j--) {
+        if (j in objectToModify) {
+          objectToModify[j + 1] = objectToModify[j];
+        }
       }
-      array[0] = elementsToAdd[i];
+      objectToModify[0] = elementsToAdd[i];
     }
 
-    return array.length;
+    return objectToModify.length;
   }
 
   // Requirements:
@@ -83,11 +98,8 @@
 
     "3a) If no elementsToAdd, array should remain unchanged.": function() {
       var emptyArray = [];
-      var emptyArrayLength = emptyArray.length;
-      var firstElementInEmptyArray = emptyArray[0];
       unshift(emptyArray);
-      eq(emptyArrayLength, emptyArray.length);
-      eq(firstElementInEmptyArray, emptyArray[0]);
+      eq(emptyArray.length, 0);
 
       var array = [0];
       var originalArrayLength = array.length;
@@ -122,53 +134,48 @@
     },
 
     "5a) If should preserve holes in array.": function() {
-      fail();
-      // var arrayWithHoles = [,,,];
-      // unshift(arrayWithHoles, 1);
-      // eq(arrayWithHoles[0], 1);
-      // eq(1 in arrayWithHoles, false);
-      // eq(2 in arrayWithHoles, false);
-      // eq(3 in arrayWithHoles, false);
+      var arrayWithHoles = [, , ,];
+      unshift(arrayWithHoles, 1);
+      eq(arrayWithHoles[0], 1);
+      eq(1 in arrayWithHoles, false);
+      eq(2 in arrayWithHoles, false);
+      eq(3 in arrayWithHoles, false);
     },
 
     "6a) If multiple elementsToAdd, it should increase array.length by the number of elementsToAdd.": function() {
-      fail();
-      // var array = [];
-      // var originalArrayLength = array.length;
-      // unshift(array, 1);
-      // eq(array.length, originalArrayLength + 1);
+      var array = [];
+      var originalArrayLength = array.length;
+      unshift(array, 1);
+      eq(array.length, originalArrayLength + 1);
 
-      // var array = [];
-      // var originalArrayLength = array.length;
-      // unshift(array, 1, 2);
-      // eq(array.length, originalArrayLength + 2);
+      var array = [];
+      var originalArrayLength = array.length;
+      unshift(array, 1, 2);
+      eq(array.length, originalArrayLength + 2);
     },
 
     "7a) It should add elements in the same order as they were passed into unshift as arguments.": function() {
-      fail();
-      // var array = [];
-      // var firstArgument = 1;
-      // var secondArgument = 2;
-      // unshift(array, firstArgument,secondArgument);
-      // eq(array.indexOf(firstArgument), array.indexOf(secondArgument)-1);
+      var array = [];
+      var firstArgument = 1;
+      var secondArgument = 2;
+      unshift(array, firstArgument, secondArgument);
+      eq(array.indexOf(firstArgument), array.indexOf(secondArgument) - 1);
     },
 
     // When used with .call() or .apply():
     "8a) It should unshift when used with call().": function() {
-      fail();
-      // var array = [];
-      // unshift.call(array, 1, 2));
-      // eq(array[0], 1);
-      // eq(array[1], 2);
-      // eq(array.length, 2);
+      var array = [];
+      unshift.call(array, 1, 2);
+      eq(array[0], 1);
+      eq(array[1], 2);
+      eq(array.length, 2);
     },
     "8b) It should unshift when used with apply().": function() {
-      fail();
-      // var array = [];
-      // var argumentsArray = [1,2]
-      // unshift.call(array, argumentsArray));
-      // eq(array[0], argumentsArray);
-      // eq(array.length, 1);
+      var array = [];
+      var argumentsArray = [1, 2];
+      unshift.call(array, argumentsArray);
+      eq(array[0], argumentsArray);
+      eq(array.length, 1);
     },
 
     "9a) If elementsToAdd, add numerated keys to object beginning at object[0].": function() {
