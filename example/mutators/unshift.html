@@ -9,26 +9,6 @@
   // >>> returns 2
   // >>> array = [1,0];
 
-  // TODO: Finish writing prototype implementation of function.
-
-  // Inside of parent loop, write child loop that starts at end of array
-
-  // Write loop that starts at the end of the array:
-  // Set i = array.length
-  // if i !== 0
-  // Retrive the value stored in array[i] and copy it to array[i+1]
-  // Decrement i by 1
-  // else
-  // Store the value in elementToAdd in array[0]
-
-  // Repeat the loop
-
-  // Add the last element in the elementToAdd array
-  // Starting at
-
-  // TODO: Refactor sytax and remove console tests for prototype implementation.
-  // Start -----------------------------
-
   // Prototype implementation:
 
   // function unshift(array, elements) {
@@ -50,8 +30,6 @@
   //   return array.length;
   // }
 
-  // End -----------------------------
-
   // Function signature:
   // unshift(array, elementsToAdd);
 
@@ -63,7 +41,22 @@
   // 1) The new length of the array after the element has been added.
 
   // Function Syntax:
-  function unshift(array, elementsToAdd) {
+  function unshift(array, elements) {
+    // Extract elementsToAdd from arguments array.
+    var elementsToAdd = [];
+    for (var i = 0; i < arguments.length - 1; i++) {
+      elementsToAdd[i] = arguments[i + 1];
+    }
+
+    // Starting with the last elementToAdd:
+    for (var i = elementsToAdd.length - 1; i >= 0; i--) {
+      // Copy the value of all elements in array to the index above them:
+      for (var j = array.length - 1; j >= 0; j--) {
+        array[j + 1] = array[j];
+      }
+      array[0] = elementsToAdd[i];
+    }
+
     return array.length;
   }
 
@@ -78,7 +71,7 @@
       eq(Object.prototype.toString.call(returnedValue), "[object Number]");
     },
 
-    "2a) It should return the length of array.": function() {
+    "2a) The number that is returned should be equal to the length of array.": function() {
       var emptyArray = [];
       var unshiftedEmptyArray = unshift(emptyArray);
       eq(unshiftedEmptyArray, emptyArray.length);
@@ -105,28 +98,27 @@
     },
 
     "4a) If elementsToAdd, it should add number of elementsToAdd to the beginning of array.": function() {
-      fail();
-      // var primitiveToAdd = 1;
-      // var array = [];
-      // unshift(array, primitiveToAdd);
-      // eq(primitiveToAdd, array[0]);
+      var primitiveToAdd = 1;
+      var array = [];
+      unshift(array, primitiveToAdd);
+      eq(primitiveToAdd, array[0]);
 
-      // var objectToAdd = {};
-      // var array = [];
-      // unshift(array, objectToAdd);
-      // eq(objectToAdd, array[0]);
+      var objectToAdd = {};
+      var array = [];
+      unshift(array, objectToAdd);
+      eq(objectToAdd, array[0]);
 
-      // var array = [];
-      // var firstElementInArray = 1;
-      // unshift(array, firstElementInArray);
-      // eq(firstElementInArray, array[0]);
+      var array = [];
+      var firstElementInArray = 1;
+      unshift(array, firstElementInArray);
+      eq(firstElementInArray, array[0]);
 
-      // var array = [];
-      // var firstElementInArray = 1;
-      // var secondElementInArray = 2;
-      // unshift(array, firstElementInArray, secondElementInArray);
-      // eq(firstElementInArray, array[0]);
-      // eq(secondElementInArray, array[1]);
+      var array = [];
+      var firstElementInArray = 1;
+      var secondElementInArray = 2;
+      unshift(array, firstElementInArray, secondElementInArray);
+      eq(firstElementInArray, array[0]);
+      eq(secondElementInArray, array[1]);
     },
 
     "5a) If should preserve holes in array.": function() {
