@@ -34,36 +34,21 @@
   // function unshift(array, elements) {
   //   // Extract elementsToAdd from arguments array.
   //   var elementsToAdd = [];
-
   //   for (var i = 0; i < arguments.length - 1; i++) {
   //     elementsToAdd[i] = arguments[i + 1];
   //   }
 
-  //   // Go through every element in elementsToAdd, starting with the last one:
-  //   for (var i = elementsToAdd.length - 1; i > -1; i--) {
-  //     var elementToAdd = elementsToAdd[i];
-
-  //     // Starting with the last element in array:
-  //     for (var j = array.length - 1; j > -2; j--) {
-  //       // Increase the index of every element by one.
-  //       if (j > -1) {
-  //         var elementToCopy = array[j];
-  //         array[j + 1] = elementToCopy;
-  //         // And replace the value at array[0] with elementToAdd
-  //       } else {
-  //         array[0] = elementToAdd;
-  //       }
+  //   // Starting with the last elementToAdd:
+  //   for (var i = elementsToAdd.length - 1; i >= 0; i--) {
+  //     // Copy the value of all elements in array to the index above them:
+  //     for (var j = array.length - 1; j >= 0; j--) {
+  //       array[j + 1] = array[j];
   //     }
+  //     array[0] = elementsToAdd[i];
   //   }
 
   //   return array.length;
   // }
-
-  // Console tests for prototype implementation:
-  // debugger;
-
-  // var testArray = [0];
-  // unshift(testArray, 1, 2);
 
   // End -----------------------------
 
