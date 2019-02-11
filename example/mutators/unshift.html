@@ -238,48 +238,42 @@
       eq(object.length, 0);
 
       var object = { length: "1" };
-      debugger;
       unshift.call(object);
       eq(object.length, 1);
     },
 
     "12a) If elementsToAdd and object.length does not exist, set object.length to number of elementsToAdd.": function() {
-      fail();
-      // var object = {};
-      // unshift.call(object, 1, 2);
-      // eq(object.length, 2);
+      var object = {};
+      unshift.call(object, 1, 2);
+      eq(object.length, 2);
     },
     "12b) If elementsToAdd, object.length is a number and object.length < 0, set object.length to number of elementsToAdd.": function() {
-      fail();
-      // var objectWithNegativeLength = { length: -10 };
-      // unshift.call(objectWithNegativeLength, 1, 2);
-      // eq(objectWithNegativeLength.length, 2);
+      var objectWithNegativeLength = { length: -10 };
+      unshift.call(objectWithNegativeLength, 1, 2);
+      eq(objectWithNegativeLength.length, 2);
     },
     "12c) If elementsToAdd and object.length >= 0, increase object.length by number of elementsToAdd.": function() {
-      fail();
-      // var objectWithLengthOfZero = {
-      //   length: 0,
-      // };
-      // unshift.call(objectWithLengthOfZero, 1, 2);
-      // eq(objectWithLengthOfZero.length, 2);
+      var objectWithLengthOfZero = {
+        length: 0
+      };
+      unshift.call(objectWithLengthOfZero, 1, 2);
+      eq(objectWithLengthOfZero.length, 2);
 
-      // var objectWithLengthOfOne = {
-      //   length: 1,
-      // };
-      // unshift.call(objectWithLengthOfOne, 1, 2);
-      // eq(objectWithLengthOfOne.length, 3);
+      var objectWithLengthOfOne = {
+        length: 1
+      };
+      unshift.call(objectWithLengthOfOne, 1, 2);
+      eq(objectWithLengthOfOne.length, 3);
     },
     "12d) If elementsToAdd and object.length is not a number, set object.length equal to Number(object.length) + number of elementsToAdd.": function() {
-      fail();
-      // var object = { length: "0" };
-      // unshift.call(object, 1, 2);
-      // eq(object.length, 2);
+      var object = { length: "0" };
+      unshift.call(object, 1, 2);
+      eq(object.length, 2);
     },
     "12e) If elementsToAdd and object.length is not a number, and object.length cannot be converted to a number set object.length equal to Number(object.length) + number of elementsToAdd.": function() {
-      fail();
-      // var object = { length: "string" };
-      // unshift.call(object, 1, 2);
-      // eq(object.length, 2);
+      var object = { length: "string" };
+      unshift.call(object, 1, 2);
+      eq(object.length, 2);
     },
 
     // TODO: Write tests for uses of unshift using .call() that may throw an error:
