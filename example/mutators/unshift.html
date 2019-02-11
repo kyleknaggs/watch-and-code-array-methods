@@ -53,7 +53,6 @@
       indexOfFirstArgumentToAdd = 1;
     }
 
-    // Extract the list of values to add to array:
     var elementsToAdd = [];
     var numberOfElementsToAdd = arguments.length - indexOfFirstArgumentToAdd;
 
@@ -61,9 +60,16 @@
       elementsToAdd[i] = arguments[i + indexOfFirstArgumentToAdd];
     }
 
+    if (objectToModify.length < 0 || isNaN(objectToModify.length)) {
+      objectToModify.length = 0;
+    }
+
+    if (numberOfElementsToAdd > 0) {
+      objectToModify.length = objectToModify.length + elementsToAdd.length;
+    }
+
     // Starting with the last elementToAdd, copy all elements in array to the index above them:
-    for (var i = elementsToAdd.length - 1; i >= 0; i--) {
-      objectToModify.length = objectToModify.length + 1;
+    for (var i = numberOfElementsToAdd - 1; i >= 0; i--) {
       for (var j = objectToModify.length - 1; j >= 0; j--) {
         if (j in objectToModify) {
           objectToModify[j + 1] = objectToModify[j];
@@ -179,63 +185,62 @@
     },
 
     "9a) If elementsToAdd, add numerated keys to object beginning at object[0].": function() {
-      fail();
-      // var object = {};
-      // unshift.call(object, 1, 2);
-      // eq(object[0], 1);
-      // eq(object[1], 2);
+      var object = {};
+      unshift.call(object, 1, 2);
+      eq(object[0], 1);
+      eq(object[1], 2);
 
-      // var object = {10: 10};
-      // unshift.call(object, 1, 2);
-      // eq(object[0], 1);
-      // eq(object[1], 2);
+      var object = { 10: 10 };
+      unshift.call(object, 1, 2);
+      eq(object[0], 1);
+      eq(object[1], 2);
     },
 
     "10a) If elementsToAdd, a numerated key already exists, and number of elementsToAdd > numerated key, overwrite value of numerated key with elementToAdd.": function() {
-      fail();
-      // var valueAddedByUnshift = 'string';
-      // var object = {0: 'string'};
-      // unshift.call(object, valueAddedByUnshift);
-      // eq(object[0], valueAddedByUnshift);
+      var valueAddedByUnshift = "string";
+      var object = { 0: "string" };
+      unshift.call(object, valueAddedByUnshift);
+      eq(object[0], valueAddedByUnshift);
     },
 
     "11a) If no elementsToAdd and object.length >= 0, leave object.length unchanged.": function() {
-      fail();
-      // var objectWithLengthOfZero = {
-      //   length: 0,
-      // };
-      // unshift.call(objectWithLengthOfZero);
-      // eq(objectWithLengthOfZero.length, 0);
+      var objectWithLengthOfZero = {
+        length: 0
+      };
+      unshift.call(objectWithLengthOfZero);
+      eq(objectWithLengthOfZero.length, 0);
 
-      // var objectWithLengthOfOne = {
-      //   length: 1,
-      // };
-      // unshift.call(objectWithLengthOfOne);
-      // eq(objectWithLengthOfOne.length, 1);
+      var objectWithLengthOfOne = {
+        length: 1
+      };
+      unshift.call(objectWithLengthOfOne);
+      eq(objectWithLengthOfOne.length, 1);
     },
     "11b) If no elementsToAdd and object.length does not exist, set object.length to 0.": function() {
-      fail();
-      // var object = {};
-      // unshift.call(object);
-      // eq(object.length, 0);
+      var object = {};
+      unshift.call(object);
+      eq(object.length, 0);
     },
     "11c) If no elementsToAdd, object.length is a number and object.length < 0, set object.length to 0.": function() {
-      fail();
-      // var objectWithNegativeLength = { length: -10 };
-      // unshift.call(objectWithNegativeLength);
-      // eq(objectWithNegativeLength.length, 0);
+      var objectWithNegativeLength = { length: -10 };
+      unshift.call(objectWithNegativeLength);
+      eq(objectWithNegativeLength.length, 0);
     },
-    "9d) If no elementsToAdd and object.length is not a number, and object.length cannot be converted to a number set object.length to 0.": function() {
-      fail();
-      // var object = { length: "string" };
-      // unshift.call(object);
-      // eq(object.length, 0);
+    "11d) If no elementsToAdd and object.length is not a number, and object.length cannot be converted to a number set object.length to 0.": function() {
+      var object = { length: "string" };
+      // debugger;
+      unshift.call(object);
+      eq(object.length, 0);
     },
     "11e) If no elementsToAdd and object.length is not a number, convert object.length to number.": function() {
-      fail();
-      // var object = { length: "0" };
-      // unshift.call(object);
-      // eq(object.length, 0);
+      var object = { length: "0" };
+      unshift.call(object);
+      eq(object.length, 0);
+
+      var object = { length: "1" };
+      debugger;
+      unshift.call(object);
+      eq(object.length, 1);
     },
 
     "12a) If elementsToAdd and object.length does not exist, set object.length to number of elementsToAdd.": function() {
