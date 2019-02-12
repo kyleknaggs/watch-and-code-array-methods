@@ -43,14 +43,24 @@
   // Function Syntax:
   function unshift(array, elements) {
     var objectToModify, indexOfFirstArgumentToAdd;
+    var classOfThis = Object.prototype.toString.call(this);
 
-    // if this !== window, store the value in this in the variable objectToModify
-    if (Object.prototype.toString.call(this) !== "[object Window]") {
-      objectToModify = this;
-      indexOfFirstArgumentToAdd = 0;
-    } else {
+    // Incorrect uses via .call() or .apply():
+    if (
+      classOfThis === "[object String]" ||
+      classOfThis === "[object Undefined]" ||
+      classOfThis === "[object Function]"
+    ) {
+      throw new TypeError();
+    }
+
+    // Correct uses via .call() or .apply():
+    if (classOfThis === "[object Window]") {
       objectToModify = array;
       indexOfFirstArgumentToAdd = 1;
+    } else {
+      objectToModify = this;
+      indexOfFirstArgumentToAdd = 0;
     }
 
     var elementsToAdd = [];
@@ -80,10 +90,6 @@
 
     return objectToModify.length;
   }
-
-  // Requirements:
-  // i.e. What are the different arguments and combinations of these arguments that can be passed into the function's parameters.
-  // i.e. array, empty array, no elementsToAdd, elementsToAdd, array is a traditional array, array is an array-like object...etc.
 
   tests({
     "1a) It should return a number.": function() {
@@ -228,7 +234,6 @@
     },
     "11d) If no elementsToAdd and object.length is not a number, and object.length cannot be converted to a number set object.length to 0.": function() {
       var object = { length: "string" };
-      // debugger;
       unshift.call(object);
       eq(object.length, 0);
     },
@@ -279,79 +284,73 @@
     // TODO: Write tests for uses of unshift using .call() that may throw an error:
 
     "13a) If array is a number or a boolean return 0.": function() {
-      fail();
       // If array is a number:
+      var zero = 0;
+      var unshiftedValue = unshift.call(zero);
+      eq(unshiftedValue, 0);
 
-      // var zero = 0;
-      // var unshiftedValue = unshift.call(zero);
-      // eq(unshiftedValue, 0);
+      var one = 1;
+      var unshiftedValue = unshift.call(zero);
+      eq(unshiftedValue, 0);
 
-      // var one = 1;
-      // var unshiftedValue = unshift.call(zero);
-      // eq(unshiftedValue, 0);
-
-      // var two = 2;
-      // var unshiftedValue = unshift.call(zero);
-      // eq(unshiftedValue, 0);
+      var two = 2;
+      var unshiftedValue = unshift.call(zero);
+      eq(unshiftedValue, 0);
 
       // If array is a bool:
+      var falseBool = false;
+      var unshiftedValue = unshift.call(falseBool);
+      eq(unshiftedValue, 0);
 
-      // var falseBool = false;
-      // var unshiftedValue = unshift.call(falseBool);
-      // eq(unshiftedValue, 0);
-
-      // var trueBool = true;
-      // var unshiftedValue = unshift.call(trueBool);
-      // eq(unshiftedValue, 0);
+      var trueBool = true;
+      var unshiftedValue = unshift.call(trueBool);
+      eq(unshiftedValue, 0);
     },
 
     // Note: Will not test for the string contained by the TypeError, just wanted to the tests to reflect the different reasons that TypeError occured:
 
     "14a) If array is a string, throw TypeError that states 'Cannot assign to read only property 'length' of object '[object String]''.": function() {
-      fail();
-      // var isTypeError = false;
-      // try {
-      //   var string = "string";
-      //   unshift.call(string);
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      var isTypeError = false;
+      try {
+        var string = "string";
+        unshift.call(string);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     },
 
     "14b) If array is null or undefined throw a TypeError that states 'Cannot convert undefined or null to object'.": function() {
-      fail();
       // If array is null:
-      // var isTypeError = false;
-      // try {
-      //   var testNull = null;
-      //   unshift.call(testNull);
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      var isTypeError = false;
+      try {
+        var testNull = null;
+        unshift.call(testNull);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
 
       // If array is undefined:
-      // var isTypeError = false;
-      // try {
-      //   var testUndefined = undefined;
-      //   unshift.call(testUndefined);
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      var isTypeError = false;
+      try {
+        var testUndefined = undefined;
+        unshift.call(testUndefined);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     },
 
     "14c) If array is function throw a TypeError that states 'Cannot assign to read only property 'length' of function'.": function() {
-      fail();
-      // var isTypeError = false;
-      // try {
-      //   var testFunction = function() {};
-      //   unshift.call(testFunction);
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      var isTypeError = false;
+      try {
+        var testFunction = function() {};
+        unshift.call(testFunction);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     }
   });
 </script>
