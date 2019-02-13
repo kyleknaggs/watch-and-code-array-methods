@@ -1,8 +1,13 @@
 <script src="../../simpletest.js"></script>
 <script>
   // Summary:
+  //  Fills all the elements of an array from a start index to an end index with a static value.
 
   // Example:
+  // var array = [0,1];
+  // fill(array, 2)
+  // >> returns [2,2]
+  // >> array === [2,2]
 
   // Prototype implementation:
 
@@ -10,22 +15,138 @@
   // }
 
   // Function signature:
-  // fill();
+  // fill(array, value, optionalStart, optionalEnd);
 
   // Arguments:
+  // array - The array to be modified.
+  // value - The value used to fill the array.
+  // optionalStart - Starting index for the insertion of valueToFill. Defaults to 0.
+  // optionalEnd - Ending index for the insertion of valueToFill. Defaults to array.length.
 
   // Return value:
+  // The modified array.
+
+  // Requirements:
+
+  // Questions:
+  // 1) What is a polyfill?
+  // https://developer.mozilla.org/en-US/docs/Glossary/Polyfill
+  // A polyfill is a piece of code, usually JS on the web, used to provide modern functionality to old browsers that do not support it.
+  // https://www.youtube.com/watch?v=kJZFEI67HoM
+  // A script that is conditionally injected into a browser if an older browser does not support a specific bit of modern functionality.
 
   // Function Syntax:
   // function fill() {}
 
+  // TODO: 1) Test what these strangely worded requirements means:
+
+  // Fill is intentionally generic, it does not require that its this value be an Array object.
+  // ^^ Theory: Test what happens with .call(), .apply() & array like objects.
+
+  // When fill gets passed an object, it will copy the reference and fill the array with references to that object.
+  // ^^ Theory: Test what happens when objects and array-like objects are passed to .fill().
+
+  // The end argument is optional with and the length of the this object... -
+  // ^^ What happens if this isn't triggered manually via .call() or .apply(). I have no idea what this means.
+
+  // TODO: 2) Go through generic requirements lists and edge cases.
+
+  // TODO: 3) Continue to create test cases.
+
+  // TODO: 4) Organize and number tests.
+
   tests({
-    "1a) First Test.": function() {
+    "a) It should return an array.": function() {
       fail();
     },
 
-    "2a) Second Test.": function() {
+    "a) It should return the same array instead of creating a new array.": function() {
       fail();
+      // var originalArray = [0,1,2];
+      // var filledArray = originalArray.fill('a');
+      // eq(originalArray, filledArray);
+    },
+
+    "a) It should fill elements with value.": function() {
+      fail();
+    },
+
+    "a) If no optionalStart, it should start filling indexes at array[0].": function() {
+      fail();
+    },
+    "b) If optionalStart, it should start filling indexes at array[optionalStart].": function() {
+      fail();
+    },
+
+    "a) If no optionalEnd, it should fill all remaining indexes in array.": function() {
+      fail();
+    },
+    "b) If optionalEnd, it should fill all indexes until array[optionalEnd].": function() {
+      fail();
+    },
+
+    "a) If optionalStart is negative, start fill at array.length + optionalStart.": function() {
+      fail();
+      // var originalArray = [0, 1, 2];
+      // var filledArray = originalArray.fill("a", -1);
+      // eq(filledArray[0], 0);
+      // eq(filledArray[1], 1);
+      // eq(filledArray[2], "a");
+
+      // var originalArray = [0, 1, 2];
+      // var filledArray = originalArray.fill("a", -2);
+      // eq(filledArray[0], 0);
+      // eq(filledArray[1], "a");
+      // eq(filledArray[2], "a");
+    },
+    "b) If optionalEnd is negative, end fill at array.length + optionalEnd.": function() {
+      fail();
+      // var originalArray = [0, 1, 2];
+      // var filledArray = originalArray.fill("a", 0, -1);
+      // eq(filledArray[0], "a");
+      // eq(filledArray[1], "a");
+      // eq(filledArray[2], 2);
+
+      // var originalArray = [0, 1, 2];
+      // var filledArray = originalArray.fill("a", 0, -2);
+      // eq(filledArray[0], "a");
+      // eq(filledArray[1], 1);
+      // eq(filledArray[2], 2);
+    },
+
+    "a) It should fill with .call().": function() {
+      fail();
+      // var originalArray = [0, 1, 2];
+      // fill.call(originalArray, "a");
+      // eq(originalArray[0] && originalArray[1] && originalArray[2], "a");
+
+      // var originalArray = [0, 1, 2];
+      // fill.call(originalArray, "a", 1);
+      // eq(originalArray[0], 0);
+      // eq(originalArray[1] && originalArray[2], "a");
+
+      // var originalArray = [0, 1, 2];
+      // fill.call(originalArray, "a", 1, 2);
+      // eq(originalArray[0], 0);
+      // eq(originalArray[1], "a");
+      // eq(originalArray[2], 2);
+    },
+    "b) It should fill with .apply().": function() {
+      fail();
+      // var originalArray = [0, 1, 2];
+      // fill.call(originalArray, ["a"]);
+      // eq(originalArray[0] && originalArray[1] && originalArray[2], "a");
+
+      // var originalArray = [0, 1, 2];
+      // fill.call(originalArray, ["a", 1]);
+      // eq(originalArray[0], 0);
+      // eq(originalArray[1] && originalArray[2], "a");
+
+      // var originalArray = [0, 1, 2];
+      // fill.call(originalArray, ["a", 1, 2]);
+      // eq(originalArray[0], 0);
+      // eq(originalArray[1], "a");
+      // eq(originalArray[2], 2);
     }
   });
 </script>
