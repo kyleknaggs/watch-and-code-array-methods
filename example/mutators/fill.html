@@ -52,95 +52,102 @@
   // A script that is conditionally injected into a browser if an older browser does not support a specific bit of modern functionality.
 
   // Function Syntax:
-  // function fill() {}
+
+  function fill(array, valueToFill, optionalStart, optionalEnd) {
+    var startingIndex = 0;
+    var endingIndex = array.length;
+
+    if (optionalStart) {
+      startingIndex = optionalStart;
+    }
+
+    if (optionalEnd) {
+      endingIndex = optionalEnd;
+    }
+
+    for (var i = startingIndex; i < endingIndex; i++) {
+      array[i] = valueToFill;
+    }
+
+    return array;
+  }
 
   tests({
     "1a) It should return an array.": function() {
-      fail();
-      // var originalArray = [];
-      // var filledArray = fill(originalArray);
-      // eq(Object.prototype.toString.call(filledArray), "[object Array]")
+      var originalArray = [];
+      var filledArray = fill(originalArray);
+      eq(Object.prototype.toString.call(filledArray), "[object Array]");
     },
 
     "2a) It should return the same array instead of creating a new array.": function() {
-      fail();
-      // var originalArray = [];
-      // var filledArray = fill(originalArray);
-      // eq(originalArray, filledArray);
+      var originalArray = [];
+      var filledArray = fill(originalArray);
+      eq(originalArray, filledArray);
     },
 
     "3a) It should fill elements with valueToFill.": function() {
-      fail();
-      // var originalArray = [0];
-      // var filledArray = fill(originalArray, 'a');
-      // eq(filledArray[0], 'a');
+      var originalArray = [0];
+      var filledArray = fill(originalArray, "a");
+      eq(filledArray[0], "a");
 
-      // var originalArray = [0,1];
-      // var filledArray = fill(originalArray, 'a');
-      // eq(filledArray[0], 'a');
-      // eq(filledArray[1], 'a');
+      var originalArray = [0, 1];
+      var filledArray = fill(originalArray, "a");
+      eq(filledArray[0], "a");
+      eq(filledArray[1], "a");
     },
 
     "4a) It should fill holes in array.": function() {
-      fail();
-      // var arrayWithHoles = [,,,];
-      // var filledArray = fill(arrayWithHoles, 'a');
-      // eq(filledArray[0], 'a')
-      // eq(filledArray[1], 'a')
-      // eq(filledArray[2], 'a')
+      var arrayWithHoles = [, , ,];
+      var filledArray = fill(arrayWithHoles, "a");
+      eq(filledArray[0], "a");
+      eq(filledArray[1], "a");
+      eq(filledArray[2], "a");
 
-      // var arrayWithHoles = [0,,2];
-      // var filledArray = fill(arrayWithHoles, 'a');
-      // eq(filledArray[1], 'a')
+      var arrayWithHoles = [0, , 2];
+      var filledArray = fill(arrayWithHoles, "a");
+      eq(filledArray[1], "a");
     },
 
     "5a) If valueToFill is an object, pass reference to object instead of a shallow copy of object.": function() {
-      fail();
-      // var originalArray = [0];
-      // var originalObject = {};
-      // var filledArray = fill(originalArray, originalObject);
-      // eq(filledArray[0], originalObject);
+      var originalArray = [0];
+      var originalObject = {};
+      var filledArray = fill(originalArray, originalObject);
+      eq(filledArray[0], originalObject);
     },
 
     "6a) If valueToFill contains a nested array, fill should contain nested array.": function() {
-      fail();
-      // var originalArray = ['originalArray'];
-      // var nestedArray = ['nestedArray'];
-      // var array = ['array', nestedArray]
-      // var filledArray = originalArray.fill(array);
-      // eq(filledArray[0], array);
-      // eq(filledArray[0][1], nestedArray);
+      var originalArray = ["originalArray"];
+      var nestedArray = ["nestedArray"];
+      var array = ["array", nestedArray];
+      var filledArray = originalArray.fill(array);
+      eq(filledArray[0], array);
+      eq(filledArray[0][1], nestedArray);
     },
 
     "7a) If no optionalStart, it should start filling indexes at array[0].": function() {
-      fail();
-      // var originalArray = [0,1];
-      // var filledArray = fill(originalArray, 'a');
-      // eq(filledArray[0], 'a');
+      var originalArray = [0, 1];
+      var filledArray = fill(originalArray, "a");
+      eq(filledArray[0], "a");
     },
     "7b) If optionalStart, it should start filling indexes at array[optionalStart].": function() {
-      fail();
-      // var originalArray = [0,1];
-      // var filledArray = fill(originalArray, 'a', 1);
-      // eq(filledArray[0], 0);
-      // eq(filledArray[1], 'a');
+      var originalArray = [0, 1];
+      var filledArray = fill(originalArray, "a", 1);
+      eq(filledArray[0], 0);
+      eq(filledArray[1], "a");
     },
 
     "8a) If no optionalEnd, it should fill all remaining indexes in array.": function() {
-      fail();
-      // var originalArray = [0,1];
-      // var filledArray = fill(originalArray, 'a', 0);
-      // TODO: 5) Double check this for loop is a good way to run a test.
-      // for(var i=0; i<filledArray.length; i++){
-      //    eq(filledArray[i], 'a');
-      // }
+      var originalArray = [0, 1];
+      var filledArray = fill(originalArray, "a", 0);
+      for (var i = 0; i < filledArray.length; i++) {
+        eq(filledArray[i], "a");
+      }
     },
     "9b) If optionalEnd, it should fill all indexes until array[optionalEnd].": function() {
-      fail();
-      // var originalArray = [0,1];
-      // var filledArray = fill(originalArray, 'a', 0, 1);
-      // eq(filledArray[0], 'a');
-      // eq(filledArray[1], 1);
+      var originalArray = [0, 1];
+      var filledArray = fill(originalArray, "a", 0, 1);
+      eq(filledArray[0], "a");
+      eq(filledArray[1], 1);
     },
 
     "10a) If optionalStart is negative, start fill at array.length + optionalStart.": function() {
