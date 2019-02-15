@@ -38,37 +38,57 @@
   // Function Syntax:
   // function fill() {}
 
-  // TODO: 1) Test what these strangely worded requirements means:
-
-  // Fill is intentionally generic, it does not require that its this value be an Array object.
-  // ^^ Theory: Test what happens with .call(), .apply() & array like objects.
-
-  // When fill gets passed an object, it will copy the reference and fill the array with references to that object.
-  // ^^ Theory: Test what happens when objects and array-like objects are passed to .fill().
-
-  // The end argument is optional with and the length of the this object... -
-  // ^^ What happens if this isn't triggered manually via .call() or .apply(). I have no idea what this means.
-
-  // TODO: 2) Go through generic requirements lists and edge cases.
-
-  // TODO: 3) Continue to create test cases.
-
-  // TODO: 4) Organize and number tests.
+  // TODO: 1) Continue to create test cases.
+  // TODO: 2) Organize and number tests.
+  // TODO: 3) What happens if there is a nested array inside of array?.
+  // TODO: 4) What happens if unintended data types are passed into fill via .call() or .apply()? Does it trigger a TypeError?
 
   tests({
     "a) It should return an array.": function() {
       fail();
+      // var originalArray = [];
+      // var filledArray = fill(originalArray);
+      // eq(Object.prototype.toString.call(filledArray), "[object Array]")
     },
 
     "a) It should return the same array instead of creating a new array.": function() {
       fail();
-      // var originalArray = [0,1,2];
-      // var filledArray = originalArray.fill('a');
+      // var originalArray = [];
+      // var filledArray = fill(originalArray);
       // eq(originalArray, filledArray);
     },
 
     "a) It should fill elements with value.": function() {
       fail();
+      // var originalArray = [0];
+      // var filledArray = fill(originalArray, 'a');
+      // eq(filledArray[0], 'a');
+
+      // var originalArray = [0,1];
+      // var filledArray = fill(originalArray, 'a');
+      // eq(filledArray[0], 'a');
+      // eq(filledArray[1], 'a');
+    },
+
+    "a) It should fill holes in array.": function() {
+      fail();
+      // var arrayWithHoles = [,,,];
+      // var filledArray = fill(arrayWithHoles, 'a');
+      // eq(filledArray[0], 'a')
+      // eq(filledArray[1], 'a')
+      // eq(filledArray[2], 'a')
+
+      // var arrayWithHoles = [0,,2];
+      // var filledArray = fill(arrayWithHoles, 'a');
+      // eq(filledArray[1], 'a')
+    },
+
+    "a) If value is an object, pass reference to object instead of a shallow copy of object.": function() {
+      fail();
+      // var originalArray = [0];
+      // var originalObject = {};
+      // var filledArray = fill(originalArray, originalObject);
+      // eq(filledArray[0], originalObject);
     },
 
     "a) If no optionalStart, it should start filling indexes at array[0].": function() {
@@ -147,6 +167,116 @@
       // eq(originalArray[0], 0);
       // eq(originalArray[1], "a");
       // eq(originalArray[2], 2);
+    },
+
+    "a) If array is object and object has no length, object should remain unchanged.": function() {
+      fail();
+      // var originalObject = {
+      //   0:0
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject[0], 0);
+    },
+    "b) If array is object and object.length is <= 0, object should remain unchanged.": function() {
+      fail();
+      // var originalObject = {
+      //   0:0,
+      //   length: -10
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject[0], 0);
+    },
+    "c) If array is object and object.length is > 0, fill indexes up to object.length - 1.": function() {
+      fail();
+      // var originalObject = {
+      //   0:0,
+      //   1:1,
+      //   length: 1
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject[0], 'a');
+      // eq(modifiedObject[1], 1);
+
+      // var originalObject = {
+      //   0:0,
+      //   1:1,
+      //   length: 2
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject[0], 'a');
+      // eq(modifiedObject[1], 'a');
+
+      // var originalObject = {
+      //   0:0,
+      //   1:1,
+      //   length: 3
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject[0], 'a');
+      // eq(modifiedObject[1], 'a');
+      // eq(modifiedObject[2], 'a');
+    },
+    "d) If array is object and object.length is a string, and object.length can be converted to a number, fill indexes up to Number(object.length) - 1.": function() {
+      fail();
+      // var originalObject = {
+      //   0:0,
+      //   length: '1'
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject[0], 'a');
+    },
+    "e) If array is object and object.length is a string, and object.length cannot be converted to a number, object should remain unchanged.": function() {
+      fail();
+      // var originalObject = {
+      //   0:0,
+      //   length: 'cow'
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject[0], 0);
+    },
+
+    "a) If array is object it should never modify object.length.": function() {
+      fail();
+      // var originalObject = {
+      //   0:0
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject.hasOwnProperty("length"), false);
+
+      // var originalObject = {
+      //   0:0,
+      //   length: -10
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject.length, -10);
+
+      // var originalObject = {
+      //   0:0,
+      //   length: 1
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject.length, 1);
+
+      // var originalObject = {
+      //   0:0,
+      //   length: 2
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject.length, 2);
+
+      // var originalObject = {
+      //   0:0,
+      //   length: '1'
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject.length, '1');
+
+      // var originalObject = {
+      //   0:0,
+      //   length: 'cow'
+      // };
+      // var modifiedObject = fill.call(originalObject, 'a');
+      // eq(modifiedObject.length, 'cow');
     }
   });
 </script>
