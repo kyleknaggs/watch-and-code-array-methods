@@ -11,15 +11,31 @@
 
   // Prototype implementation:
 
-  // function fill() {
+  // function fill(array, valueToFill, optionalStart, optionalEnd) {
+  //   var startingIndex = 0;
+  //   var endingIndex = array.length;
+
+  //   if (optionalStart) {
+  //     startingIndex = optionalStart;
+  //   }
+
+  //   if (optionalEnd) {
+  //     startingIndex = optionalEnd;
+  //   }
+
+  //   for (var i = startingIndex; i < endingIndex; i++) {
+  //     array[i] = valueToFill;
+  //   }
+
+  //   return array;
   // }
 
   // Function signature:
-  // fill(array, value, optionalStart, optionalEnd);
+  // fill(array, valueToFill, optionalStart, optionalEnd);
 
   // Arguments:
   // array - The array to be modified.
-  // value - The value used to fill the array.
+  // valueToFill - The value used to fill the array.
   // optionalStart - Starting index for the insertion of valueToFill. Defaults to 0.
   // optionalEnd - Ending index for the insertion of valueToFill. Defaults to array.length.
 
@@ -38,25 +54,22 @@
   // Function Syntax:
   // function fill() {}
 
-  // TODO: 3) What happens if there is a nested array inside of array?.
-  // TODO: 4) Organize and number tests.
-
   tests({
-    "a) It should return an array.": function() {
+    "1a) It should return an array.": function() {
       fail();
       // var originalArray = [];
       // var filledArray = fill(originalArray);
       // eq(Object.prototype.toString.call(filledArray), "[object Array]")
     },
 
-    "a) It should return the same array instead of creating a new array.": function() {
+    "2a) It should return the same array instead of creating a new array.": function() {
       fail();
       // var originalArray = [];
       // var filledArray = fill(originalArray);
       // eq(originalArray, filledArray);
     },
 
-    "a) It should fill elements with value.": function() {
+    "3a) It should fill elements with valueToFill.": function() {
       fail();
       // var originalArray = [0];
       // var filledArray = fill(originalArray, 'a');
@@ -68,7 +81,7 @@
       // eq(filledArray[1], 'a');
     },
 
-    "a) It should fill holes in array.": function() {
+    "4a) It should fill holes in array.": function() {
       fail();
       // var arrayWithHoles = [,,,];
       // var filledArray = fill(arrayWithHoles, 'a');
@@ -81,7 +94,7 @@
       // eq(filledArray[1], 'a')
     },
 
-    "a) If value is an object, pass reference to object instead of a shallow copy of object.": function() {
+    "5a) If valueToFill is an object, pass reference to object instead of a shallow copy of object.": function() {
       fail();
       // var originalArray = [0];
       // var originalObject = {};
@@ -89,13 +102,23 @@
       // eq(filledArray[0], originalObject);
     },
 
-    "a) If no optionalStart, it should start filling indexes at array[0].": function() {
+    "6a) If valueToFill contains a nested array, fill should contain nested array.": function() {
+      fail();
+      // var originalArray = ['originalArray'];
+      // var nestedArray = ['nestedArray'];
+      // var array = ['array', nestedArray]
+      // var filledArray = originalArray.fill(array);
+      // eq(filledArray[0], array);
+      // eq(filledArray[0][1], nestedArray);
+    },
+
+    "7a) If no optionalStart, it should start filling indexes at array[0].": function() {
       fail();
       // var originalArray = [0,1];
       // var filledArray = fill(originalArray, 'a');
       // eq(filledArray[0], 'a');
     },
-    "b) If optionalStart, it should start filling indexes at array[optionalStart].": function() {
+    "7b) If optionalStart, it should start filling indexes at array[optionalStart].": function() {
       fail();
       // var originalArray = [0,1];
       // var filledArray = fill(originalArray, 'a', 1);
@@ -103,7 +126,7 @@
       // eq(filledArray[1], 'a');
     },
 
-    "a) If no optionalEnd, it should fill all remaining indexes in array.": function() {
+    "8a) If no optionalEnd, it should fill all remaining indexes in array.": function() {
       fail();
       // var originalArray = [0,1];
       // var filledArray = fill(originalArray, 'a', 0);
@@ -112,7 +135,7 @@
       //    eq(filledArray[i], 'a');
       // }
     },
-    "b) If optionalEnd, it should fill all indexes until array[optionalEnd].": function() {
+    "9b) If optionalEnd, it should fill all indexes until array[optionalEnd].": function() {
       fail();
       // var originalArray = [0,1];
       // var filledArray = fill(originalArray, 'a', 0, 1);
@@ -120,7 +143,7 @@
       // eq(filledArray[1], 1);
     },
 
-    "a) If optionalStart is negative, start fill at array.length + optionalStart.": function() {
+    "10a) If optionalStart is negative, start fill at array.length + optionalStart.": function() {
       fail();
       // var originalArray = [0, 1, 2];
       // var filledArray = originalArray.fill("a", -1);
@@ -134,7 +157,7 @@
       // eq(filledArray[1], "a");
       // eq(filledArray[2], "a");
     },
-    "b) If optionalEnd is negative, end fill at array.length + optionalEnd.": function() {
+    "10b) If optionalEnd is negative, end fill at array.length + optionalEnd.": function() {
       fail();
       // var originalArray = [0, 1, 2];
       // var filledArray = originalArray.fill("a", 0, -1);
@@ -149,7 +172,7 @@
       // eq(filledArray[2], 2);
     },
 
-    "a) It should fill with .call().": function() {
+    "11a) It should fill with .call().": function() {
       fail();
       // var originalArray = [0, 1, 2];
       // fill.call(originalArray, "a");
@@ -166,7 +189,7 @@
       // eq(originalArray[1], "a");
       // eq(originalArray[2], 2);
     },
-    "b) It should fill with .apply().": function() {
+    "11b) It should fill with .apply().": function() {
       fail();
       // var originalArray = [0, 1, 2];
       // fill.call(originalArray, ["a"]);
@@ -184,7 +207,7 @@
       // eq(originalArray[2], 2);
     },
 
-    "a) If array is object and object has no length, object should remain unchanged.": function() {
+    "12a) If array is object and object has no length, object should remain unchanged.": function() {
       fail();
       // var originalObject = {
       //   0:0
@@ -192,7 +215,7 @@
       // var modifiedObject = fill.call(originalObject, 'a');
       // eq(modifiedObject[0], 0);
     },
-    "b) If array is object and object.length is <= 0, object should remain unchanged.": function() {
+    "12b) If array is object and object.length is <= 0, object should remain unchanged.": function() {
       fail();
       // var originalObject = {
       //   0:0,
@@ -201,7 +224,7 @@
       // var modifiedObject = fill.call(originalObject, 'a');
       // eq(modifiedObject[0], 0);
     },
-    "c) If array is object and object.length is > 0, fill indexes up to object.length - 1.": function() {
+    "12c) If array is object and object.length is > 0, fill indexes up to object.length - 1.": function() {
       fail();
       // var originalObject = {
       //   0:0,
@@ -231,7 +254,7 @@
       // eq(modifiedObject[1], 'a');
       // eq(modifiedObject[2], 'a');
     },
-    "d) If array is object and object.length is a string, and object.length can be converted to a number, fill indexes up to Number(object.length) - 1.": function() {
+    "12d) If array is object and object.length is a string, and object.length can be converted to a number, fill indexes up to Number(object.length) - 1.": function() {
       fail();
       // var originalObject = {
       //   0:0,
@@ -240,7 +263,7 @@
       // var modifiedObject = fill.call(originalObject, 'a');
       // eq(modifiedObject[0], 'a');
     },
-    "e) If array is object and object.length is a string, and object.length cannot be converted to a number, object should remain unchanged.": function() {
+    "12e) If array is object and object.length is a string, and object.length cannot be converted to a number, object should remain unchanged.": function() {
       fail();
       // var originalObject = {
       //   0:0,
@@ -250,7 +273,7 @@
       // eq(modifiedObject[0], 0);
     },
 
-    "a) If array is object it should never modify object.length.": function() {
+    "13a) If array is object it should never modify object.length.": function() {
       fail();
       // var originalObject = {
       //   0:0
@@ -294,7 +317,7 @@
       // eq(modifiedObject.length, 'cow');
     },
 
-    "a) It array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'. ": function() {
+    "14a) It array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'. ": function() {
       fail();
       // var isTypeError = false;
       // try {
@@ -305,7 +328,7 @@
       // }
       // eq(isTypeError, true);
     },
-    "b) It array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object. ": function() {
+    "14b) It array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object. ": function() {
       fail();
       // var isTypeError = false;
       // try {
@@ -325,14 +348,14 @@
       // }
       // eq(isTypeError, true);
     },
-    "c) If array is a function, it should return function.": function() {
+    "14c) If array is a function, it should return function.": function() {
       fail();
       // var testFunction = function () {};
       // var filledFunction = Array.prototype.fill.call(testFunction, 'a');
       // eq(testFunction, filledFunction)
     },
 
-    "d) If array is number or a boolean, it should convert array to object and return that?!": function() {
+    "14d) If array is number or a boolean, it should convert array to object and return that?!": function() {
       fail();
       // TODO: 2) Figure out what happens with conversion of primitive to object.
 
