@@ -38,10 +38,8 @@
   // Function Syntax:
   // function fill() {}
 
-  // TODO: 1) Continue to create test cases.
-  // TODO: 2) Organize and number tests.
   // TODO: 3) What happens if there is a nested array inside of array?.
-  // TODO: 4) What happens if unintended data types are passed into fill via .call() or .apply()? Does it trigger a TypeError?
+  // TODO: 4) Organize and number tests.
 
   tests({
     "a) It should return an array.": function() {
@@ -93,16 +91,33 @@
 
     "a) If no optionalStart, it should start filling indexes at array[0].": function() {
       fail();
+      // var originalArray = [0,1];
+      // var filledArray = fill(originalArray, 'a');
+      // eq(filledArray[0], 'a');
     },
     "b) If optionalStart, it should start filling indexes at array[optionalStart].": function() {
       fail();
+      // var originalArray = [0,1];
+      // var filledArray = fill(originalArray, 'a', 1);
+      // eq(filledArray[0], 0);
+      // eq(filledArray[1], 'a');
     },
 
     "a) If no optionalEnd, it should fill all remaining indexes in array.": function() {
       fail();
+      // var originalArray = [0,1];
+      // var filledArray = fill(originalArray, 'a', 0);
+      // TODO: 5) Double check this for loop is a good way to run a test.
+      // for(var i=0; i<filledArray.length; i++){
+      //    eq(filledArray[i], 'a');
+      // }
     },
     "b) If optionalEnd, it should fill all indexes until array[optionalEnd].": function() {
       fail();
+      // var originalArray = [0,1];
+      // var filledArray = fill(originalArray, 'a', 0, 1);
+      // eq(filledArray[0], 'a');
+      // eq(filledArray[1], 1);
     },
 
     "a) If optionalStart is negative, start fill at array.length + optionalStart.": function() {
@@ -277,6 +292,65 @@
       // };
       // var modifiedObject = fill.call(originalObject, 'a');
       // eq(modifiedObject.length, 'cow');
+    },
+
+    "a) It array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'. ": function() {
+      fail();
+      // var isTypeError = false;
+      // try {
+      //   var string = "string";
+      //   fill.call(string, "a");
+      // } catch (e) {
+      //   isTypeError = e instanceof TypeError;
+      // }
+      // eq(isTypeError, true);
+    },
+    "b) It array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object. ": function() {
+      fail();
+      // var isTypeError = false;
+      // try {
+      //   var testNull = null;
+      //   fill.call(testNull, "a");
+      // } catch (e) {
+      //   isTypeError = e instanceof TypeError;
+      // }
+      // eq(isTypeError, true);
+
+      // var isTypeError = false;
+      // try {
+      //   var testUndefined = undefined;
+      //   fill.call(testUndefined, "a");
+      // } catch (e) {
+      //   isTypeError = e instanceof TypeError;
+      // }
+      // eq(isTypeError, true);
+    },
+    "c) If array is a function, it should return function.": function() {
+      fail();
+      // var testFunction = function () {};
+      // var filledFunction = Array.prototype.fill.call(testFunction, 'a');
+      // eq(testFunction, filledFunction)
+    },
+
+    "d) If array is number or a boolean, it should convert array to object and return that?!": function() {
+      fail();
+      // TODO: 2) Figure out what happens with conversion of primitive to object.
+
+      // Notes:
+      // Spec: https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.fill
+      // First step in Array.prototype.fill() is "Let O be ToObject(this value)."
+      // Spec on ToObject method used in Array.prototype.fill(): https://www.ecma-international.org/ecma-262/6.0/#sec-toobject
+      // The abstract operation ToObject converts argument to a value of type Object according to Table 13:
+      // TODO: 1) Read this article. It appears to be very useful and sheds light on converting primtives to objects in JS:
+      // JavaScript: Converting any value to an object: http://2ality.com/2011/04/javascript-converting-any-value-to.html
+
+      // var number = 1;
+      // var filledNumber = Array.prototype.fill.call(number, "a");
+      // >>> returns {1}
+
+      // var bool = true;
+      // var filledBool = Array.prototype.fill.call(true, 'a');
+      // >>> returns {true}
     }
   });
 </script>
