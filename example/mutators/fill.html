@@ -11,7 +11,7 @@
 
   // Prototype implementation:
 
-  // function fill(array, valueToFill, optionalStart, optionalEnd) {
+  // function fill(array, value, optionalStart, optionalEnd) {
   //   var startingIndex = 0;
   //   var endingIndex = array.length;
 
@@ -24,20 +24,20 @@
   //   }
 
   //   for (var i = startingIndex; i < endingIndex; i++) {
-  //     array[i] = valueToFill;
+  //     array[i] = value;
   //   }
 
   //   return array;
   // }
 
   // Function signature:
-  // fill(array, valueToFill, optionalStart, optionalEnd);
+  // fill(array, value, optionalStart, optionalEnd);
 
   // Arguments:
   // array - The array to be modified.
-  // valueToFill - The value used to fill the array.
-  // optionalStart - Starting index for the insertion of valueToFill. Defaults to 0.
-  // optionalEnd - Ending index for the insertion of valueToFill. Defaults to array.length.
+  // value - The value used to fill the array.
+  // optionalStart - Starting index for the insertion of value. Defaults to 0.
+  // optionalEnd - Ending index for the insertion of value. Defaults to array.length.
 
   // Return value:
   // The modified array.
@@ -53,15 +53,32 @@
 
   // Function Syntax:
 
-  function fill(array, valueToFill, optionalStart, optionalEnd) {
-    var startingIndex = 0;
-    var endingIndex = array.length;
+  function fill(array, value, optionalStart, optionalEnd) {
+    var classOfThis = Object.prototype.toString.call(this);
+    // Need to shift value of optionalStart && optionalEnd
+    var objectToModify, valueToFill, startingIndex, endingIndex;
 
-    if (optionalStart) {
+    if (classOfThis !== "[object Window]") {
+      objectToModify = this;
+      valueToFill = arguments[0];
+    } else {
+      objectToModify = array;
+      valueToFill = value;
+    }
+
+    startingIndex = 0;
+
+    if (optionalStart < 0) {
+      startingIndex = array.length + optionalStart;
+    } else if (optionalStart >= 0) {
       startingIndex = optionalStart;
     }
 
-    if (optionalEnd) {
+    endingIndex = objectToModify.length;
+
+    if (optionalEnd < 0) {
+      endingIndex = array.length + optionalEnd;
+    } else if (optionalEnd >= 0) {
       endingIndex = optionalEnd;
     }
 
@@ -85,7 +102,7 @@
       eq(originalArray, filledArray);
     },
 
-    "3a) It should fill elements with valueToFill.": function() {
+    "3a) It should fill elements with value.": function() {
       var originalArray = [0];
       var filledArray = fill(originalArray, "a");
       eq(filledArray[0], "a");
@@ -108,14 +125,14 @@
       eq(filledArray[1], "a");
     },
 
-    "5a) If valueToFill is an object, pass reference to object instead of a shallow copy of object.": function() {
+    "5a) If value is an object, pass reference to object instead of a shallow copy of object.": function() {
       var originalArray = [0];
       var originalObject = {};
       var filledArray = fill(originalArray, originalObject);
       eq(filledArray[0], originalObject);
     },
 
-    "6a) If valueToFill contains a nested array, fill should contain nested array.": function() {
+    "6a) If value contains a nested array, fill should contain nested array.": function() {
       var originalArray = ["originalArray"];
       var nestedArray = ["nestedArray"];
       var array = ["array", nestedArray];
@@ -151,32 +168,30 @@
     },
 
     "10a) If optionalStart is negative, start fill at array.length + optionalStart.": function() {
-      fail();
-      // var originalArray = [0, 1, 2];
-      // var filledArray = originalArray.fill("a", -1);
-      // eq(filledArray[0], 0);
-      // eq(filledArray[1], 1);
-      // eq(filledArray[2], "a");
+      var originalArray = [0, 1, 2];
+      var filledArray = fill(originalArray, "a", -1);
+      eq(filledArray[0], 0);
+      eq(filledArray[1], 1);
+      eq(filledArray[2], "a");
 
-      // var originalArray = [0, 1, 2];
-      // var filledArray = originalArray.fill("a", -2);
-      // eq(filledArray[0], 0);
-      // eq(filledArray[1], "a");
-      // eq(filledArray[2], "a");
+      var originalArray = [0, 1, 2];
+      var filledArray = fill(originalArray, "a", -2);
+      eq(filledArray[0], 0);
+      eq(filledArray[1], "a");
+      eq(filledArray[2], "a");
     },
     "10b) If optionalEnd is negative, end fill at array.length + optionalEnd.": function() {
-      fail();
-      // var originalArray = [0, 1, 2];
-      // var filledArray = originalArray.fill("a", 0, -1);
-      // eq(filledArray[0], "a");
-      // eq(filledArray[1], "a");
-      // eq(filledArray[2], 2);
+      var originalArray = [0, 1, 2];
+      var filledArray = fill(originalArray, "a", 0, -1);
+      eq(filledArray[0], "a");
+      eq(filledArray[1], "a");
+      eq(filledArray[2], 2);
 
-      // var originalArray = [0, 1, 2];
-      // var filledArray = originalArray.fill("a", 0, -2);
-      // eq(filledArray[0], "a");
-      // eq(filledArray[1], 1);
-      // eq(filledArray[2], 2);
+      var originalArray = [0, 1, 2];
+      var filledArray = fill(originalArray, "a", 0, -2);
+      eq(filledArray[0], "a");
+      eq(filledArray[1], 1);
+      eq(filledArray[2], 2);
     },
 
     "11a) It should fill with .call().": function() {
