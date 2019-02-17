@@ -48,7 +48,6 @@
     // Incorrect uses via .call() or .apply():
     if (
       classOfThis === "[object String]" ||
-      classOfThis === "[object Undefined]" ||
       classOfThis === "[object Function]"
     ) {
       throw new TypeError();
@@ -319,6 +318,7 @@
     },
 
     "14b) If array is null or undefined throw a TypeError that states 'Cannot convert undefined or null to object'.": function() {
+      debugger;
       // If array is null:
       var isTypeError = false;
       try {
