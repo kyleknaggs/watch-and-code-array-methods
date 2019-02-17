@@ -55,14 +55,15 @@
 
   function fill(array, value, start, end) {
     var classOfThis = Object.prototype.toString.call(this);
-    var objectToModify, valueToFill, optionalStart, optionalEnd;
 
-    // Incorrect uses via .call() or .apply():
+    // Incorrect use via .call() or .apply():
     if (classOfThis === "[object String]") {
       throw new TypeError(
         "Cannot assign to read only property '0' of object '[object String]'"
       );
     }
+
+    var objectToModify, valueToFill, optionalStart, optionalEnd;
 
     // If used with .call() or .apply():
     if (classOfThis !== "[object Window]") {
@@ -77,25 +78,28 @@
       optionalEnd = end;
     }
 
-    var startingIndex = 0;
-
     // Set startingIndex:
-    if (optionalStart < 0) {
-      startingIndex = objectToModify.length + optionalStart;
-    } else if (optionalStart >= 0) {
-      startingIndex = optionalStart;
-    }
+    var startingIndex = 0;
+    var objectLength = objectToModify.length;
 
-    var endingIndex = objectToModify.length;
+    if (optionalStart >= 0) {
+      startingIndex = optionalStart;
+    } else if (optionalStart < 0) {
+      var computedStart = objectLength + optionalStart;
+      if (computedStart > 0) {
+        startingIndex = computedStart;
+      }
+    }
 
     // Set endingIndex:
-    if (optionalEnd < 0) {
-      endingIndex = objectToModify.length + optionalEnd;
-    } else if (optionalEnd >= 0) {
+    var endingIndex = objectLength;
+
+    if (optionalEnd >= 0 && optionalEnd < objectLength) {
       endingIndex = optionalEnd;
+    } else if (optionalEnd < 0) {
+      endingIndex = objectLength + optionalEnd;
     }
 
-    // Fill:
     for (var i = startingIndex; i < endingIndex; i++) {
       objectToModify[i] = valueToFill;
     }
@@ -208,7 +212,44 @@
       eq(filledArray[2], 2);
     },
 
-    "11a) It should fill with .call().": function() {
+    "11a) If start is negative, && computedStart is < 0, start fill at array[0].": function() {
+      var originalObject = {
+        0: 1,
+        1: 2,
+        2: 3,
+        length: 3
+      };
+      var filledObject = fill(originalObject, "a", -4);
+      eq(-1 in filledObject, false);
+
+      var originalArray = [0, 1, 2];
+      var filledArray = fill(originalArray, "a", -2);
+      eq(filledArray[0], 0);
+      eq(filledArray[1], "a");
+      eq(filledArray[2], "a");
+    },
+    "11b) If end is negative, && computedEnd is > array.length, end fill at array.length.": function() {
+      var originalArray = [1, 2, 3];
+      var filledArray = fill(originalArray, "a", 2, 5);
+      eq(filledArray[2], "a");
+      eq(filledArray.length, 3);
+
+      var originalArray = [0, 1, 2];
+      var filledArray = fill(originalArray, "a", 0, -2);
+      eq(filledArray[0], "a");
+      eq(filledArray[1], 1);
+      eq(filledArray[2], 2);
+    },
+    "11c) If end is negative, && computedEnd is < 0, do not fill.": function() {
+      var originalArray = [0, 1, 2];
+      var filledArray = fill(originalArray, "a", 0, -10);
+      eq(filledArray[0], 0);
+      eq(filledArray[1], 1);
+      eq(filledArray[2], 2);
+      eq(filledArray.length, 3);
+    },
+
+    "12a) It should fill with .call().": function() {
       var originalArray = [0, 1, 2];
       var filledArray = fill.call(originalArray, "a");
       eq(filledArray[0] && filledArray[1] && filledArray[2], "a");
@@ -224,7 +265,7 @@
       eq(filledArray[1], "a");
       eq(filledArray[2], 2);
     },
-    "11b) It should fill with .apply().": function() {
+    "12b) It should fill with .apply().": function() {
       var originalArray = [0, 1, 2];
       var filledArray = fill.apply(originalArray, ["a"]);
       eq(filledArray[0] && filledArray[1] && filledArray[2], "a");
@@ -241,14 +282,14 @@
       eq(filledArray[2], 2);
     },
 
-    "12a) If array is object and object has no length, object should remain unchanged.": function() {
+    "13a) If array is object and object has no length, object should remain unchanged.": function() {
       var originalObject = {
         0: 0
       };
       var modifiedObject = fill.call(originalObject, "a");
       eq(modifiedObject[0], 0);
     },
-    "12b) If array is object and object.length is <= 0, object should remain unchanged.": function() {
+    "13b) If array is object and object.length is <= 0, object should remain unchanged.": function() {
       var originalObject = {
         0: 0,
         length: -10
@@ -256,7 +297,7 @@
       var modifiedObject = fill.call(originalObject, "a");
       eq(modifiedObject[0], 0);
     },
-    "12c) If array is object and object.length is > 0, fill indexes up to object.length - 1.": function() {
+    "13c) If array is object and object.length is > 0, fill indexes up to object.length - 1.": function() {
       var originalObject = {
         0: 0,
         1: 1,
@@ -285,7 +326,7 @@
       eq(modifiedObject[1], "a");
       eq(modifiedObject[2], "a");
     },
-    "12d) If array is object and object.length is a string, and object.length can be converted to a number, fill indexes up to Number(object.length) - 1.": function() {
+    "13d) If array is object and object.length is a string, and object.length can be converted to a number, fill indexes up to Number(object.length) - 1.": function() {
       var originalObject = {
         0: 0,
         length: "1"
@@ -293,7 +334,7 @@
       var modifiedObject = fill.call(originalObject, "a");
       eq(modifiedObject[0], "a");
     },
-    "12e) If array is object and object.length is a string, and object.length cannot be converted to a number, object should remain unchanged.": function() {
+    "13e) If array is object and object.length is a string, and object.length cannot be converted to a number, object should remain unchanged.": function() {
       var originalObject = {
         0: 0,
         length: "cow"
@@ -302,7 +343,7 @@
       eq(modifiedObject[0], 0);
     },
 
-    "13a) If array is object it should never modify object.length.": function() {
+    "14a) If array is object it should never modify object.length.": function() {
       var originalObject = {
         0: 0
       };
@@ -345,7 +386,7 @@
       eq(modifiedObject.length, "cow");
     },
 
-    "14a) It array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'. ": function() {
+    "15a) It array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'. ": function() {
       var isTypeError = false;
       var errorMessage;
       try {
@@ -362,21 +403,13 @@
       );
     },
 
-    "15a) If array is a function, it should return function.": function() {
+    "16a) If array is a function, it should return function.": function() {
       var testFunction = function() {};
       var filledFunction = Array.prototype.fill.call(testFunction, "a");
       eq(testFunction, filledFunction);
     },
 
-    // Notes:
-    // Spec: https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.fill
-    // First step in Array.prototype.fill() is "Let O be ToObject(this value)."
-    // Spec on ToObject method used in Array.prototype.fill(): https://www.ecma-international.org/ecma-262/6.0/#sec-toobject
-    // The abstract operation ToObject converts argument to a value of type Object according to Table 13:
-    // TODO: 1) Read this article. It appears to be very useful and sheds light on converting primtives to objects in JS:
-    // JavaScript: Converting any value to an object: http://2ality.com/2011/04/javascript-converting-any-value-to.html
-
-    "16a) If array is number or a boolean, it should convert array to object and return that?!": function() {
+    "17a) If array is number or a boolean, it should convert array to object and return that?!": function() {
       var number = 1;
       var filledNumber = fill.call(number);
       eq(typeof filledNumber, "object");
@@ -386,6 +419,28 @@
       var filledBool = fill.call(bool);
       eq(typeof filledBool, "object");
       eq(filledNumber.valueOf(), true);
+    },
+
+    // TODO: Ask if null or undefined tests would passed if fill() passed 2nd argument.
+    // Relates to Table in ToObject conversion mentioned in Spec.
+    "18a) It array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object. ": function() {
+      var isTypeError = false;
+      try {
+        var testNull = null;
+        fill.call(testNull);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
+
+      var isTypeError = false;
+      try {
+        var testUndefined = undefined;
+        fill.call(testUndefined);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     }
   });
 </script>
