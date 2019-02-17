@@ -57,6 +57,13 @@
     var classOfThis = Object.prototype.toString.call(this);
     var objectToModify, valueToFill, optionalStart, optionalEnd;
 
+    // Incorrect uses via .call() or .apply():
+    if (classOfThis === "[object String]") {
+      throw new TypeError(
+        "Cannot assign to read only property '0' of object '[object String]'"
+      );
+    }
+
     // If used with .call() or .apply():
     if (classOfThis !== "[object Window]") {
       objectToModify = this;
@@ -339,62 +346,46 @@
     },
 
     "14a) It array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'. ": function() {
-      fail();
-      // var isTypeError = false;
-      // try {
-      //   var string = "string";
-      //   fill.call(string, "a");
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
-    },
-    "14b) It array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object. ": function() {
-      fail();
-      // var isTypeError = false;
-      // try {
-      //   var testNull = null;
-      //   fill.call(testNull, "a");
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
-
-      // var isTypeError = false;
-      // try {
-      //   var testUndefined = undefined;
-      //   fill.call(testUndefined, "a");
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
-    },
-    "14c) If array is a function, it should return function.": function() {
-      fail();
-      // var testFunction = function () {};
-      // var filledFunction = Array.prototype.fill.call(testFunction, 'a');
-      // eq(testFunction, filledFunction)
+      var isTypeError = false;
+      var errorMessage;
+      try {
+        var string = "string";
+        fill.call(string, "a");
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+        errorMessage = e.message;
+      }
+      eq(isTypeError, true);
+      eq(
+        errorMessage,
+        "Cannot assign to read only property '0' of object '[object String]'"
+      );
     },
 
-    "14d) If array is number or a boolean, it should convert array to object and return that?!": function() {
-      fail();
-      // TODO: 2) Figure out what happens with conversion of primitive to object.
+    "15a) If array is a function, it should return function.": function() {
+      var testFunction = function() {};
+      var filledFunction = Array.prototype.fill.call(testFunction, "a");
+      eq(testFunction, filledFunction);
+    },
 
-      // Notes:
-      // Spec: https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.fill
-      // First step in Array.prototype.fill() is "Let O be ToObject(this value)."
-      // Spec on ToObject method used in Array.prototype.fill(): https://www.ecma-international.org/ecma-262/6.0/#sec-toobject
-      // The abstract operation ToObject converts argument to a value of type Object according to Table 13:
-      // TODO: 1) Read this article. It appears to be very useful and sheds light on converting primtives to objects in JS:
-      // JavaScript: Converting any value to an object: http://2ality.com/2011/04/javascript-converting-any-value-to.html
+    // Notes:
+    // Spec: https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.fill
+    // First step in Array.prototype.fill() is "Let O be ToObject(this value)."
+    // Spec on ToObject method used in Array.prototype.fill(): https://www.ecma-international.org/ecma-262/6.0/#sec-toobject
+    // The abstract operation ToObject converts argument to a value of type Object according to Table 13:
+    // TODO: 1) Read this article. It appears to be very useful and sheds light on converting primtives to objects in JS:
+    // JavaScript: Converting any value to an object: http://2ality.com/2011/04/javascript-converting-any-value-to.html
 
-      // var number = 1;
-      // var filledNumber = Array.prototype.fill.call(number, "a");
-      // >>> returns {1}
+    "16a) If array is number or a boolean, it should convert array to object and return that?!": function() {
+      var number = 1;
+      var filledNumber = fill.call(number);
+      eq(typeof filledNumber, "object");
+      eq(filledNumber.valueOf(), 1);
 
-      // var bool = true;
-      // var filledBool = Array.prototype.fill.call(true, 'a');
-      // >>> returns {true}
+      var bool = true;
+      var filledBool = fill.call(bool);
+      eq(typeof filledBool, "object");
+      eq(filledNumber.valueOf(), true);
     }
   });
 </script>
