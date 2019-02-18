@@ -386,7 +386,7 @@
       eq(modifiedObject.length, "cow");
     },
 
-    "15a) It array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'. ": function() {
+    "15a) If array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'. ": function() {
       var isTypeError = false;
       var errorMessage;
       try {
@@ -423,7 +423,7 @@
 
     // TODO: Ask if null or undefined tests would passed if fill() passed 2nd argument.
     // Relates to Table in ToObject conversion mentioned in Spec.
-    "18a) It array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object. ": function() {
+    "18a) If array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object. ": function() {
       var isTypeError = false;
       try {
         var testNull = null;
