@@ -409,7 +409,7 @@
       eq(testFunction, filledFunction);
     },
 
-    "17a) If array is number or a boolean, it should convert array to object and return that?!": function() {
+    "17a) If array is number or a boolean, it should convert primitive value Object and return Object.": function() {
       var number = 1;
       var filledNumber = fill.call(number);
       eq(typeof filledNumber, "object");
