@@ -54,13 +54,13 @@
 
   tests({
     // Basic Requirements:
-    "It should return an array.": function() {
+    "1) It should return an array.": function() {
       fail();
       // var originalArray = [];
       // var reversedArray = reverse(originalArray);
       // eq(Object.prototype.toString.call(reversedArray), "[object Array]");
     },
-    "It should return the same array instead of creating a new array.": function() {
+    "2) It should return the same array instead of creating a new array.": function() {
       fail();
       // var originalArray = [];
       // var reversedArray = reverse(originalArray);
@@ -68,20 +68,20 @@
     },
 
     // Elements in Array:
-    "a) If array.length < 2 it should not modify elements in array.": function() {
+    "3a) If array.length < 2 it should not modify elements in array.": function() {
       fail();
       // var originalArray = [0];
       // var reversedArray = reverse(originalArray);
       // eq(reversedArray[0], 0);
     },
-    "b) If array.length === 2 it should reverse the elements in array.": function() {
+    "3b) If array.length === 2 it should reverse the elements in array.": function() {
       fail();
       // var originalArray = [0, 1];
       // var reversedArray = reverse(originalArray);
       // eq(reversedArray[0], 1);
       // eq(reversedArray[1], 0);
     },
-    "c) If array.length === 3 it should reverse the elements in array.": function() {
+    "3c) If array.length === 3 it should reverse the elements in array.": function() {
       fail();
       // var originalArray = [0, 1, 2];
       // var reversedArray = reverse(originalArray);
@@ -89,7 +89,7 @@
       // eq(reversedArray[1], 1);
       // eq(reversedArray[2], 0);
     },
-    "d) If array.length === 4 it should reverse the elements in array.": function() {
+    "3d) If array.length === 4 it should reverse the elements in array.": function() {
       fail();
       // var originalArray = [0, 1, 2, 3];
       // var reversedArray = reverse(originalArray);
@@ -98,7 +98,7 @@
       // eq(reversedArray[2], 1);
       // eq(reversedArray[3], 0);
     },
-    "e) If array.length > 4 it should reverse the elements in array.": function() {
+    "3e) If array.length > 4 it should reverse the elements in array.": function() {
       fail();
       // var originalArray = [0, 1, 2, 3, 4];
       // var reversedArray = reverse(originalArray);
@@ -109,14 +109,14 @@
       // eq(reversedArray[4], 0);
     },
 
-    "It should reverse holes.": function() {
+    "4) It should reverse holes.": function() {
       fail();
       // var originalArray = [, 1, 2];
       // var reversedArray = reverse(originalArray);
       // eq(2 in reversedArray, false);
     },
 
-    "It should not reverse nested arrays": function() {
+    "5) It should not reverse nested arrays": function() {
       fail();
       // var originalNestedArray = ['a', 'b'];
       // var indexZeroInOriginalNestedArray = originalNestedArray[0];
@@ -127,10 +127,8 @@
       // eq( reversedArray[2][1], indexOneInOriginalNestedArray);
     },
 
-    // ---------------------
-
     // Array.length double check:
-    "It should never modify array.length.": function() {
+    "6) It should never modify array.length.": function() {
       fail();
       // var originalArray = [];
       // var reversedArray = reverse(originalArray);
@@ -150,7 +148,7 @@
     },
 
     // Call() and Apply():
-    "It should reverse when used with .call().": function() {
+    "7) It should reverse when used with .call().": function() {
       fail();
       // var originalArray = [0, 1, 2];
       // var reversedArray = Array.prototype.reverse.call(originalArray);
@@ -159,7 +157,7 @@
       // eq(reversedArray[2], 0);
       // eq(reversedArray.length, 3);
     },
-    "It should reverse when used with .apply().": function() {
+    "8) It should reverse when used with .apply().": function() {
       fail();
       // var originalArray = [0, 1, 2];
       // var reversedArray = Array.prototype.reverse.apply(originalArray);
@@ -170,7 +168,7 @@
     },
 
     // Objects and Array-like objects:
-    "a) If object has no numerated keys, but object.length exists object should remain unchanged.": function() {
+    "9a) If object has no numerated keys, but object.length exists object should remain unchanged.": function() {
       fail();
       // var originalObject = {
       //    length: 0
@@ -179,7 +177,7 @@
       // eq(Object.keys(reversedObject).length, 1);
       // eq(reversedObject.length, 0);
     },
-    "b) If object has numerated keys, but object.length does not exist, it should remain unchanged.": function() {
+    "9b) If object has numerated keys, but object.length does not exist, it should remain unchanged.": function() {
       fail();
       // var originalObject = {
       //    0: 0,
@@ -189,7 +187,7 @@
       //  var reversedObject = Array.prototype.reverse.apply(originalObject);
       // >> {0: 0, 1: 1, 2: 2}
     },
-    "c) If object has numerated keys and object.length <= index of last numerated key, it should remain unchanged.": function() {
+    "9c) If object has numerated keys and object.length <= index of last numerated key, it should remain unchanged.": function() {
       fail();
       // var originalObject = {
       //    0: 0,
@@ -209,7 +207,7 @@
       // var reversedObject = Array.prototype.reverse.apply(originalObject);
       // >>> {0: 1, 1: 0, 2: 2, length: 2}
     },
-    "d) If object has numerated keys and object.length > index of last numerated key, object reverses.": function() {
+    "9d) If object has numerated keys and object.length > index of last numerated key, object reverses.": function() {
       fail();
       // var originalObject = {
       //   0: 0,
@@ -230,7 +228,7 @@
       // >>> {1: 2, 2: 1, 3: 0, length: 4}
     },
 
-    "a) If object.length is not a number and object.length cannot be converted to a number, it should not reverse elements in object.": function() {
+    "10a) If object.length is not a number and object.length cannot be converted to a number, it should not reverse elements in object.": function() {
       fail();
       // var originalObject = {
       //   0: 0,
@@ -243,7 +241,7 @@
       // eq(reversedObject[1], 1)
       // eq(reversedObject[2], 0)
     },
-    "b) If object.length is not a number but object.length can be converted to a number, it should reverse elements in object.": function() {
+    "10b) If object.length is not a number but object.length can be converted to a number, it should reverse elements in object.": function() {
       fail();
       // var originalObject = {
       //   0: 0,
@@ -258,7 +256,7 @@
     },
 
     // "If object has numerated keys and object.length > index of last numerated key, it should place value at first numerated key at object.length - 1.": function() {
-    "a) If object.length === index of last numerated key + 1, numerated keys in object should remain the same.": function() {
+    "11a) If object.length === index of last numerated key + 1, numerated keys in object should remain the same.": function() {
       fail();
       // var originalObject = {
       //   0: 0,
@@ -273,7 +271,7 @@
       // eq(keysInOriginalObject[1], keysInReversedObject[1])
       // eq(keysInOriginalObject[2], keysInReversedObject[2])
     },
-    "b) If object.length > index of last numerated key + 1, keys should shift by object.length - index of last numerated key.": function() {
+    "11b) If object.length > index of last numerated key + 1, keys should shift by object.length - index of last numerated key.": function() {
       fail();
       // TODO: 3) Refactor keys when head is straight.
       // var originalObject = {
@@ -303,7 +301,7 @@
       // }
     },
 
-    "a) If array is number or a boolean, it should convert primitive value Object and return Object.": function() {
+    "12a) If array is number or a boolean, it should convert primitive value Object and return Object.": function() {
       fail();
       // var number = 123;
       // var reversedNumber = reverse.call(number);
@@ -320,13 +318,13 @@
       // eq(typeof reversedNumber, "object");
       // eq(reversedNumber.valueOf(), false);
     },
-    "b) If array is function, it should return function.": function() {
+    "12b) If array is function, it should return function.": function() {
       fail();
       // var testFunction = function () {};
       // var reversedFunction = reverse(testFunction);
       // eq(testFunction, reversedFunction);
     },
-    "c) If array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'.": function() {
+    "12c) If array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'.": function() {
       fail();
       // var isTypeError = false;
       // var errorMessage;
@@ -343,7 +341,7 @@
       //   "Cannot assign to read only property '0' of object '[object String]'"
       // );
     },
-    "d) If array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object.": function() {
+    "12d) If array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object.": function() {
       fail();
       // var isTypeError = false;
       // try {
