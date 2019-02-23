@@ -57,11 +57,26 @@
 
     while (currentIndex < indexOfMiddleOfArray) {
       var indexOfElementAtEnd = lengthOfArray - 1 - currentIndex;
-      var elementAtStart = array[currentIndex];
-      var elementAtEnd = array[indexOfElementAtEnd];
+      var valueOfElementAtStart = array[currentIndex];
+      var valueOfElementAtEnd = array[indexOfElementAtEnd];
+      var elementAtStart = currentIndex in array;
+      var elementAtEnd = indexOfElementAtEnd in array;
 
-      array[currentIndex] = elementAtEnd;
-      array[indexOfElementAtEnd] = elementAtStart;
+      if (!elementAtStart && elementAtEnd) {
+        array[currentIndex] = valueOfElementAtEnd;
+        delete array[indexOfElementAtEnd];
+      }
+
+      if (elementAtStart && !elementAtEnd) {
+        delete array[currentIndex];
+        array[indexOfElementAtEnd] = valueOfElementAtStart;
+      }
+
+      if (elementAtStart && elementAtEnd) {
+        array[currentIndex] = valueOfElementAtEnd;
+        array[indexOfElementAtEnd] = valueOfElementAtStart;
+      }
+
       currentIndex++;
     }
 
@@ -118,41 +133,49 @@
       eq(reversedArray[4], 0);
     },
 
+    // Did not use values at end of array in holes test because prettier keeps removing empty index at end of array:
     "4) It should reverse holes.": function() {
-      var originalArray = [, 1, 2];
+      var originalArray = [0, , 2, 3, 4];
       var reversedArray = reverse(originalArray);
-      eq(2 in reversedArray, false);
+      eq(3 in reversedArray, false);
+
+      var originalArray = [0, 1, 2, , 4];
+      var reversedArray = reverse(originalArray);
+      eq(1 in reversedArray, false);
+
+      var originalArray = [0, , 2, , 4];
+      var reversedArray = reverse(originalArray);
+      eq(1 in reversedArray, false);
+      eq(3 in reversedArray, false);
     },
 
     "5) It should not reverse nested arrays": function() {
-      fail();
-      // var originalNestedArray = ['a', 'b'];
-      // var indexZeroInOriginalNestedArray = originalNestedArray[0];
-      // var indexOneInOriginalNestedArray = originalNestedArray[1];
-      // var originalArray = [originalNestedArray, 1, 2];
-      // var reversedArray = reverse(originalArray);
-      // eq( reversedArray[2][0], indexZeroInOriginalNestedArray);
-      // eq( reversedArray[2][1], indexOneInOriginalNestedArray);
+      var originalNestedArray = ["a", "b"];
+      var indexZeroInOriginalNestedArray = originalNestedArray[0];
+      var indexOneInOriginalNestedArray = originalNestedArray[1];
+      var originalArray = [originalNestedArray, 1, 2];
+      var reversedArray = reverse(originalArray);
+      eq(reversedArray[2][0], indexZeroInOriginalNestedArray);
+      eq(reversedArray[2][1], indexOneInOriginalNestedArray);
     },
 
     // Array.length double check:
     "6) It should never modify array.length.": function() {
-      fail();
-      // var originalArray = [];
-      // var reversedArray = reverse(originalArray);
-      // eq(reversedArray.length, 0);
+      var originalArray = [];
+      var reversedArray = reverse(originalArray);
+      eq(reversedArray.length, 0);
 
-      // var originalArray = [0];
-      // var reversedArray = reverse(originalArray);
-      // eq(reversedArray.length, 1);
+      var originalArray = [0];
+      var reversedArray = reverse(originalArray);
+      eq(reversedArray.length, 1);
 
-      // var originalArray = [0, 1];
-      // var reversedArray = reverse(originalArray);
-      // eq(reversedArray.length, 2);
+      var originalArray = [0, 1];
+      var reversedArray = reverse(originalArray);
+      eq(reversedArray.length, 2);
 
-      // var originalArray = [0, 1, 2];
-      // var reversedArray = reverse(originalArray);
-      // eq(reversedArray.length, 3);
+      var originalArray = [0, 1, 2];
+      var reversedArray = reverse(originalArray);
+      eq(reversedArray.length, 3);
     },
 
     // Call() and Apply():
