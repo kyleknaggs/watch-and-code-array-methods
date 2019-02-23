@@ -53,14 +53,16 @@
   function reverse(array) {
     var lengthOfArray = array.length;
     var indexOfMiddleOfArray = Math.floor(lengthOfArray / 2);
+    var currentIndex = 0;
 
-    for (var i = 0; i < indexOfMiddleOfArray; i++) {
-      var indexOfElementAtEnd = lengthOfArray - 1 - i;
-      var elementAtStart = array[i];
+    while (currentIndex < indexOfMiddleOfArray) {
+      var indexOfElementAtEnd = lengthOfArray - 1 - currentIndex;
+      var elementAtStart = array[currentIndex];
       var elementAtEnd = array[indexOfElementAtEnd];
 
-      array[i] = elementAtEnd;
+      array[currentIndex] = elementAtEnd;
       array[indexOfElementAtEnd] = elementAtStart;
+      currentIndex++;
     }
 
     return array;
@@ -117,10 +119,9 @@
     },
 
     "4) It should reverse holes.": function() {
-      fail();
-      // var originalArray = [, 1, 2];
-      // var reversedArray = reverse(originalArray);
-      // eq(2 in reversedArray, false);
+      var originalArray = [, 1, 2];
+      var reversedArray = reverse(originalArray);
+      eq(2 in reversedArray, false);
     },
 
     "5) It should not reverse nested arrays": function() {
