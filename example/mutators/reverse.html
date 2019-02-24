@@ -13,11 +13,11 @@
   // Prototype implementation:
 
   // function reverse(array) {
-  //   var lengthOfArray = array.length;
-  //   var indexOfMiddleOfArray = Math.floor(lengthOfArray / 2);
+  //   var lengthOfObject = array.length;
+  //   var indexOfMiddleOfObject = Math.floor(lengthOfObject / 2);
 
-  //   for (var i = 0; i < indexOfMiddleOfArray; i++) {
-  //     var indexOfElementAtEnd = lengthOfArray - 1 - i;
+  //   for (var i = 0; i < indexOfMiddleOfObject; i++) {
+  //     var indexOfElementAtEnd = lengthOfObject - 1 - i;
   //     var elementAtStart = array[i];
   //     var elementAtEnd = array[indexOfElementAtEnd];
 
@@ -50,37 +50,43 @@
 
   // Function Syntax:
 
-  function reverse(array) {
-    var lengthOfArray = array.length;
-    var indexOfMiddleOfArray = Math.floor(lengthOfArray / 2);
+  function reverse(object) {
+    var objectToModify = object;
+
+    if (Object.prototype.toString.call(this) !== "[object Window]") {
+      objectToModify = this;
+    }
+
+    var lengthOfObject = objectToModify.length;
+    var indexOfMiddleOfObject = Math.floor(lengthOfObject / 2);
     var currentIndex = 0;
 
-    while (currentIndex < indexOfMiddleOfArray) {
-      var indexOfElementAtEnd = lengthOfArray - 1 - currentIndex;
-      var valueOfElementAtStart = array[currentIndex];
-      var valueOfElementAtEnd = array[indexOfElementAtEnd];
-      var elementAtStart = currentIndex in array;
-      var elementAtEnd = indexOfElementAtEnd in array;
+    while (currentIndex < indexOfMiddleOfObject) {
+      var indexOfElementAtEnd = lengthOfObject - 1 - currentIndex;
+      var valueOfElementAtStart = objectToModify[currentIndex];
+      var valueOfElementAtEnd = objectToModify[indexOfElementAtEnd];
+      var elementAtStart = currentIndex in objectToModify;
+      var elementAtEnd = indexOfElementAtEnd in objectToModify;
 
       if (!elementAtStart && elementAtEnd) {
-        array[currentIndex] = valueOfElementAtEnd;
-        delete array[indexOfElementAtEnd];
+        objectToModify[currentIndex] = valueOfElementAtEnd;
+        delete objectToModify[indexOfElementAtEnd];
       }
 
       if (elementAtStart && !elementAtEnd) {
-        delete array[currentIndex];
-        array[indexOfElementAtEnd] = valueOfElementAtStart;
+        delete objectToModify[currentIndex];
+        objectToModify[indexOfElementAtEnd] = valueOfElementAtStart;
       }
 
       if (elementAtStart && elementAtEnd) {
-        array[currentIndex] = valueOfElementAtEnd;
-        array[indexOfElementAtEnd] = valueOfElementAtStart;
+        objectToModify[currentIndex] = valueOfElementAtEnd;
+        objectToModify[indexOfElementAtEnd] = valueOfElementAtStart;
       }
 
       currentIndex++;
     }
 
-    return array;
+    return objectToModify;
   }
 
   tests({
@@ -180,43 +186,41 @@
 
     // Call() and Apply():
     "7) It should reverse when used with .call().": function() {
-      fail();
-      // var originalArray = [0, 1, 2];
-      // var reversedArray = Array.prototype.reverse.call(originalArray);
-      // eq(reversedArray[0], 2);
-      // eq(reversedArray[1], 1);
-      // eq(reversedArray[2], 0);
-      // eq(reversedArray.length, 3);
+      var originalArray = [0, 1, 2];
+      var reversedArray = reverse.call(originalArray);
+      eq(reversedArray[0], 2);
+      eq(reversedArray[1], 1);
+      eq(reversedArray[2], 0);
+      eq(reversedArray.length, 3);
     },
     "8) It should reverse when used with .apply().": function() {
-      fail();
-      // var originalArray = [0, 1, 2];
-      // var reversedArray = Array.prototype.reverse.apply(originalArray);
-      // eq(reversedArray[0], 2);
-      // eq(reversedArray[1], 1);
-      // eq(reversedArray[2], 0);
-      // eq(reversedArray.length, 3);
+      var originalArray = [0, 1, 2];
+      var reversedArray = reverse.apply(originalArray);
+      eq(reversedArray[0], 2);
+      eq(reversedArray[1], 1);
+      eq(reversedArray[2], 0);
+      eq(reversedArray.length, 3);
     },
 
     // Objects and Array-like objects:
     "9a) If object has no numerated keys, but object.length exists object should remain unchanged.": function() {
-      fail();
-      // var originalObject = {
-      //    length: 0
-      //  };
-      //  var reversedObject = Array.prototype.reverse.apply(originalObject);
-      // eq(Object.keys(reversedObject).length, 1);
-      // eq(reversedObject.length, 0);
+      var originalObject = {
+        length: 0
+      };
+      var reversedObject = reverse.call(originalObject);
+      eq(Object.keys(reversedObject).length, 1);
+      eq(reversedObject.length, 0);
     },
     "9b) If object has numerated keys, but object.length does not exist, it should remain unchanged.": function() {
-      fail();
-      // var originalObject = {
-      //    0: 0,
-      //    1: 1,
-      //    2: 2,
-      //  };
-      //  var reversedObject = Array.prototype.reverse.apply(originalObject);
-      // >> {0: 0, 1: 1, 2: 2}
+      var originalObject = {
+        0: 0,
+        1: 1,
+        2: 2
+      };
+      var reversedObject = reverse.call(originalObject);
+      eq(reversedObject[0], 0);
+      eq(reversedObject[1], 1);
+      eq(reversedObject[2], 2);
     },
     "9c) If object has numerated keys and object.length <= index of last numerated key, it should remain unchanged.": function() {
       fail();
@@ -226,8 +230,10 @@
       //    2: 2,
       //    length: -1
       //  };
-      //  var reversedObject = Array.prototype.reverse.apply(originalObject);
-      // >> {0: 0, 1: 1, 2: 2, length: -1}
+      //  var reversedObject = reverse.call(originalObject);
+      // eq(reversedObject[0], 0);
+      // eq(reversedObject[1], 1);
+      // eq(reversedObject[2], 2);
 
       // var originalObject = {
       //   0: 0,
@@ -235,7 +241,8 @@
       //   2: 2,
       //   length: 2
       // };
-      // var reversedObject = Array.prototype.reverse.apply(originalObject);
+      // var reversedObject = reverse.call(originalObject);
+      // TODO: Figure out WTF is going on here because this does not make sense!!
       // >>> {0: 1, 1: 0, 2: 2, length: 2}
     },
     "9d) If object has numerated keys and object.length > index of last numerated key, object reverses.": function() {
@@ -246,7 +253,7 @@
       //   2: 2,
       //   length: 3
       // };
-      // var reversedObject = Array.prototype.reverse.apply(originalObject);
+      // var reversedObject = reverse.call(originalObject);
       // >>> {0: 2, 1: 1, 2: 0, length: 3}
 
       // var originalObject = {
@@ -255,7 +262,7 @@
       //   2: 2,
       //   length: 4
       // };
-      // var reversedObject = Array.prototype.reverse.apply(originalObject);
+      // var reversedObject = reverse.call(originalObject);
       // >>> {1: 2, 2: 1, 3: 0, length: 4}
     },
 
@@ -267,7 +274,7 @@
       //   2: 2,
       //   length: "3"
       // };
-      // var reversedObject = Array.prototype.reverse.apply(originalObject);
+      // var reversedObject = reverse.call(originalObject);
       // eq(reversedObject[0], 2)
       // eq(reversedObject[1], 1)
       // eq(reversedObject[2], 0)
@@ -280,7 +287,7 @@
       //   2: 2,
       //   length: "cow"
       // };
-      // var reversedObject = Array.prototype.reverse.apply(originalObject);
+      // var reversedObject = reverse.call(originalObject);
       // eq(reversedObject[0], 0)
       // eq(reversedObject[1], 1)
       // eq(reversedObject[2], 2)
@@ -296,7 +303,7 @@
       //   length: 3
       // };
       // var keysInOriginalObject = Object.keys(originalObject);
-      // var reversedObject = Array.prototype.reverse.apply(originalObject);
+      // var reversedObject = reverse.call(originalObject);
       // var keysInReversedObject = Object.keys(reversedObject);
       // eq(keysInOriginalObject[0], keysInReversedObject[0])
       // eq(keysInOriginalObject[1], keysInReversedObject[1])
@@ -316,7 +323,7 @@
       //   originalObject.length - 1
       // );
       // var indexOfLastNumeratedKeyInOriginalObject = 2;
-      // var reversedObject = Array.prototype.reverse.apply(originalObject);
+      // var reversedObject = reverse.call(originalObject);
       // var numerableKeysInReversedObject = Object.keys(originalObject).slice(
       //   0,
       //   reversedObject.length - 1
