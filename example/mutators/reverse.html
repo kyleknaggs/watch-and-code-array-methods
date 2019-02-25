@@ -51,9 +51,15 @@
   // Function Syntax:
 
   function reverse(object) {
-    var objectToModify = object;
+    var classOfThis = Object.prototype.toString.call(this);
+    if (classOfThis === "[object String]") {
+      throw new TypeError(
+        "Cannot assign to read only property '0' of object '[object String]'"
+      );
+    }
 
-    if (Object.prototype.toString.call(this) !== "[object Window]") {
+    var objectToModify = object;
+    if (classOfThis !== "[object Window]") {
       objectToModify = this;
     }
 
@@ -222,182 +228,180 @@
       eq(reversedObject[1], 1);
       eq(reversedObject[2], 2);
     },
-    "9c) If object has numerated keys and object.length <= index of last numerated key, it should remain unchanged.": function() {
-      fail();
-      // var originalObject = {
-      //    0: 0,
-      //    1: 1,
-      //    2: 2,
-      //    length: -1
-      //  };
-      //  var reversedObject = reverse.call(originalObject);
-      // eq(reversedObject[0], 0);
-      // eq(reversedObject[1], 1);
-      // eq(reversedObject[2], 2);
-
-      // var originalObject = {
-      //   0: 0,
-      //   1: 1,
-      //   2: 2,
-      //   length: 2
-      // };
-      // var reversedObject = reverse.call(originalObject);
-      // TODO: Figure out WTF is going on here because this does not make sense!!
-      // >>> {0: 1, 1: 0, 2: 2, length: 2}
+    "9c) If object has numerated keys and object.length < 0, it should remain unchanged.": function() {
+      var originalObject = {
+        0: 0,
+        1: 1,
+        2: 2,
+        length: -1
+      };
+      var reversedObject = reverse.call(originalObject);
+      eq(reversedObject[0], 0);
+      eq(reversedObject[1], 1);
+      eq(reversedObject[2], 2);
     },
-    "9d) If object has numerated keys and object.length > index of last numerated key, object reverses.": function() {
-      fail();
-      // var originalObject = {
-      //   0: 0,
-      //   1: 1,
-      //   2: 2,
-      //   length: 3
-      // };
-      // var reversedObject = reverse.call(originalObject);
-      // >>> {0: 2, 1: 1, 2: 0, length: 3}
+    "9d) If object has numerated keys and object.length < index of last numerated key, object reverses up to object[object.length-1].": function() {
+      var originalObject = {
+        0: 0,
+        1: 1,
+        2: 2,
+        length: 2
+      };
+      var reversedObject = reverse.call(originalObject);
+      eq(reversedObject[0], 1);
+      eq(reversedObject[1], 0);
+      eq(reversedObject[2], 2);
+      eq(reversedObject.length, 2);
+    },
+    "9e) If object has numerated keys and object.length > index of last numerated key, object reverses.": function() {
+      var originalObject = {
+        0: 0,
+        1: 1,
+        2: 2,
+        length: 3
+      };
+      var reversedObject = reverse.call(originalObject);
+      eq(reversedObject[0], 2);
+      eq(reversedObject[1], 1);
+      eq(reversedObject[2], 0);
+      eq(reversedObject.length, 3);
 
-      // var originalObject = {
-      //   0: 0,
-      //   1: 1,
-      //   2: 2,
-      //   length: 4
-      // };
-      // var reversedObject = reverse.call(originalObject);
-      // >>> {1: 2, 2: 1, 3: 0, length: 4}
+      var originalObject = {
+        0: 0,
+        1: 1,
+        2: 2,
+        length: 4
+      };
+      var reversedObject = reverse.call(originalObject);
+      eq(reversedObject[1], 2);
+      eq(reversedObject[2], 1);
+      eq(reversedObject[3], 0);
+      eq(reversedObject.length, 4);
     },
 
     "10a) If object.length is not a number and object.length cannot be converted to a number, it should not reverse elements in object.": function() {
-      fail();
-      // var originalObject = {
-      //   0: 0,
-      //   1: 1,
-      //   2: 2,
-      //   length: "3"
-      // };
-      // var reversedObject = reverse.call(originalObject);
-      // eq(reversedObject[0], 2)
-      // eq(reversedObject[1], 1)
-      // eq(reversedObject[2], 0)
+      var originalObject = {
+        0: 0,
+        1: 1,
+        2: 2,
+        length: "cow"
+      };
+      var reversedObject = reverse.call(originalObject);
+      eq(reversedObject[0], 0);
+      eq(reversedObject[1], 1);
+      eq(reversedObject[2], 2);
     },
     "10b) If object.length is not a number but object.length can be converted to a number, it should reverse elements in object.": function() {
-      fail();
-      // var originalObject = {
-      //   0: 0,
-      //   1: 1,
-      //   2: 2,
-      //   length: "cow"
-      // };
-      // var reversedObject = reverse.call(originalObject);
-      // eq(reversedObject[0], 0)
-      // eq(reversedObject[1], 1)
-      // eq(reversedObject[2], 2)
+      var originalObject = {
+        0: 0,
+        1: 1,
+        2: 2,
+        length: "3"
+      };
+      var reversedObject = reverse.call(originalObject);
+      eq(reversedObject[0], 2);
+      eq(reversedObject[1], 1);
+      eq(reversedObject[2], 0);
     },
 
     // "If object has numerated keys and object.length > index of last numerated key, it should place value at first numerated key at object.length - 1.": function() {
     "11a) If object.length === index of last numerated key + 1, numerated keys in object should remain the same.": function() {
-      fail();
-      // var originalObject = {
-      //   0: 0,
-      //   1: 1,
-      //   2: 2,
-      //   length: 3
-      // };
-      // var keysInOriginalObject = Object.keys(originalObject);
-      // var reversedObject = reverse.call(originalObject);
-      // var keysInReversedObject = Object.keys(reversedObject);
-      // eq(keysInOriginalObject[0], keysInReversedObject[0])
-      // eq(keysInOriginalObject[1], keysInReversedObject[1])
-      // eq(keysInOriginalObject[2], keysInReversedObject[2])
+      var originalObject = {
+        0: 0,
+        1: 1,
+        2: 2,
+        length: 3
+      };
+      var keysInOriginalObject = Object.keys(originalObject);
+      var reversedObject = reverse.call(originalObject);
+      var keysInReversedObject = Object.keys(reversedObject);
+      eq(keysInOriginalObject[0], keysInReversedObject[0]);
+      eq(keysInOriginalObject[1], keysInReversedObject[1]);
+      eq(keysInOriginalObject[2], keysInReversedObject[2]);
     },
     "11b) If object.length > index of last numerated key + 1, keys should shift by object.length - index of last numerated key.": function() {
-      fail();
-      // TODO: 3) Refactor keys when head is straight.
-      // var originalObject = {
-      //   0: 0,
-      //   1: 1,
-      //   2: 2,
-      //   length: 4
-      // };
-      // var numerableKeysInOriginalObject = Object.keys(originalObject).slice(
-      //   0,
-      //   originalObject.length - 1
-      // );
-      // var indexOfLastNumeratedKeyInOriginalObject = 2;
-      // var reversedObject = reverse.call(originalObject);
-      // var numerableKeysInReversedObject = Object.keys(originalObject).slice(
-      //   0,
-      //   reversedObject.length - 1
-      // );
-      // var valueKeyShouldShift = Number(
-      //   originalObject.length - indexOfLastNumeratedKeyInOriginalObject - 1
-      // );
-      // for (var i = 0; i < numerableKeysInReversedObject.length; i++) {
-      //   console.log(
-      //     numerableKeysInReversedObject[i],
-      //     Number(numerableKeysInOriginalObject[i]) + Number(valueKeyShouldShift)
-      //   );
-      // }
+      var originalObject = {
+        0: 0,
+        1: 1,
+        2: 2,
+        length: 4
+      };
+      var numerableKeysInOriginalObject = Object.keys(originalObject).slice(
+        0,
+        originalObject.length - 1
+      );
+      var indexOfLastNumeratedKeyInOriginalObject = 2;
+      var reversedObject = reverse.call(originalObject);
+      var numerableKeysInReversedObject = Object.keys(originalObject).slice(
+        0,
+        reversedObject.length - 1
+      );
+      var valueKeyShouldShift = Number(
+        originalObject.length - indexOfLastNumeratedKeyInOriginalObject - 1
+      );
+      for (var i = 0; i < numerableKeysInReversedObject.length; i++) {
+        eq(
+          numerableKeysInReversedObject[i],
+          Number(numerableKeysInOriginalObject[i]) + Number(valueKeyShouldShift)
+        );
+      }
     },
 
     "12a) If array is number or a boolean, it should convert primitive value Object and return Object.": function() {
-      fail();
-      // var number = 123;
-      // var reversedNumber = reverse.call(number);
-      // eq(typeof filledNumber, "object");
-      // eq(filledNumber.valueOf(), 123);
+      var number = 123;
+      var reversedNumber = reverse.call(number);
+      eq(typeof reversedNumber, "object");
+      eq(reversedNumber.valueOf(), 123);
 
-      // var bool = true;
-      // var reversedNumber = reverse.call(bool);
-      // eq(typeof reversedNumber, "object");
-      // eq(reversedNumber.valueOf(), true);
+      var bool = true;
+      var reversedNumber = reverse.call(bool);
+      eq(typeof reversedNumber, "object");
+      eq(reversedNumber.valueOf(), true);
 
-      // var bool = false;
-      // var reversedNumber = reverse.call(bool);
-      // eq(typeof reversedNumber, "object");
-      // eq(reversedNumber.valueOf(), false);
+      var bool = false;
+      var reversedNumber = reverse.call(bool);
+      eq(typeof reversedNumber, "object");
+      eq(reversedNumber.valueOf(), false);
     },
     "12b) If array is function, it should return function.": function() {
-      fail();
-      // var testFunction = function () {};
-      // var reversedFunction = reverse(testFunction);
-      // eq(testFunction, reversedFunction);
+      var testFunction = function() {};
+      var reversedFunction = reverse(testFunction);
+      eq(testFunction, reversedFunction);
     },
     "12c) If array is a string it should throw TypeError that states: Uncaught TypeError Cannot assign to read only property '0' of object '[object String]'.": function() {
-      fail();
-      // var isTypeError = false;
-      // var errorMessage;
-      // try {
-      //   var string = "string";
-      //   reverse.call(string);
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      //   errorMessage = e.message;
-      // }
-      // eq(isTypeError, true);
-      // eq(
-      //   errorMessage,
-      //   "Cannot assign to read only property '0' of object '[object String]'"
-      // );
+      var isTypeError = false;
+      var errorMessage;
+      try {
+        var string = "string";
+        reverse.call(string);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+        errorMessage = e.message;
+      }
+      eq(isTypeError, true);
+      eq(
+        errorMessage,
+        "Cannot assign to read only property '0' of object '[object String]'"
+      );
     },
     "12d) If array is null or undefined it should throw TypeError that states: Uncaught TypeError Cannot convert undefined or null to object.": function() {
-      fail();
-      // var isTypeError = false;
-      // try {
-      //   var testNull = null;
-      //   reverse.call(testNull);
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      var isTypeError = false;
+      try {
+        var testNull = null;
+        reverse.call(testNull);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
 
-      // var isTypeError = false;
-      // try {
-      //   var testUndefined = undefined;
-      //   reverse.call(testUndefined);
-      // } catch (e) {
-      //   isTypeError = e instanceof TypeError;
-      // }
-      // eq(isTypeError, true);
+      var isTypeError = false;
+      try {
+        var testUndefined = undefined;
+        reverse.call(testUndefined);
+      } catch (e) {
+        isTypeError = e instanceof TypeError;
+      }
+      eq(isTypeError, true);
     }
   });
 </script>
