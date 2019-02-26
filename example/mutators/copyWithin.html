@@ -1,8 +1,12 @@
 <script src="../../simpletest.js"></script>
 <script>
   // Summary:
+  // Shallow copies part of an array to another location in the same array.
 
   // Example:
+  // var array = ["a", "b", "c", "d"];
+  // copyWithin(array, 1, 2, 3);
+  // >>> ["a", "c", "c", "d"];
 
   // Prototype implementation:
 
@@ -10,21 +14,59 @@
   // }
 
   // Function signature:
-  // copyWithin();
+  // copyWithin(array, indexToInsertCopiedElements, optionalStart, optionalEnd);
 
   // Arguments:
+  // array - The array to be modified.
+  // indexToCopyTo - The index to insert copied elements at.
+  // optionalStart - The index to begin copying elements from.
+  // optionalEnd - The index to stop copying elements at.
 
   // Return value:
+  // The array that was modified.
+
+  // Requirements:
+
+  // It should return an array.
+  // It should return the same array instead of creating a new array.
+
+  // It should copy part of array.
+  // It should shallow copy part of an array instead of deep copying part of an array.
+
+  // It should insert elements at indexToCopyTo.
+  // If negative, indexToCopyTo will be counted from the end.
+  // If indexToCopyTo is at or greater than arr.length, nothing will be copied.
+  // If indexToCopyTo is positioned after start, the copied sequence will be trimmed to fit arr.length.
+
+  // If no optionalStart, it should start copying at 0.
+  // If opitonalStart && optionalStart > 0, it should start copying at optionalStart.
+  // If optionalStart is negative, optionalStart will be counted from the end.
+
+  // If no optionalEnd, it should copy all remaining elements in array.
+  // If optionalEnd, it should stop copying elements at the index before optionalEnd.
+  // If optionalEnd is negative, optionalEnd will be counted from the end.
+
+  // It should not modify array.length.
+
+  // TODO: In typical requirements:
+  // This especially applies to the TypedArray method of the same name. >>> What does this mean?
+  // It should be copied and pasted as one operation. >>> What does this mean?
+  // pasted sequence will have the copied values even when the copy and paste region overlap. >>> What does this mean?
+  // The copyWithin function is intentionally generic, it does not require that its this value be an Array object. >>> Test objects and array-like objects.
+
+  // TODO: Edge Cases:
+  // Refer to standard edge case docs here.
+
+  // TODO: Review Docs Examples
 
   // Questions:
-  // 1)
-  // 2)
-  // 3)
+  // 1) What does shallow copy mean? - Confirm that this means that it does not copy a reference to the original object.
+  // 2) What is a TypedArray? https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/copyWithin
 
   // Useful References:
-  // 1)
-  // 2)
-  // 3)
+  // 1) MDN Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin s
+  // 2) Specs: https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.copywithin
+  // 3) Type Array Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/copyWithin
 
   // Function Syntax:
 
