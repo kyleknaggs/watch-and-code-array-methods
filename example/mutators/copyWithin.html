@@ -14,7 +14,7 @@
   // }
 
   // Function signature:
-  // copyWithin(array, indexToInsertCopiedElements, optionalStart, optionalEnd);
+  // copyWithin(array, indexToCopyTo, optionalStart, optionalEnd);
 
   // Arguments:
   // array - The array to be modified.
@@ -26,42 +26,12 @@
   // The array that was modified.
 
   // Requirements:
-
-  // It should return an array.
-  // It should return the same array instead of creating a new array.
-
-  // It should copy part of array.
-  // It should shallow copy part of an array instead of deep copying part of an array.
-
-  // It should insert elements at indexToCopyTo.
-  // If negative, indexToCopyTo will be counted from the end.
-  // If indexToCopyTo is at or greater than arr.length, nothing will be copied.
-  // If indexToCopyTo is positioned after start, the copied sequence will be trimmed to fit arr.length.
-
-  // If no optionalStart, it should start copying at 0.
-  // If opitonalStart && optionalStart > 0, it should start copying at optionalStart.
-  // If optionalStart is negative, optionalStart will be counted from the end.
-
-  // If no optionalEnd, it should copy all remaining elements in array.
-  // If optionalEnd, it should stop copying elements at the index before optionalEnd.
-  // If optionalEnd is negative, optionalEnd will be counted from the end.
-
-  // It should not modify array.length.
-
-  // TODO: In typical requirements:
-  // This especially applies to the TypedArray method of the same name. >>> What does this mean?
-  // It should be copied and pasted as one operation. >>> What does this mean?
-  // pasted sequence will have the copied values even when the copy and paste region overlap. >>> What does this mean?
-  // The copyWithin function is intentionally generic, it does not require that its this value be an Array object. >>> Test objects and array-like objects.
-
-  // TODO: Edge Cases:
-  // Refer to standard edge case docs here.
-
-  // TODO: Review Docs Examples
-
   // Questions:
   // 1) What does shallow copy mean? - Confirm that this means that it does not copy a reference to the original object.
   // 2) What is a TypedArray? https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/copyWithin
+  // A TypedArray object describes an array-like view of an underlying binary data buffer.
+  // 3) What is a binary data buffer? https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
+  // The ArrayBuffer object is used to represent a generic, fixed-length raw binary data buffer.
 
   // Useful References:
   // 1) MDN Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin s
@@ -73,11 +43,104 @@
   function copyWithin() {}
 
   tests({
-    "1)": function() {
+    // Basic Requirements:
+    "It should return an array.": function() {
+      fail();
+      // var array = [];
+      // var returnedArray = copyWithin(array);
+      // eq(Object.prototype.toString.call(returnedArray), "[object Array]");
+    },
+    "It should return the same array instead of creating a new array.": function() {
+      fail();
+      // var array = [];
+      // var returnedArray = copyWithin(array);
+      // eq(array, returnedArray);
+    },
+
+    "a) If indexToCopyTo, it should not change indexes before indexToCopyTo.": function() {
+      fail();
+      // var array = ["a", "b", "c"];
+      // var valueAtIndexBeforeIndexToCopyTo = array[0];
+      // var returnedArray = array.copyWithin(1);
+      // eq(valueAtIndexBeforeIndexToCopyTo, returnedArray[0]);
+    },
+    "b) If indexToCopyTo, it should copy array[0+n], to array[indexToCopyTo+n].": function() {
+      fail();
+      // var array = ["a", "b", "c"];
+      // var valueAtIndexZeroInArray = array[0];
+      // var valueAtIndexOneInArray = array[1];
+      // var returnedArray = array.copyWithin(1);
+      // eq(valueAtIndexZeroInArray, returnedArray[1]);
+      // eq(valueAtIndexOneInArray, returnedArray[2]);
+    },
+
+    "It should not modify array.length.": function() {
+      fail();
+      // var array = ["a", "b", "c"];
+      // var originalLength = array.length;
+      // var returnedArray = array.copyWithin(1);
+      // eq(originalLength, returnedArray.length);
+    },
+
+    "It should shallow copy part of an array instead of copying a reference to the original object.": function() {
+      fail();
+      // var object = {};
+      // var array = [object, "b", "c"];
+      // var returnedArray = array.copyWithin(1);
+      // eq(object === returnedArray[2], false);
+    },
+
+    // Behaviour of indexToCopyTo:
+    "a) If indexToCopyTo is negative, count indexToCopyTo from the end of array.": function() {
       fail();
     },
-    "2)": function() {
+    "b) If indexToCopyTo is at or greater than arr.length, nothing will be copied.": function() {
+      fail();
+    },
+    "c) If indexToCopyTo is positioned after start, the copied sequence will be trimmed to fit array.length.": function() {
+      fail();
+    },
+
+    // Behaviour of optionalStart:
+    "a) If no optionalStart, it should start copying at 0.": function() {
+      fail();
+    },
+    "b) If opitonalStart && optionalStart > 0, it should start copying at optionalStart.": function() {
+      fail();
+    },
+    "c) If optionalStart is negative, optionalStart will be counted from the end.": function() {
+      fail();
+    },
+
+    // Behaviour of optionalEnd:
+    "a) If no optionalEnd, it should copy all remaining elements in array.": function() {
+      fail();
+    },
+    "b) If optionalEnd, it should stop copying elements at the index before optionalEnd.": function() {
+      fail();
+    },
+    "c) If optionalEnd is negative, optionalEnd will be counted from the end.": function() {
+      fail();
+    },
+
+    // Double check with a number of test cases:
+    "If copy and paste regions overlap, it should have pasted sequence.": function() {
+      fail();
+    },
+
+    // When used with call() and apply():
+    "a) It should work with .call().": function() {
+      fail();
+    },
+    "b) It should work with .apply().": function() {
+      fail();
+    },
+
+    // When used with objects:
+    "If object has object.length, it should copyWithin().": function() {
       fail();
     }
+
+    // TODO: Add Edge Cases: Check for edge cases: Refer to standard edge case docs here.
   });
 </script>
