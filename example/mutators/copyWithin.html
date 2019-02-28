@@ -27,7 +27,9 @@
 
   // Requirements:
   // Questions:
-  // 1) What does shallow copy mean? - Confirm that this means that it does not copy a reference to the original object.
+  // 1) What does shallow copy mean? https://we-are.bookmyshow.com/understanding-deep-and-shallow-copy-in-javascript-13438bad941c
+  // A "shallow copy" is a copy of an object that points to the same memory address.
+  // A "deep copy" is a copy of an object that is stored at a new memory address.
   // 2) What is a TypedArray? https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/copyWithin
   // A TypedArray object describes an array-like view of an underlying binary data buffer.
   // 3) What is a binary data buffer? https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
@@ -58,33 +60,123 @@
     },
 
     // Behaviour of indexToCopyTo:
-
-    "a) If indexToCopyTo is 0, of indexToCopyTo is at or greater than arr.length, it should not copy elements.": function() {
+    "a) If (indexToCopyTo === 0 ) it should not copy any elements in array.": function() {
       fail();
-      // TODO: 2) Include a test that uses shallow copy of object to confirm that copy has not occured here.
+      // var array = ["a", "b"];
+      // var indexToCopyTo = 0;
+      // var returnedArray = copyWithin(array, indexToCopyTo);
+      // eq(returnedArray[0], "a")
+      // eq(returnedArray[1], "b")
     },
-    "b) If indexToCopyTo is > 1 && < array.length, it should copy array[0+n], to array[indexToCopyTo+n].": function() {
+    "b) If (indexToCopyTo > 0) && (indexToCopyTo < array.length), it should copy array[n], to array[n + indexToCopyTo].": function() {
       fail();
       // var array = ["a", "b", "c"];
-      // var valueAtIndexZeroInArray = array[0];
-      // var valueAtIndexOneInArray = array[1];
-      // var returnedArray = copyWithin(array, 1);
-      // eq(valueAtIndexZeroInArray, returnedArray[1]);
-      // eq(valueAtIndexOneInArray, returnedArray[2]);
+      // var deepCopyOfOrginalArray = array.slice();
+      // var indexToCopyTo = 1;
+      // var returnedArray = copyWithin(array, indexToCopyTo);
+      // eq(deepCopyOfOrginalArray[0] === returnedArray[indexToCopyTo + 0], true);
+      // eq(deepCopyOfOrginalArray[1] === returnedArray[indexToCopyTo + 1], true);
     },
-    "c) If indexToCopyTo is negative, it should copy array[0+n] to array.length - [indexToCopyTo+n].": function() {
+    "c) If (indexToCopyTo > 0) && (indexToCopyTo >= array.length), it should not copy any elements in array.": function() {
+      fail();
+      // var array = ["a", "b"];
+      // var indexToCopyTo = 2;
+      // var returnedArray = copyWithin(array, indexToCopyTo);
+      // eq(returnedArray[0], "a")
+      // eq(returnedArray[1], "b")
+    },
+    "d) If (indexToCopyTo < 0) && (indexToCopyTo + array.length > 0), it should copy array[n] to array[array.length + indexToCopyTo + n].": function() {
       fail();
       // var array = ["a", "b", "c"];
-      // var returnedArray = copyWithin(array, -1);
-      // eq(returnedArray[0], "a");
-      // eq(returnedArray[1], "b");
-      // eq(returnedArray[2], "a");
+      // var deepCopyOfOrginalArray = array.slice();
+      // var indexToCopyTo = -1;
+      // var returnedArray = copyWithin(array, indexToCopyTo);
+      // eq(deepCopyOfOrginalArray[0] === returnedArray[deepCopyOfOrginalArray.length + indexToCopyTo + 0], true);
+    },
+    "e) If (indexToCopyTo < 0) && (indexToCopyTo + array.length <= 0), it should copy array[n] to array[array.length + indexToCopyTo + n].": function() {
+      fail();
+      // var array = ["a", "b"];
+      // var indexToCopyTo = -2;
+      // var returnedArray = copyWithin(array, indexToCopyTo);
+      // eq(returnedArray[0], "a")
+      // eq(returnedArray[1], "b")
+    },
 
+    // Behaviour of optionalStart:
+    "a) If no optionalStart, the first copied index should be array[0].": function() {
+      fail();
       // var array = ["a", "b", "c"];
-      // var returnedArray = copyWithin(array, -2);
-      // eq(returnedArray[0], "a");
-      // eq(returnedArray[1], "a");
-      // eq(returnedArray[2], "b");
+      // var deepCopyOfOrginalArray = array.slice();
+      // var indexToCopyTo = 1;
+      // var returnedArray = copyWithin(array, indexToCopyTo);
+      // eq(deepCopyOfOrginalArray[0] === returnedArray[indexToCopyTo], true);
+    },
+    "b) If (optionalStart >= 0) && (optionalStart < array.length), the first copied index should be array[optionalStart].": function() {
+      fail();
+      // var array = ["a", "b", "c"];
+      // var deepCopyOfOrginalArray = array.slice();
+      // var optionalStart = 1;
+      // var indexToCopyTo = 0;
+      // var returnedArray = copyWithin(array, indexToCopyTo, optionalStart);
+      // eq(deepCopyOfOrginalArray[optionalStart] === returnedArray[indexToCopyTo], true);
+    },
+    "c) If (optionalStart >= 0) && (optionalStart >= array.length), do not copy indexes": function() {
+      fail();
+      // var array = ["a", "b", "c"];
+      // var deepCopyOfOrginalArray = array.slice();
+      // var optionalStart = 3;
+      // var indexToCopyTo = 0;
+      // var returnedArray = copyWithin(array, indexToCopyTo, optionalStart);
+      // eq(deepCopyOfOrginalArray[0] === returnedArray[indexToCopyTo] === false);
+    },
+    "d) If (optionalStart < 0) && (optionalStart + array.length > 0), the first copied index should be array[array.length + optionalStart].": function() {
+      fail();
+      // var array = ["a", "b", "c"];
+      // var deepCopyOfOrginalArray = array.slice();
+      // var optionalStart = -1;
+      // var returnedArray = copyWithin(array, 0, optionalStart);
+      // eq(deepCopyOfOrginalArray[array.length+optionalStart] === returnedArray[0], true);
+    },
+    "e) If (optionalStart < 0) && (optionalStart + array.length <= 0), do not copy indexes.": function() {
+      fail();
+      // var array = ["a", "b"];
+      // var optionalStart = -2;
+      // var returnedArray = copyWithin(array, indexToCopyTo);
+      // eq(returnedArray[0], "a")
+      // eq(returnedArray[1], "b")
+    },
+
+    // Behaviour of optionalEnd:
+    "a) If no optionalEnd, all indexes after optionalStart should be copied.": function() {
+      fail();
+      // var array = ["a", "b", "c"];
+      // var deepCopyOfOrginalArray = array.slice();
+      // var returnedArray = copyWithin(array, 1, 0);
+      // eq(deepCopyOfOrginalArray[0] === returnedArray[1], true);
+      // eq(deepCopyOfOrginalArray[1] === returnedArray[2], true);
+    },
+    "b) If (optionalEnd >= 0) && (optionalEnd < array.length), the last copied index should be array[optionalEnd - 1].": function() {
+      fail();
+      // var array = ["a", "b", "c", "d"];
+      // var deepCopyOfOrginalArray = array.slice();
+      // var returnedArray = copyWithin(array, 1, 0, 1);
+      // eq(deepCopyOfOrginalArray[0] === returnedArray[1], true);
+      // eq(deepCopyOfOrginalArray[0] === returnedArray[2], false);
+    },
+    "c) If (optionalEnd >= 0) && (optionalEnd > array.length), the last copied index should be array[optionalEnd - 1].": function() {
+      fail();
+    },
+    "d) If (optionalEnd < 0) && (optionalEnd + array.length > 0), the last copied index should be array[array.length - optionalEnd]": function() {
+      fail();
+      // var array = ["a", "b", "c", "d"];
+      // var deepCopyOfOrginalArray = array.slice();
+      // var returnedArray = array.copyWithin(0, 1, -1);
+      // eq(deepCopyOfOrginalArray[1] === returnedArray[0], true);
+      // eq(deepCopyOfOrginalArray[2] === returnedArray[1], true);
+      // eq(deepCopyOfOrginalArray[3] === returnedArray[2], false);
+    },
+    "e) If (optionalEnd < 0) && (optionalEnd + array.length < 0), the last copied index should be array[array.length - optionalEnd]": function() {
+      fail();
     },
 
     "It should never modify array.length.": function() {
@@ -95,57 +187,16 @@
       // eq(originalLength, returnedArray.length);
     },
 
-    "It should shallow copy part of an array instead of copying a reference to the original object.": function() {
+    "It should shallow copy part of array, creating a copies of objects that point to the same memory address": function() {
       fail();
-      // TODO: 1) Figure out what "shallow copy" means and research how its relates to the array according to the docs.
       // var object = {};
       // var array = [object, "b", "c"];
       // var returnedArray = copyWithin(array, 1);
-      // eq(object === returnedArray[1], false);
+      // object.isShallowCopyOfObject = true;
+      // eq(returnedArray[1].isShallowCopyOfObject, true);
     },
 
-    // Behaviour of optionalStart:
-    "a) If no optionalStart, it should start copying at index 0.": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var returnedArray = copyWithin(array, 1);
-      // eq(returnedArray[1], "a");
-
-      // var array = ["a", "b", "c"];
-      // var returnedArray = copyWithin(array, 2);
-      // eq(returnedArray[2], "a");
-    },
-    "b) If opitonalStart && optionalStart > 0, the first copied element should be array[optionalStart].": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var returnedArray = copyWithin(array, 0, 1);
-      // eq(returnedArray[0], "b");
-
-      // var array = ["a", "b", "c"];
-      // var returnedArray = copyWithin(array, 0, 2);
-      // eq(returnedArray[0], "c");
-    },
-    "c) If optionalStart is negative, the first copied element should be array[optionalStart].": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var returnedArray = copyWithin(array, 0, -1);
-      // eq(returnedArray[0], "c");
-
-      // var array = ["a", "b", "c"];
-      // var returnedArray = copyWithin(array, 0, -2);
-      // eq(returnedArray[0], "b");
-    },
-
-    // Behaviour of optionalEnd:
-    "a) If no optionalEnd, it should copy all remaining elements in array.": function() {
-      fail();
-    },
-    "b) If optionalEnd, it should stop copying elements at the index before optionalEnd.": function() {
-      fail();
-    },
-    "c) If optionalEnd is negative, optionalEnd will be counted from the end.": function() {
-      fail();
-    },
+    // TODO: 3) What happens if optionalStart && optionalEnd but array.length + optionalStart < 0 OR array.length + optionalEnd < 0.
 
     // Double check with a number of test cases:
     "If copy and paste regions overlap, it should have pasted sequence.": function() {
