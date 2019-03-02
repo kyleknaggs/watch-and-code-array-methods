@@ -60,7 +60,7 @@
     },
 
     // If indexToCopyTo is a number:
-    "3a) If (indexToCopyTo === 0 ) it should NOT copy any elements in array.": function() {
+    "3a) If (indexToCopyTo === 0 ) it should NOT copy any indexes in array.": function() {
       fail();
       // var array = ["a", "b"];
       // var indexToCopyTo = 0;
@@ -77,7 +77,7 @@
       // eq(deepCopyOfOrginalArray[0] === returnedArray[indexToCopyTo + 0], true);
       // eq(deepCopyOfOrginalArray[1] === returnedArray[indexToCopyTo + 1], true);
     },
-    "3c) If (indexToCopyTo > 0) && (indexToCopyTo >= array.length), it should NOT copy any elements in array.": function() {
+    "3c) If (indexToCopyTo > 0) && (indexToCopyTo >= array.length), it should NOT copy any indexes in array.": function() {
       fail();
       // var array = ["a", "b"];
       // var indexToCopyTo = 2;
@@ -93,7 +93,7 @@
       // var returnedArray = copyWithin(array, indexToCopyTo);
       // eq(deepCopyOfOrginalArray[0] === returnedArray[deepCopyOfOrginalArray.length + indexToCopyTo + 0], true);
     },
-    "3e) If (indexToCopyTo < 0) && (indexToCopyTo + array.length <= 0), it should copy array[n] to array[array.length + indexToCopyTo + n].": function() {
+    "3e) If (indexToCopyTo < 0) && (indexToCopyTo + array.length <= 0), it should NOT copy any indexes in array.": function() {
       fail();
       // var array = ["a", "b"];
       // var indexToCopyTo = -2;
@@ -102,23 +102,24 @@
       // eq(returnedArray[1], "b")
     },
 
-    // If indexToCopyTo is not a number:
-    "4a) If indexToCopyTo is not a number && indexToCopyTo can be converted to a number it should behave like Number(indexToCopyTo)": function() {
+    // If indexToCopyTo is NOT a number:
+    "4a) If indexToCopyTo is NOT a number && indexToCopyTo can be converted to a number it should behave like Number(indexToCopyTo)": function() {
       fail();
       // var array = ["a", "b", "c"];
-      // var deepCopyOfOrginalArray = array.slice();
       // var indexToCopyTo = "1";
       // var returnedArray = copyWithin(array, indexToCopyTo);
-      // eq(deepCopyOfOrginalArray[0] === returnedArray[indexToCopyTo + 0], true);
-      // eq(deepCopyOfOrginalArray[1] === returnedArray[indexToCopyTo + 1], true);
+      // eq(returnedArray[0], "a")
+      // eq(returnedArray[1], "a")
+      // eq(returnedArray[2], "b")
     },
-    "4b) If indexToCopyTo is not a number && indexToCopyTo cannot be converted to a number, it should NOT copy indexes.": function() {
+    "4b) If indexToCopyTo is NOT a number && indexToCopyTo cannot be converted to a number, it should NOT copy any indexes in array.": function() {
       fail();
-      // var array = ["a", "b"];
+      // var array = ["a", "b", "c"];
       // var indexToCopyTo = "cow";
       // var returnedArray = copyWithin(array, indexToCopyTo);
       // eq(returnedArray[0], "a")
       // eq(returnedArray[1], "b")
+      // eq(returnedArray[2], "c")
     },
 
     // If optionalStart is a number:
@@ -134,52 +135,59 @@
       fail();
       // var array = ["a", "b", "c"];
       // var deepCopyOfOrginalArray = array.slice();
-      // var optionalStart = 1;
       // var indexToCopyTo = 0;
+      // var optionalStart = 1;
       // var returnedArray = copyWithin(array, indexToCopyTo, optionalStart);
       // eq(deepCopyOfOrginalArray[optionalStart] === returnedArray[indexToCopyTo], true);
     },
-    "5c) If (optionalStart >= 0) && (optionalStart >= array.length), do not copy indexes": function() {
+    "5c) If (optionalStart >= 0) && (optionalStart >= array.length), do NOT copy indexes": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var deepCopyOfOrginalArray = array.slice();
-      // var optionalStart = 3;
       // var indexToCopyTo = 0;
+      // var optionalStart = 3;
       // var returnedArray = copyWithin(array, indexToCopyTo, optionalStart);
-      // eq(deepCopyOfOrginalArray[0] === returnedArray[indexToCopyTo] === false);
+      // eq(returnedArray[0], "a")
+      // eq(returnedArray[1], "b")
+      // eq(returnedArray[2], "c")
     },
     "5d) If (optionalStart < 0) && (optionalStart + array.length > 0), the first copied index should be array[array.length + optionalStart].": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var deepCopyOfOrginalArray = array.slice();
+      // var indexToCopyTo = 0;
       // var optionalStart = -1;
-      // var returnedArray = copyWithin(array, 0, optionalStart);
+      // var returnedArray = copyWithin(array, indexToCopyTo, optionalStart);
       // eq(deepCopyOfOrginalArray[array.length+optionalStart] === returnedArray[0], true);
     },
-    "5e) If (optionalStart < 0) && (optionalStart + array.length <= 0), do not copy indexes.": function() {
+    "5e) If (optionalStart < 0) && (optionalStart + array.length <= 0), do NOT copy indexes.": function() {
       fail();
-      // var array = ["a", "b"];
-      // var optionalStart = -2;
+      // var array = ["a", "b", "C"];
+      // var indexToCopyTo = 0;
+      // var optionalStart = -3;
       // var returnedArray = copyWithin(array, indexToCopyTo);
       // eq(returnedArray[0], "a")
       // eq(returnedArray[1], "b")
+      // eq(returnedArray[2], "c")
     },
 
-    // If optionalStart is not a number:
-    "6a) If optionalStart is not a number && optionalStart can be converted to a number, it should behave like Number(optionalStart).": function() {
+    // If optionalStart is NOT a number:
+    "6a) If optionalStart is NOT a number && optionalStart can be converted to a number, it should behave like Number(optionalStart).": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var deepCopyOfOrginalArray = array.slice();
-      // var optionalStart = "1";
       // var indexToCopyTo = 0;
+      // var optionalStart = "1";
       // var returnedArray = copyWithin(array, indexToCopyTo, optionalStart);
-      // eq(deepCopyOfOrginalArray[optionalStart] === returnedArray[indexToCopyTo], true);
+      // eq(returnedArray[0], "b";
+      // eq(returnedArray[1], "c";
+      // eq(returnedArray[2], "c";
     },
-    "6b) If optionalStart is not a number && optionalStart cannnot be converted to a number, it should NOT copy indexes.": function() {
+    "6b) If optionalStart is NOT a number && optionalStart cannnot be converted to a number, it should NOT copy any indexes in array.": function() {
       fail();
       // var array = ["a", "b", "c"];
-      // var optionalStart = "cow";
       // var indexToCopyTo = 0;
+      // var optionalStart = "cow";
       // var returnedArray = copyWithin(array, indexToCopyTo, optionalStart);
       // eq(returnedArray[0], "a";
       // eq(returnedArray[1], "b";
@@ -233,22 +241,21 @@
       // eq(returnedArray[2], "c")
     },
 
-    // If optionalEnd is not a number:
-    "8a) If optionalEnd is not a number && optionalEnd can be converted to a number, it should behave like Number(optionalEnd).": function() {
+    // If optionalEnd is NOT a number:
+    "8a) If optionalEnd is NOT a number && optionalEnd can be converted to a number, it should behave like Number(optionalEnd).": function() {
       fail();
       // var array = ["a", "b", "c"];
-      // var deepCopyOfOrginalArray = array.slice();
       // var indexToCopyTo = 1;
       // var optionalStart = 0;
       // var optionalEnd = "1";
       // var returnedArray = copyWithin(array, indexToCopyTo, optionalStart, optionalEnd);
-      // eq(deepCopyOfOrginalArray[optionalEnd - 1] === returnedArray[indexToCopyTo + optionalEnd - 1], true);
-      // eq(deepCopyOfOrginalArray[optionalEnd] === returnedArray[indexToCopyTo + optionalEnd], false);
+      // eq(returnedArray[0], "a");
+      // eq(returnedArray[1], "a");
+      // eq(returnedArray[2], "c");
     },
-    "8b) If optionalEnd is not a number && optionalEnd cannnot be converted to a number, it should NOT copy indexes.": function() {
+    "8b) If optionalEnd is NOT a number && optionalEnd cannnot be converted to a number, it should NOT copy any indexes in array.": function() {
       fail();
       // var array = ["a", "b", "c"];
-      // var deepCopyOfOrginalArray = array.slice();
       // var indexToCopyTo = 1;
       // var optionalStart = 0;
       // var optionalEnd = "cow";
@@ -285,25 +292,38 @@
       // eq(returnedArray[1].isShallowCopyOfObject, true);
     },
 
-    // TODO: 4) Test function using .call() & .apply().
-
     // When used with call() and apply():
-    "8a) It should work with .call().": function() {
+    // Tests include all parameters:
+    "8a) It should copyWithin when used with .call().": function() {
       fail();
+      // var array = ["a", "b", "c"];
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedArray = copyWithin.call(array, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedArray[0], "a");
+      // eq(returnedArray[1], "a");
+      // eq(returnedArray[2], "c");
     },
-    "8b) It should work with .apply().": function() {
+    "8b)  It should copyWithin when used with .apply().": function() {
       fail();
+      // var array = ["a", "b", "c"];
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedArray = copyWithin.call(array, [indexToCopyTo, optionalStart, optionalEnd)];
+      // eq(returnedArray[0], "a");
+      // eq(returnedArray[1], "a");
+      // eq(returnedArray[2], "c");
     },
 
-    // TODO: 5) Test function with array-like objects.
-
+    // TODO: 1) Test function with array-like objects.
     // When used with objects:
     "9)If object has object.length, it should copyWithin().": function() {
       fail();
     }
 
-    // TODO: 6) Test function for edge cases listed in document.
-
-    // TODO: 7) Test function for non-object or array-like arguments.
+    // TODO: 2) Test function for edge cases listed in document.
+    // TODO: 3) Test function for behaviour when handling arguments that are not objects or arrays.
   });
 </script>
