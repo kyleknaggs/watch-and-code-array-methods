@@ -103,7 +103,7 @@
     },
 
     // If indexToCopyTo is NOT a number:
-    "4a) If indexToCopyTo is NOT a number && indexToCopyTo can be converted to a number it should behave like Number(indexToCopyTo)": function() {
+    "4a) If indexToCopyTo is NOT a number && indexToCopyTo can be converted to a number it should behave like Number(indexToCopyTo).": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var indexToCopyTo = "1";
@@ -140,7 +140,7 @@
       // var returnedArray = copyWithin(array, indexToCopyTo, optionalStart);
       // eq(deepCopyOfOrginalArray[optionalStart] === returnedArray[indexToCopyTo], true);
     },
-    "5c) If (optionalStart >= 0) && (optionalStart >= array.length), do NOT copy indexes": function() {
+    "5c) If (optionalStart >= 0) && (optionalStart >= array.length), do NOT copy indexes.": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var deepCopyOfOrginalArray = array.slice();
@@ -217,7 +217,7 @@
       // eq(deepCopyOfOrginalArray[optionalEnd - 1] === returnedArray[indexToCopyTo + optionalEnd - 1], true);
       // eq(deepCopyOfOrginalArray[optionalEnd] === returnedArray[indexToCopyTo + optionalEnd], false);
     },
-    "7c) If (optionalEnd < 0) && (optionalEnd + array.length > 0), the last copied index should be array[optionalEnd + array.length - 1]": function() {
+    "7c) If (optionalEnd < 0) && (optionalEnd + array.length > 0), the last copied index should be array[optionalEnd + array.length - 1].": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var deepCopyOfOrginalArray = array.slice();
@@ -283,7 +283,7 @@
       // eq(originalLength, returnedArray.length);
     },
 
-    "10) It should shallow copy part of array, creating a copies of objects that point to the same memory address": function() {
+    "10) It should shallow copy part of array, creating a copies of objects that point to the same memory address.": function() {
       fail();
       // var object = {};
       // var array = [object, "b", "c"];
@@ -292,9 +292,25 @@
       // eq(returnedArray[1].isShallowCopyOfObject, true);
     },
 
+    // TODO: 1) Test for nested arrays in array.
+
+    "11) It should copy holes in array.": function() {
+      fail();
+      // var array = ["a", , "c", "d", "e"];
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 3;
+      // var returnedArray = copyWithin.call(array, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedArray[0], "a");
+      // eq(returnedArray[1], "a");
+      // eq(2 in returnedArray], false);
+      // eq(returnedArray[3], "c");
+      // eq(returnedArray[4], "e");
+    },
+
     // When used with call() and apply():
     // Tests include all parameters:
-    "11a) It should copyWithin when used with .call().": function() {
+    "12a) If used with .call() it should copyWithin().": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var indexToCopyTo = 1;
@@ -305,7 +321,7 @@
       // eq(returnedArray[1], "a");
       // eq(returnedArray[2], "c");
     },
-    "11b)  It should copyWithin when used with .apply().": function() {
+    "12b) If used with .apply() it should copyWithin().": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var indexToCopyTo = 1;
@@ -317,7 +333,7 @@
       // eq(returnedArray[2], "c");
     },
 
-    "12a) If ('length' in object === false) it should not copyWithin().": function() {
+    "13a) If ('length' in object === false) it should NOT copyWithin().": function() {
       fail();
       // var object = {
       //   0: "a",
@@ -332,7 +348,111 @@
       // eq(returnedObject[1], "b");
       // eq(returnedObject[2], "c");
     },
-    "12b) If (typeof(object.length) !== 'number'), and object.length cannot be converted to a number it should NOT copyWithin().": function() {
+    "13b) If (object.length < 0) it should NOT copyWithin().": function() {
+      fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: -1
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "b");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, -1);
+    },
+    "13c) If (object.length === 0) it should NOT copyWithin().": function() {
+      fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 0
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "b");
+      // eq(returnedObject[2], "c");
+    },
+
+    "14a) If (object.length > 0) && (object.length < last index of object to be modified) it should NOT copyWithin().": function() {
+      fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 1
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "b");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, 1);
+    },
+    "14b) If (object.length > 0) && (object.length > last index of object to be modified) it should copyWithin().": function() {
+      fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 2
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "a");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, 2);
+    },
+
+    "14a) If (object.length === number of ennumerable properties in object) it should copyWithin().": function() {
+      fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 3
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "a");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, 3);
+    },
+    "14b) If (object.length > number of ennumerable properties in object) it should copyWithin().": function() {
+      fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 10
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "a");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, 10);
+    },
+
+    "15a) If (typeof(object.length) !== 'number'), and object.length cannot be converted to a number it should NOT copyWithin().": function() {
       fail();
       // var object = {
       //   0: "a",
@@ -349,118 +469,113 @@
       // eq(returnedObject[2], "c");
       // eq(returnedObject.length, "cow");
     },
-
-    "13a) If (Number(object.length) < last index of object to be modified) it should NOT copyWithin().": function() {
+    "15b) If (typeof(object.length) !== 'number'), and object.length can be converted to a number it should copyWithin().": function() {
       fail();
       // var object = {
       //   0: "a",
       //   1: "b",
       //   2: "c",
-      //   length: -1
+      //   length: "3"
       // };
       // var indexToCopyTo = 1;
       // var optionalStart = 0;
       // var optionalEnd = 1;
       // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
       // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "b");
+      // eq(returnedObject[1], "a");
       // eq(returnedObject[2], "c");
-      // eq(returnedObject.length, -1);
-
-      // var object = {
-      //   0: "a",
-      //   1: "b",
-      //   2: "c",
-      //   length: 0
-      // };
-      // var indexToCopyTo = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 1;
-      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
-      // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "b");
-      // eq(returnedObject[2], "c");
-
-      // eq(returnedObject.length, 0);
-      // var object = {
-      //   0: "a",
-      //   1: "b",
-      //   2: "c",
-      //   length: 1
-      // };
-      // var indexToCopyTo = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 1;
-      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
-      // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "b");
-      // eq(returnedObject[2], "c");
-      // eq(returnedObject.length, 1);
+      // eq(returnedObject.length, "3");
     },
-    "13b) If (Number(object.length) >= last index of object to be modified) it should copyWithin().": function() {
+
+    "16a) If (typeof(object) === 'number'), it should create an object wrapper for object.": function() {
       fail();
-      // var object = {
-      //   0: "a",
-      //   1: "b",
-      //   2: "c",
-      //   length: 2
-      // };
+      // var numberValue = 10;
       // var indexToCopyTo = 1;
       // var optionalStart = 0;
       // var optionalEnd = 1;
-      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
-      // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "a");
-      // eq(returnedObject[2], "c");
-      // eq(returnedObject.length, 2);
+      // var returnedValue = copyWithin.call(numberValue, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(typeof returnedValue, "object");
+      // eq(returnedValue.valueOf(), 10);
+    },
+    "16b) If (typeof(object) === 'boolean'), it should create an object wrapper for object.": function() {
+      fail();
+      // var booleanValue = true;
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedValue = copyWithin.call(booleanValue, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(typeof returnedValue, "object");
+      // eq(returnedValue.valueOf(), true);
+    },
+    "16c) If (typeof(object) === 'function'), it should create an object wrapper for function.": function() {
+      fail();
+      // var functionValue = function () { };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedValue = copyWithin.call(functionValue, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(functionValue, returnedValue);
+    },
 
-      // var object = {
-      //   0: "a",
-      //   1: "b",
-      //   2: "c",
-      //   length: 3
-      // };
+    "17a) If (typeof(object) === 'string'), it should throw TypeError.": function() {
+      fail();
+      // var isTypeError = false;
+      // var errorMessage;
+      // try {
+      // var stringValue = "cow";
       // var indexToCopyTo = 1;
       // var optionalStart = 0;
       // var optionalEnd = 1;
-      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
-      // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "a");
-      // eq(returnedObject[2], "c");
-      // eq(returnedObject.length, 3);
-
-      // var object = {
-      //   0: "a",
-      //   1: "b",
-      //   2: "c",
-      //   length: 10
-      // };
+      // var returnedValue = copyWithin.call(stringValue, indexToCopyTo, optionalStart, optionalEnd);
+      // } catch(e) {
+      //   isTypeError = e instanceof TypeError;
+      //   errorMessage = e.message;
+      // }
+      //   eq(isTypeError, true);
+      //   eq(
+      //   errorMessage,
+      //     "Cannot assign to read only property '1' of object '[object String]'"
+      // );
+    },
+    "17b) If object is null, it should throw TypeError.": function() {
+      fail();
+      // var isTypeError = false;
+      // var errorMessage;
+      // try {
+      // var nullValue = null;
       // var indexToCopyTo = 1;
       // var optionalStart = 0;
       // var optionalEnd = 1;
-      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
-      // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "a");
-      // eq(returnedObject[2], "c");
-      // eq(returnedObject.length, 10);
-
-      // var object = {
-      //   0: "a",
-      //   1: "b",
-      //   2: "c",
-      //   length: "10"
-      // };
+      // var returnedValue = copyWithin.call(nullValue, indexToCopyTo, optionalStart, optionalEnd);
+      // } catch(e) {
+      //   isTypeError = e instanceof TypeError;
+      //   errorMessage = e.message;
+      // }
+      //   eq(isTypeError, true);
+      //   eq(
+      //   errorMessage,
+      //     "Cannot convert undefined or null to object"
+      // );
+    },
+    "17c) If object is undefined, it should throw TypeError.": function() {
+      fail();
+      // var isTypeError = false;
+      // var errorMessage;
+      // try {
+      // var undefinedValue = null;
       // var indexToCopyTo = 1;
       // var optionalStart = 0;
       // var optionalEnd = 1;
-      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
-      // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "a");
-      // eq(returnedObject[2], "c");
-      // eq(returnedObject.length, "10");
+      // var returnedValue = copyWithin.call(undefinedValue, indexToCopyTo, optionalStart, optionalEnd);
+      // } catch(e) {
+      //   isTypeError = e instanceof TypeError;
+      //   errorMessage = e.message;
+      // }
+      //   eq(isTypeError, true);
+      //   eq(
+      //   errorMessage,
+      //     "Cannot convert undefined or null to object"
+      // );
     }
-
-    // TODO: 1) Test function for edge cases listed in document.
-    // TODO: 2) Test function for behaviour when handling arguments that are not objects or arrays.
   });
 </script>
