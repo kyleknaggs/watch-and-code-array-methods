@@ -294,7 +294,7 @@
 
     // When used with call() and apply():
     // Tests include all parameters:
-    "8a) It should copyWithin when used with .call().": function() {
+    "11a) It should copyWithin when used with .call().": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var indexToCopyTo = 1;
@@ -305,25 +305,162 @@
       // eq(returnedArray[1], "a");
       // eq(returnedArray[2], "c");
     },
-    "8b)  It should copyWithin when used with .apply().": function() {
+    "11b)  It should copyWithin when used with .apply().": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var indexToCopyTo = 1;
       // var optionalStart = 0;
       // var optionalEnd = 1;
-      // var returnedArray = copyWithin.call(array, [indexToCopyTo, optionalStart, optionalEnd)];
+      // var returnedArray = copyWithin.call(array, [indexToCopyTo, optionalStart, optionalEnd]);
       // eq(returnedArray[0], "a");
       // eq(returnedArray[1], "a");
       // eq(returnedArray[2], "c");
     },
 
-    // TODO: 1) Test function with array-like objects.
-    // When used with objects:
-    "9)If object has object.length, it should copyWithin().": function() {
+    "12a) If ('length' in object === false) it should not copyWithin().": function() {
       fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c"
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "b");
+      // eq(returnedObject[2], "c");
+    },
+    "12b) If (typeof(object.length) !== 'number'), and object.length cannot be converted to a number it should NOT copyWithin().": function() {
+      fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: "cow"
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "b");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, "cow");
+    },
+
+    "13a) If (Number(object.length) < last index of object to be modified) it should NOT copyWithin().": function() {
+      fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: -1
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "b");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, -1);
+
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 0
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "b");
+      // eq(returnedObject[2], "c");
+
+      // eq(returnedObject.length, 0);
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 1
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "b");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, 1);
+    },
+    "13b) If (Number(object.length) >= last index of object to be modified) it should copyWithin().": function() {
+      fail();
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 2
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "a");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, 2);
+
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 3
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "a");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, 3);
+
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: 10
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "a");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, 10);
+
+      // var object = {
+      //   0: "a",
+      //   1: "b",
+      //   2: "c",
+      //   length: "10"
+      // };
+      // var indexToCopyTo = 1;
+      // var optionalStart = 0;
+      // var optionalEnd = 1;
+      // var returnedObject = copyWithin.call(object, indexToCopyTo, optionalStart, optionalEnd);
+      // eq(returnedObject[0], "a");
+      // eq(returnedObject[1], "a");
+      // eq(returnedObject[2], "c");
+      // eq(returnedObject.length, "10");
     }
 
-    // TODO: 2) Test function for edge cases listed in document.
-    // TODO: 3) Test function for behaviour when handling arguments that are not objects or arrays.
+    // TODO: 1) Test function for edge cases listed in document.
+    // TODO: 2) Test function for behaviour when handling arguments that are not objects or arrays.
   });
 </script>
