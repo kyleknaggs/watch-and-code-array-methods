@@ -5,12 +5,39 @@
 
   // Example:
   // var array = ["a", "b", "c", "d"];
-  // copyWithin(array, 1, 2, 3);
+  //copyWithin(array, 1, 2, 3);
   // >>> ["a", "c", "c", "d"];
 
   // Prototype implementation:
+  // function copyWithin(array, indexToCopyTo, optionalStart, optionalEnd) {
+  //   var originalLength = array.length;
+  //   var numberOfIndexesToBeCopied;
 
-  // function copyWithin() {
+  //   // Elements will not be copied if coped elements will increase length.
+  //   if (indexToCopyTo + (optionalEnd - optionalStart) > originalLength) {
+  //     numberOfIndexesToBeCopied = originalLength - indexToCopyTo;
+  //   } else {
+  //     numberOfIndexesToBeCopied = optionalEnd - optionalStart;
+  //   }
+
+  //   var indexesToBeCopied = [];
+  //   var i = 0;
+
+  //   // Store all elements to be copied in array.
+  //   while (i < numberOfIndexesToBeCopied) {
+  //     indexesToBeCopied[i] = array[optionalStart + i];
+  //     i++;
+  //   }
+
+  //   var j = 0;
+
+  //   // Add all elements to be copied to array starting at indexToCopyTo.
+  //   while (j < numberOfIndexesToBeCopied) {
+  //     array[indexToCopyTo + j] = indexesToBeCopied[j];
+  //     j++;
+  //   }
+
+  //   return array;
   // }
 
   // Function signature:
@@ -280,6 +307,11 @@
       // var array = ["a", "b", "c"];
       // var originalLength = array.length;
       // var returnedArray = copyWithin(array, 2, 0, 2);
+      // eq(originalLength, returnedArray.length);
+
+      // var array = ["a", "b", "c", "d"];
+      // var originalLength = array.length;
+      // var returnedArray = copyWithin(array, 3, 0, 3);
       // eq(originalLength, returnedArray.length);
     },
 
