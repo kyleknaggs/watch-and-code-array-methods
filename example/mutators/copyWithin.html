@@ -70,45 +70,56 @@
   // Function Syntax:
 
   function copyWithin(array, index, optionalStart, optionalEnd) {
-    var numberOfArguments = arguments.length;
     var lengthOfOriginalArray = array.length;
-    var optionalStartAsNumber = Number(optionalStart);
-    var indexAsNumber = Number(index);
+    var numberOfArguments = arguments.length;
 
-    // Set value of indexToCopyTo:
-    var indexToCopyTo;
+    // 1) Set value of indexToCopyTo:
+    var indexAsNumber = Number(index);
+    var indexToCopyTo = indexAsNumber;
     if (indexAsNumber < 0) {
       indexToCopyTo = lengthOfOriginalArray + indexAsNumber;
-    } else {
-      indexToCopyTo = indexAsNumber;
     }
 
-    // Set value of optionalStart;
-    var indexToStartCopyingFrom;
-    if (optionalStartAsNumber < 0) {
-      indexToStartCopyingFrom = lengthOfOriginalArray + optionalStartAsNumber;
-    } else if (
-      numberOfArguments > 2 &&
-      optionalStartAsNumber < lengthOfOriginalArray
-    ) {
-      indexToStartCopyingFrom = optionalStartAsNumber;
-    } else {
-      indexToStartCopyingFrom = 0;
+    // 2) Set value of indexToStartCopyingFrom;
+    var indexToStartCopyingFrom = 0;
+    if (numberOfArguments > 2) {
+      var optionalStartAsNumber = Number(optionalStart);
+      if (optionalStartAsNumber < lengthOfOriginalArray) {
+        indexToStartCopyingFrom = optionalStartAsNumber;
+      }
+      if (optionalStartAsNumber < 0) {
+        indexToStartCopyingFrom = lengthOfOriginalArray + optionalStartAsNumber;
+      }
     }
 
-    // Store list of indexes to be copied in array:
-    var indexesToCopy = [];
-    var i = 0;
-    while (i < lengthOfOriginalArray) {
-      indexesToCopy[i] = array[indexToStartCopyingFrom + i];
-      i++;
+    // 3) Set value of indexToStopCopyingBefore:
+    var indexToStopCopyingBefore = lengthOfOriginalArray;
+
+    if (numberOfArguments > 3) {
+      var optionalEndAsNumber = Number(optionalEnd);
+      indexToStopCopyingBefore = optionalEndAsNumber;
+      if (optionalEndAsNumber < 0) {
+        indexToStopCopyingBefore = lengthOfOriginalArray + optionalEndAsNumber;
+      }
     }
 
-    // Copy values from indexesToCopy to array:
-    var j = 0;
-    while (j < indexesToCopy.length) {
-      array[indexToCopyTo + j] = indexesToCopy[j];
-      j++;
+    if (!isNaN(indexToStopCopyingBefore)) {
+      // 4) Store list of indexes to be copied in array:
+      var indexesToCopy = [];
+      var i = 0;
+
+      while (i < indexToStopCopyingBefore) {
+        indexesToCopy[i] = array[indexToStartCopyingFrom + i];
+        i++;
+      }
+
+      // 5) Copy values from indexesToCopy to array:
+      var j = 0;
+
+      while (j < indexesToCopy.length) {
+        array[indexToCopyTo + j] = indexesToCopy[j];
+        j++;
+      }
     }
 
     return array;
@@ -128,7 +139,7 @@
     },
 
     // If index is a number:
-    "3a) If (index === 0 ) it should NOT copy any indexes in array.": function() {
+    "3a) If (index === 0 ) it array should remain the same.": function() {
       var array = ["a", "b", "c"];
       var index = 0;
       var returnedArray = copyWithin(array, index);
@@ -144,7 +155,7 @@
       eq(returnedArray[1], "a");
       eq(returnedArray[2], "b");
     },
-    "3c) If (index > 0) && (index >= array.length), it should NOT copy any indexes in array.": function() {
+    "3c) If (index > 0) && (index >= array.length), array should remain the same.": function() {
       var array = ["a", "b", "c"];
       var index = 3;
       var returnedArray = copyWithin(array, index);
@@ -160,7 +171,7 @@
       eq(returnedArray[1], "b");
       eq(returnedArray[2], "a");
     },
-    "3e) If (index < 0) && (index + array.length <= 0), it should NOT copy any indexes in array.": function() {
+    "3e) If (index < 0) && (index + array.length <= 0), array should remain the same.": function() {
       var array = ["a", "b", "c"];
       var index = -3;
       var returnedArray = copyWithin(array, index);
@@ -168,8 +179,6 @@
       eq(returnedArray[1], "b");
       eq(returnedArray[2], "c");
     },
-
-    // TODO: Remove overly cute test from suite as proceeding to fulfill requirements:
 
     // If index is NOT a number:
     "4a) If index is NOT a number && index can be converted to a number it should behave like Number(index).": function() {
@@ -180,7 +189,7 @@
       eq(returnedArray[1], "a");
       eq(returnedArray[2], "b");
     },
-    "4b) If index is NOT a number && index cannot be converted to a number, it should NOT copy any indexes in array.": function() {
+    "4b) If index is NOT a number && index cannot be converted to a number, array should remain the same.": function() {
       var array = ["a", "b", "c"];
       var index = "cow";
       var returnedArray = copyWithin(array, index);
@@ -203,7 +212,7 @@
       var returnedArray = copyWithin(array, index, optionalStart);
       eq(returnedArray[0], "b");
     },
-    "5c) If (optionalStart >= 0) && (optionalStart >= array.length), do NOT copy indexes.": function() {
+    "5c) If (optionalStart >= 0) && (optionalStart >= array.length), array should remain the same.": function() {
       var array = ["a", "b", "c"];
       var index = 0;
       var optionalStart = 3;
@@ -219,7 +228,7 @@
       var returnedArray = copyWithin(array, index, optionalStart);
       eq(returnedArray[0], "c");
     },
-    "5e) If (optionalStart < 0) && (optionalStart + array.length <= 0), do NOT copy indexes.": function() {
+    "5e) If (optionalStart < 0) && (optionalStart + array.length <= 0), array should remain the same.": function() {
       var array = ["a", "b", "c"];
       var index = 0;
       var optionalStart = -3;
@@ -237,7 +246,7 @@
       var returnedArray = copyWithin(array, index, optionalStart);
       eq(returnedArray[0], "b");
     },
-    "6b) If optionalStart is NOT a number && optionalStart cannnot be converted to a number, it should NOT copy any indexes in array.": function() {
+    "6b) If optionalStart is NOT a number && optionalStart cannnot be converted to a number, array should remain the same.": function() {
       var array = ["a", "b", "c"];
       var index = 0;
       var optionalStart = "cow";
@@ -259,62 +268,57 @@
       eq(returnedArray[3], "c");
     },
     "7b) If (optionalEnd >= 0) the last copied index should be array[optionalEnd - 1].": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var deepCopyOfOrginalArray = array.slice();
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 1;
-      // var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
-      // eq(deepCopyOfOrginalArray[optionalEnd - 1] === returnedArray[index + optionalEnd - 1], true);
-      // eq(deepCopyOfOrginalArray[optionalEnd] === returnedArray[index + optionalEnd], false);
+      var array = ["a", "b", "c"];
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = 1;
+      var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
+      eq(returnedArray[0], "a");
+      eq(returnedArray[1], "a");
+      eq(returnedArray[2], "c");
     },
     "7c) If (optionalEnd < 0) && (optionalEnd + array.length > 0), the last copied index should be array[optionalEnd + array.length - 1].": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var deepCopyOfOrginalArray = array.slice();
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = -2;
-      // var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
-      // eq(deepCopyOfOrginalArray[optionalEnd + array.length - 1] === returnedArray[index + optionalEnd + array.length - 1], true);
-      // eq(deepCopyOfOrginalArray[optionalEnd + array.length ] === returnedArray[index + optionalEnd + array.length], false);
+      var array = ["a", "b", "c"];
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = -2;
+      var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
+      eq(returnedArray[0], "a");
+      eq(returnedArray[1], "a");
+      eq(returnedArray[2], "c");
     },
-    "7d) If (optionalEnd < 0) && (optionalEnd + array.length < 0), it should NOT copy all remaining elements in array.": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var deepCopyOfOrginalArray = array.slice();
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = -3;
-      // var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
-      // eq(returnedArray[0], "a")
-      // eq(returnedArray[1], "b")
-      // eq(returnedArray[2], "c")
+    "7d) If (optionalEnd < 0) && (optionalEnd + array.length < 0), array should remain the same.": function() {
+      var array = ["a", "b", "c"];
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = -3;
+      var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
+      eq(returnedArray[0], "a");
+      eq(returnedArray[1], "b");
+      eq(returnedArray[2], "c");
     },
 
     // If optionalEnd is NOT a number:
     "8a) If optionalEnd is NOT a number && optionalEnd can be converted to a number, it should behave like Number(optionalEnd).": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = "1";
-      // var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
-      // eq(returnedArray[0], "a");
-      // eq(returnedArray[1], "a");
-      // eq(returnedArray[2], "c");
+      var array = ["a", "b", "c"];
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = "1";
+      var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
+      eq(returnedArray[0], "a");
+      eq(returnedArray[1], "a");
+      eq(returnedArray[2], "c");
     },
-    "8b) If optionalEnd is NOT a number && optionalEnd cannnot be converted to a number, it should NOT copy any indexes in array.": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = "cow";
-      // var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
-      // eq(returnedArray[0], "a")
-      // eq(returnedArray[1], "b")
-      // eq(returnedArray[2], "c")
+    "8b) If optionalEnd is NOT a number && optionalEnd cannnot be converted to a number, array should remain the same.": function() {
+      var array = ["a", "b", "c"];
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = "cow";
+      // debugger;
+      var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
+      eq(returnedArray[0], "a");
+      eq(returnedArray[1], "b");
+      eq(returnedArray[2], "c");
     },
 
     "9) It should never modify array.length.": function() {
