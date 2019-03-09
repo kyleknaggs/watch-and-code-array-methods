@@ -249,15 +249,14 @@
 
     // If optionalEnd is a number:
     "7a) If no optionalEnd, all indexes after optionalStart should be copied.": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var deepCopyOfOrginalArray = array.slice();
-      // var index = 1;
-      // var optionalStart = 0;
-      // var returnedArray = copyWithin(array, index, optionalStart);
-      // eq(deepCopyOfOrginalArray[optionalStart], returnedArray[optionalStart + index]);
-      // eq(deepCopyOfOrginalArray[optionalStart + 1], returnedArray[optionalStart + index + 1]);
-      // eq(deepCopyOfOrginalArray[optionalStart + 2], returnedArray[optionalStart + index + 2]);
+      var array = ["a", "b", "c", "d"];
+      var index = 1;
+      var optionalStart = 0;
+      var returnedArray = copyWithin(array, index, optionalStart);
+      eq(returnedArray[0], "a");
+      eq(returnedArray[1], "a");
+      eq(returnedArray[2], "b");
+      eq(returnedArray[3], "c");
     },
     "7b) If (optionalEnd >= 0) the last copied index should be array[optionalEnd - 1].": function() {
       fail();
