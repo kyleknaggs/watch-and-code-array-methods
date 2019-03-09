@@ -66,12 +66,12 @@
   // 1) MDN Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin s
   // 2) Specs: https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.copywithin
   // 3) Type Array Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/copyWithin
+  // 4) Number.isNaN(): https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
 
   // Function Syntax:
 
   function copyWithin(array, index, optionalStart, optionalEnd) {
     var lengthOfOriginalArray = array.length;
-    var numberOfArguments = arguments.length;
 
     // 1) Set value of indexToCopyTo:
     var indexAsNumber = Number(index);
@@ -82,34 +82,41 @@
 
     // 2) Set value of indexToStartCopyingFrom;
     var indexToStartCopyingFrom = 0;
-    if (numberOfArguments > 2) {
-      var optionalStartAsNumber = Number(optionalStart);
-      if (optionalStartAsNumber < lengthOfOriginalArray) {
-        indexToStartCopyingFrom = optionalStartAsNumber;
-      }
-      if (optionalStartAsNumber < 0) {
-        indexToStartCopyingFrom = lengthOfOriginalArray + optionalStartAsNumber;
-      }
+    var optionalStartAsNumber;
+
+    if (optionalStart !== undefined) {
+      optionalStartAsNumber = Number(optionalStart);
+    }
+
+    if (optionalStartAsNumber < 0) {
+      indexToStartCopyingFrom = lengthOfOriginalArray + optionalStartAsNumber;
+    } else if (optionalStartAsNumber < lengthOfOriginalArray) {
+      indexToStartCopyingFrom = optionalStartAsNumber;
     }
 
     // 3) Set value of indexToStopCopyingBefore:
     var indexToStopCopyingBefore = lengthOfOriginalArray;
+    var optionalEndAsNumber;
 
-    if (numberOfArguments > 3) {
-      var optionalEndAsNumber = Number(optionalEnd);
-      indexToStopCopyingBefore = optionalEndAsNumber;
-      if (optionalEndAsNumber < 0) {
-        indexToStopCopyingBefore = lengthOfOriginalArray + optionalEndAsNumber;
-      }
+    if (optionalEnd !== undefined) {
+      optionalEndAsNumber = Number(optionalEnd);
     }
 
-    if (!isNaN(indexToStopCopyingBefore)) {
+    if (optionalEndAsNumber < 0) {
+      indexToStopCopyingBefore = lengthOfOriginalArray + optionalEndAsNumber;
+    } else if (optionalEndAsNumber > 0) {
+      indexToStopCopyingBefore = optionalEndAsNumber;
+    }
+
+    if (!Number.isNaN(optionalEndAsNumber)) {
       // 4) Store list of indexes to be copied in array:
       var indexesToCopy = [];
       var i = 0;
 
       while (i < indexToStopCopyingBefore) {
-        indexesToCopy[i] = array[indexToStartCopyingFrom + i];
+        if (i in array) {
+          indexesToCopy[i] = array[indexToStartCopyingFrom + i];
+        }
         i++;
       }
 
@@ -117,9 +124,15 @@
       var j = 0;
 
       while (j < indexesToCopy.length) {
-        array[indexToCopyTo + j] = indexesToCopy[j];
+        if (j in indexesToCopy) {
+          array[indexToCopyTo + j] = indexesToCopy[j];
+        } else {
+          delete array[indexToCopyTo + j];
+        }
         j++;
       }
+
+      array.length = lengthOfOriginalArray;
     }
 
     return array;
@@ -314,7 +327,6 @@
       var index = 1;
       var optionalStart = 0;
       var optionalEnd = "cow";
-      // debugger;
       var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
       eq(returnedArray[0], "a");
       eq(returnedArray[1], "b");
@@ -322,75 +334,80 @@
     },
 
     "9) It should never modify array.length.": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var originalLength = array.length;
-      // var returnedArray = copyWithin(array, 2);
-      // eq(originalLength, returnedArray.length);
+      var array = ["a", "b", "c"];
+      var originalLength = array.length;
+      var returnedArray = copyWithin(array, 2);
+      eq(originalLength, returnedArray.length);
 
-      // var array = ["a", "b", "c"];
-      // var originalLength = array.length;
-      // var returnedArray = copyWithin(array, 2, 0);
-      // eq(originalLength, returnedArray.length);
+      var array = ["a", "b", "c"];
+      var originalLength = array.length;
+      var returnedArray = copyWithin(array, 2, 0);
+      eq(originalLength, returnedArray.length);
 
-      // var array = ["a", "b", "c"];
-      // var originalLength = array.length;
-      // var returnedArray = copyWithin(array, 2, 0, 2);
-      // eq(originalLength, returnedArray.length);
+      var array = ["a", "b", "c"];
+      var originalLength = array.length;
+      var returnedArray = copyWithin(array, 2, 0, 2);
+      eq(originalLength, returnedArray.length);
 
-      // var array = ["a", "b", "c", "d"];
-      // var originalLength = array.length;
-      // var returnedArray = copyWithin(array, 3, 0, 3);
-      // eq(originalLength, returnedArray.length);
+      var array = ["a", "b", "c", "d"];
+      var originalLength = array.length;
+      var returnedArray = copyWithin(array, 3, 0, 3);
+      eq(originalLength, returnedArray.length);
     },
 
     "10) It should shallow copy part of array, creating a copies of objects that point to the same memory address.": function() {
-      fail();
-      // var object = {};
-      // var array = [object, "b", "c"];
-      // var returnedArray = copyWithin(array, 1);
-      // object.isShallowCopyOfObject = true;
-      // eq(returnedArray[1].isShallowCopyOfObject, true);
+      var object = {};
+      var array = [object, "b", "c"];
+      var returnedArray = copyWithin(array, 1);
+      object.isShallowCopyOfObject = true;
+      eq(returnedArray[1].isShallowCopyOfObject, true);
     },
 
     "11) If used to copy a nested array, it should not copyWithin inside of nested array.": function() {
-      fail();
-      // var array = [["a", "b", "c"], "b", "c"];
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 1;
-      // var returnedValue = Array.prototype.copyWithin.call(array, index, optionalStart, optionalEnd);
-      // eq(returnedValue[1][0], "a")
-      // eq(returnedValue[1][1], "b")
-      // eq(returnedValue[1][2], "c")
+      var array = [["a", "b", "c"], "b", "c"];
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = 1;
+      var returnedValue = Array.prototype.copyWithin.call(
+        array,
+        index,
+        optionalStart,
+        optionalEnd
+      );
+      eq(returnedValue[1][0], "a");
+      eq(returnedValue[1][1], "b");
+      eq(returnedValue[1][2], "c");
     },
 
     "12) It should copy holes in array.": function() {
-      fail();
-      // var array = ["a", , "c", "d", "e"];
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 3;
-      // var returnedArray = copyWithin.call(array, index, optionalStart, optionalEnd);
-      // eq(returnedArray[0], "a");
-      // eq(returnedArray[1], "a");
-      // eq(2 in returnedArray], false);
-      // eq(returnedArray[3], "c");
-      // eq(returnedArray[4], "e");
+      var array = ["a", , "c", "d", "e"];
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = 3;
+      var returnedArray = copyWithin(array, index, optionalStart, optionalEnd);
+      eq(returnedArray[0], "a");
+      eq(returnedArray[1], "a");
+      eq(2 in returnedArray, false);
+      eq(returnedArray[3], "c");
+      eq(returnedArray[4], "e");
     },
 
     // When used with call() and apply():
     // Tests include all parameters:
     "13a) If used with .call() it should copyWithin().": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 1;
-      // var returnedArray = copyWithin.call(array, index, optionalStart, optionalEnd);
-      // eq(returnedArray[0], "a");
-      // eq(returnedArray[1], "a");
-      // eq(returnedArray[2], "c");
+      var array = ["a", "b", "c"];
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = 1;
+      var returnedArray = copyWithin.call(
+        array,
+        index,
+        optionalStart,
+        optionalEnd
+      );
+      eq(returnedArray[0], "a");
+      eq(returnedArray[1], "a");
+      eq(returnedArray[2], "c");
     },
     "13b) If used with .apply() it should copyWithin().": function() {
       fail();
