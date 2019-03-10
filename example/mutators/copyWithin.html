@@ -123,7 +123,13 @@
       indexToStopCopyingBefore = optionalEndAsNumber;
     }
 
-    if (!Number.isNaN(optionalEndAsNumber)) {
+    // 1) If "length" in objectToModify exists.
+    // 2) If optionalEnd exists && optionalEnd can be converted to a Number.
+    if (
+      "length" in objectToModify &&
+      objectToModify.length > 0 &&
+      !Number.isNaN(optionalEndAsNumber)
+    ) {
       // Store list of indexes to be copied in objectToModify:
       var indexesToCopy = [];
       var i = 0;
@@ -439,53 +445,65 @@
       eq(returnedArray[2], "c");
     },
 
-    "14a) If ('length' in object === false) it should NOT copyWithin().": function() {
-      fail();
-      // var object = {
-      //   0: "a",
-      //   1: "b",
-      //   2: "c"
-      // };
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 1;
-      // var returnedObject = copyWithin.call(object, index, optionalStart, optionalEnd);
-      // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "b");
-      // eq(returnedObject[2], "c");
+    "14a) If ('length' in object === false) it should remain unchanged.": function() {
+      var object = {
+        0: "a",
+        1: "b",
+        2: "c"
+      };
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = 1;
+      var returnedObject = copyWithin.call(
+        object,
+        index,
+        optionalStart,
+        optionalEnd
+      );
+      eq(returnedObject[0], "a");
+      eq(returnedObject[1], "b");
+      eq(returnedObject[2], "c");
     },
-    "14b) If (object.length < 0) it should NOT copyWithin().": function() {
-      fail();
-      // var object = {
-      //   0: "a",
-      //   1: "b",
-      //   2: "c",
-      //   length: -1
-      // };
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 1;
-      // var returnedObject = copyWithin.call(object, index, optionalStart, optionalEnd);
-      // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "b");
-      // eq(returnedObject[2], "c");
-      // eq(returnedObject.length, -1);
+    "14b) If (object.length < 0) it should remain unchanged.": function() {
+      var object = {
+        0: "a",
+        1: "b",
+        2: "c",
+        length: -1
+      };
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = 1;
+      var returnedObject = copyWithin.call(
+        object,
+        index,
+        optionalStart,
+        optionalEnd
+      );
+      eq(returnedObject[0], "a");
+      eq(returnedObject[1], "b");
+      eq(returnedObject[2], "c");
+      eq(returnedObject.length, -1);
     },
-    "14c) If (object.length === 0) it should NOT copyWithin().": function() {
-      fail();
-      // var object = {
-      //   0: "a",
-      //   1: "b",
-      //   2: "c",
-      //   length: 0
-      // };
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 1;
-      // var returnedObject = copyWithin.call(object, index, optionalStart, optionalEnd);
-      // eq(returnedObject[0], "a");
-      // eq(returnedObject[1], "b");
-      // eq(returnedObject[2], "c");
+    "14c) If (object.length === 0) it should remain unchanged.": function() {
+      var object = {
+        0: "a",
+        1: "b",
+        2: "c",
+        length: 0
+      };
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = 1;
+      var returnedObject = copyWithin.call(
+        object,
+        index,
+        optionalStart,
+        optionalEnd
+      );
+      eq(returnedObject[0], "a");
+      eq(returnedObject[1], "b");
+      eq(returnedObject[2], "c");
     },
 
     "15a) If (object.length > 0) && (object.length < last index of object to be modified) it should NOT copyWithin().": function() {
