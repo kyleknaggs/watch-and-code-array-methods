@@ -71,22 +71,42 @@
   // Function Syntax:
 
   function copyWithin(array, index, optionalStart, optionalEnd) {
-    var lengthOfOriginalArray = array.length;
+    var objectToModify,
+      indexAsNumber,
+      optionalStartAsNumber,
+      optionalEndAsNumber;
+    var classOfThis = Object.prototype.toString.call(this);
 
-    // 1) Set value of indexToCopyTo:
-    var indexAsNumber = Number(index);
+    if (classOfThis === "[object Window]") {
+      objectToModify = arguments[0];
+      indexAsNumber = Number(arguments[1]);
+      if (arguments[2] !== undefined) {
+        optionalStartAsNumber = Number(arguments[2]);
+      }
+      if (arguments[3] !== undefined) {
+        optionalEndAsNumber = Number(arguments[3]);
+      }
+    } else {
+      objectToModify = this;
+      indexAsNumber = Number(arguments[0]);
+      if (arguments[1] !== undefined) {
+        optionalStartAsNumber = Number(arguments[1]);
+      }
+      if (arguments[2] !== undefined) {
+        optionalEndAsNumber = Number(arguments[2]);
+      }
+    }
+
+    var lengthOfOriginalArray = objectToModify.length;
+
+    // Set value of indexToCopyTo:
     var indexToCopyTo = indexAsNumber;
     if (indexAsNumber < 0) {
       indexToCopyTo = lengthOfOriginalArray + indexAsNumber;
     }
 
-    // 2) Set value of indexToStartCopyingFrom;
+    // Set value of indexToStartCopyingFrom;
     var indexToStartCopyingFrom = 0;
-    var optionalStartAsNumber;
-
-    if (optionalStart !== undefined) {
-      optionalStartAsNumber = Number(optionalStart);
-    }
 
     if (optionalStartAsNumber < 0) {
       indexToStartCopyingFrom = lengthOfOriginalArray + optionalStartAsNumber;
@@ -94,13 +114,8 @@
       indexToStartCopyingFrom = optionalStartAsNumber;
     }
 
-    // 3) Set value of indexToStopCopyingBefore:
+    // Set value of indexToStopCopyingBefore:
     var indexToStopCopyingBefore = lengthOfOriginalArray;
-    var optionalEndAsNumber;
-
-    if (optionalEnd !== undefined) {
-      optionalEndAsNumber = Number(optionalEnd);
-    }
 
     if (optionalEndAsNumber < 0) {
       indexToStopCopyingBefore = lengthOfOriginalArray + optionalEndAsNumber;
@@ -109,33 +124,33 @@
     }
 
     if (!Number.isNaN(optionalEndAsNumber)) {
-      // 4) Store list of indexes to be copied in array:
+      // Store list of indexes to be copied in objectToModify:
       var indexesToCopy = [];
       var i = 0;
 
       while (i < indexToStopCopyingBefore) {
-        if (i in array) {
-          indexesToCopy[i] = array[indexToStartCopyingFrom + i];
+        if (i in objectToModify) {
+          indexesToCopy[i] = objectToModify[indexToStartCopyingFrom + i];
         }
         i++;
       }
 
-      // 5) Copy values from indexesToCopy to array:
+      // Copy values from indexesToCopy to objectToModify:
       var j = 0;
 
       while (j < indexesToCopy.length) {
         if (j in indexesToCopy) {
-          array[indexToCopyTo + j] = indexesToCopy[j];
+          objectToModify[indexToCopyTo + j] = indexesToCopy[j];
         } else {
-          delete array[indexToCopyTo + j];
+          delete objectToModify[indexToCopyTo + j];
         }
         j++;
       }
 
-      array.length = lengthOfOriginalArray;
+      objectToModify.length = lengthOfOriginalArray;
     }
 
-    return array;
+    return objectToModify;
   }
 
   tests({
@@ -410,15 +425,18 @@
       eq(returnedArray[2], "c");
     },
     "13b) If used with .apply() it should copyWithin().": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var index = 1;
-      // var optionalStart = 0;
-      // var optionalEnd = 1;
-      // var returnedArray = copyWithin.call(array, [index, optionalStart, optionalEnd]);
-      // eq(returnedArray[0], "a");
-      // eq(returnedArray[1], "a");
-      // eq(returnedArray[2], "c");
+      var array = ["a", "b", "c"];
+      var index = 1;
+      var optionalStart = 0;
+      var optionalEnd = 1;
+      var returnedArray = copyWithin.apply(array, [
+        index,
+        optionalStart,
+        optionalEnd
+      ]);
+      eq(returnedArray[0], "a");
+      eq(returnedArray[1], "a");
+      eq(returnedArray[2], "c");
     },
 
     "14a) If ('length' in object === false) it should NOT copyWithin().": function() {
