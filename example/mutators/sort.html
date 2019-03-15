@@ -1,0 +1,235 @@
+<script src="../../simpletest.js"></script>
+<script>
+  // Summary:
+  // Sort the elements of an array in place.
+
+  // Example:
+  // var array = ['b', 'a'];
+  // sort(array);
+  // >>> ['a', 'b']
+
+  // Prototype implementation:
+  // function sort() {}
+
+  // Function signature:
+  // sort(optionalCallback);
+
+  // Optional callback parameters:
+  // firstElement - The first element to compare.
+  // secondElement - The second element to compare.
+
+  // Arguments:
+
+  // Return value:
+  // The sorted array.
+
+  // Requirements:
+
+  // 2) If compare function:
+  // All non-undefined array elements are sorted according to the return value of the compare function.
+  // All undefined elements are sorted to the end of the array, with no call to compareFunction.
+
+  // 3) If a and b are two elements being compared:
+  // If compareFunction(a, b) is less than 0, sort a to an index lower than b (i.e. a comes first).
+  // If compareFunction(a, b) returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements.
+  // If compareFunction(a, b) is greater than 0, sort b to an index lower than a (i.e. b comes first).
+  // compareFunction(a, b) must always return the same value when given a specific pair of elements a and b as its two arguments. If inconsistent results are returned then the sort order is undefined.
+
+  // TODO: Review at end of docs:
+  // It should be able to compare strings.
+  // It should be able to compare numbers.
+  // It should be able to be used with function expressions.
+  // It should be able to sort objects given one of their properties.
+
+  // Questions:
+
+  // 1) What is in place?
+  // https://en.wikipedia.org/wiki/In-place_algorithm
+  // An in-place algorithm is an algorithm which transforms input using no auxiliary data structure.
+
+  // 2) What is a Unicode?
+  // https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/
+  // The unicode character set maps each character in the world to a unique number.
+  // This ensures that there is no collision between alphabets of different languages.
+  // Allows every device to display the same information.
+  // e.g. A >>> 13, a >>> 14, 1 >>> 33, # >>> 123
+
+  // 3) What is "each chracter's Unicode code point value"?
+  // https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/
+  // http://www.unicode.org/charts/
+  // https://unicode-table.com/en/#0045
+  // Each unique code number is called a code point in unicode terminology.
+  // e.g.  A is U+0041
+  // e.g.  B is U+0042
+  // e.g.  a is U+0061
+  // e.g.  z is U+007A
+
+  // 4) What is encoding?
+  // Encoding is the process of converting data from one form to another.
+  // Character encoding is a type of encoding that encodes characters as bytes.
+
+  // 5) What is UTF 16 encoding?
+  // Even though unicode character maps each character to a unique number, we have no way of representing this value in the computer's memory.
+  // This is because computers only recognize binary data.
+  // UTF-16 encoding converts each unicode character into binary code so that computers can understand it.
+
+  // 6) How do retrieve a character's UTF-16 code units values in Javascript?
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
+  // The charCodeAt() method returns an integer between 0 and 65535 representing the UTF-16 code unit at the given index.
+  // Function signature: string.charCodeAt(index)
+  // Arguments: index - An integer greater than or equal to 0 and less than the length of the string.
+  // Example Code:
+  // var firstString = "A";
+  // var secondString = "B";
+  // var firstCharacterCode = firstString.charCodeAt(0);
+  // var secondCharacterCode = secondString.charCodeAt(0);
+  // console.log(firstString + ": " + firstCharacterCode);
+  // console.log(secondString + ": " + secondCharacterCode);
+
+  // 7) How to convert values to strings in Javascript?
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
+  // The String global object is a constructor for strings or a sequence of characters.
+  // Function Signature: String(thing)
+  // Arguments: thing - Anything to be converted to a string
+  // Example Code:
+  // var stringAsString = String("cow");
+  // var numberAsString = String(1);
+  // var boolAsString = String(true);
+  // var nullAsString = String(null);
+  // var undefinedAsString = String(undefined);
+
+  // 8) What is the difference between String.prototype.charCodeAt() & String.prototype.codePointAt()?
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/codePointAt
+  // charCodeAt() returns the UTF-16 code unit while codePointAt() method returns the Unicode code point value.
+
+  // 9) What does this mean?
+  // In UTF - 16, Unicode characters above \uFFFF are encoded as two surrogate code units, of the range \uD800 -\uDFFF.The value of each code unit is taken separately into account for the comparison.Thus the character formed by the surrogate pair \uD655\uDE55 will be sorted before the character \uFF3A.
+
+  // Useful References:
+  // 1) MDN Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+  // 2) Specs: https://www.ecma-international.org/ecma-262/5.1/#sec-15.4.4.11
+
+  // Function Syntax:
+
+  // Notes:
+  // Do not use auxilliary data structure when sorting.
+  // The default sort should convert elements into strings.
+  // It should then compare their sequences of UTF-16 code unit values.
+
+  // function sort() {
+  // }
+
+  tests({
+    // Basic Requirements:
+    "1) It should return an array.": function() {
+      fail();
+      // var array = [];
+      // var sortedArray = array.sort();
+      // eq(Array.isArray(array), true);
+    },
+    "2) It should return the same array, not a different array.": function() {
+      fail();
+      // var array = [];
+      // var sortedArray = array.sort();
+      // eq(array, sortedArray);
+    },
+
+    // If no callback:
+
+    "3) It should sort all undefined elements to the end of array.": function() {
+      fail();
+      // var array = [undefined,'a'];
+      // var expected = ['a', undefined];
+      // var sortedArray = array.sort();
+      // sortedArray.forEach(function(value, i) {
+      //   eq(value, expected[i]);
+      // });
+    },
+
+    // If array contains strings:
+    "4) If array contains strings with a length === 1, it should sort strings from the lowest UTF-16 code unit to the highest UTF-16 code unit of the first character.": function() {
+      fail();
+      // var array = ["b", "a"];
+      // var expected = ['a', 'b'];
+      // var sortedArray = array.sort();
+      // sortedArray.forEach(function(value, i) {
+      //   eq(value, expected[i]);
+      // });
+    },
+    "5) If array contains strings of equal length with a length > 1, it should also evaluate the UTF-16 code unit of each character after the first.": function() {
+      fail();
+      // var array = ["ab", "aa"];
+      // var expected = ['aa', 'ab'];
+      // var sortedArray = array.sort();
+      // sortedArray.forEach(function(value, i) {
+      //   eq(value, expected[i]);
+      // });
+    },
+    "6) If array contains strings of differing lengths, it should sort strings from the shortest string to the longest string.": function() {
+      fail();
+      // var array = ["aa", "a"];
+      // var expected = ['a', 'aa'];
+      // var sortedArray = array.sort();
+      // sortedArray.forEach(function(value, i) {
+      //   eq(value, expected[i]);
+      // });
+    },
+
+    // If array contains primitives that are not strings:
+    "7) If array contains numbers, numbers should be converted to strings before sorting.": function() {
+      fail();
+      // var array = [9, 10];
+      // var expected = [10, 9];
+      // var sortedArray = array.sort();
+      // sortedArray.forEach(function(value, i) {
+      //   eq(value, expected[i]);
+      // });
+    },
+    "8) If array contains booleans, booleans should be converted to strings before sorting.": function() {
+      fail();
+      // var array = [true, false];
+      // var expected = [false, true];
+      // var sortedArray = array.sort();
+      // sortedArray.forEach(function(value, i) {
+      //   eq(value, expected[i]);
+      // });
+    },
+    "9) If array contains null, null should be converted to strings before sorting.": function() {
+      fail();
+      // var array = [null, 'nul'];
+      // var expected = ['nul', null];
+      // var sortedArray = array.sort();
+      // sortedArray.forEach(function(value, i) {
+      //   eq(value, expected[i]);
+      // });
+    },
+
+    // If array contains arrays:
+    "10) If array contains arrays, it should evaluate the UTF-16 code unit at each index in array.": function() {
+      fail();
+      // var arrayWithHigherUTFValue = ["b"];
+      // var arrayWithLowerUTFValue = ["a"];
+      // var array = [arrayWithHigherUTFValue, arrayWithLowerUTFValue];
+      // var sortedArray = array.sort();
+      // console.log(sortedArray[0] === arrayWithLowerUTFValue);
+      // console.log(sortedArray[1] === arrayWithHigherUTFValue);
+
+      // var arrayWithHigherUTFValue = ["a", "b"];
+      // var arrayWithLowerUTFValue = ["a", "a"];
+      // var array = [arrayWithHigherUTFValue, arrayWithLowerUTFValue];
+      // var sortedArray = array.sort();
+      // console.log(sortedArray[0] === arrayWithLowerUTFValue);
+      // console.log(sortedArray[1] === arrayWithHigherUTFValue);
+
+      // var arrayWithHigherUTFValue = ["a", "a"];
+      // var arrayWithLowerUTFValue = ["a"];
+      // var array = [arrayWithHigherUTFValue, arrayWithLowerUTFValue];
+      // var sortedArray = array.sort();
+      // console.log(sortedArray[0] === arrayWithLowerUTFValue);
+      // console.log(sortedArray[1] === arrayWithHigherUTFValue);
+    }
+
+    // TODO: 1) If array contains objects:
+    // TODO: 2) Research question number 9 listed above regarding Unicode characters above \uFFFF.
+  });
+</script>
