@@ -9,7 +9,31 @@
   // >>> ['a', 'b']
 
   // Prototype implementation:
-  // function sort() {}
+
+  // TODO: 1) Look at setting up lowest index comparison.
+  // TODO: 2) Delete index with lowest value from array, increase value of indexes in array by 1, and insert indexWithLowestValue at array[0].
+
+  var array = [3, 2, 1];
+
+  function sort(array) {
+    var numberOfIndexesInArray = array.length;
+
+    for (var i = 0; i < numberOfIndexesInArray; i++) {
+      var currentIndex = i;
+      var valueOfCurrentIndex = array[currentIndex];
+      // console.log("Value of currentIndex: " + valueOfCurrentIndex);
+      var numberOfIndexesToCompare = numberOfIndexesInArray - i - 1;
+      for (var j = 1; j <= numberOfIndexesToCompare; j++) {
+        var indexToCompare = currentIndex + j;
+        var valueOfIndexToCompare = array[currentIndex + j];
+        // console.log("Value of indexToCompare: " + valueOfIndexToCompare);
+      }
+    }
+
+    return array;
+  }
+
+  sort(array);
 
   // Function signature:
   // sort(optionalCallback);
@@ -251,5 +275,8 @@
       // sortedArray[0] === undefined;
       // 1 in sortedArray[0] === false;
     }
+
+    // TODO: What happens if values of indexes are exactly the same? Do these indexes stay in the same position or do they rearrange themsleves?
+    // Test with arrays or objects as you can test using a reference address vs primitives where it would be impossible to tell if they switched location.
   });
 </script>
