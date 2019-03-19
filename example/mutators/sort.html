@@ -9,42 +9,42 @@
   // >>> ['a', 'b']
 
   // Prototype implementation:
-  var array = [3, 2, 1];
+  // var array = [3, 2, 1];
 
-  function sort(array) {
-    var numberOfIndexesInArray = array.length;
+  // function sort(array) {
+  //   var numberOfIndexesInArray = array.length;
 
-    // For every index in array other than the last index:
-    for (var i = 0; i < numberOfIndexesInArray - 1; i++) {
-      var currentIndex = i;
-      var indexOfLowestValue = currentIndex;
-      var numberOfIndexesToCompare = numberOfIndexesInArray - i - 1;
+  //   // For every index in array other than the last index:
+  //   for (var i = 0; i < numberOfIndexesInArray - 1; i++) {
+  //     var currentIndex = i;
+  //     var indexOfLowestValue = currentIndex;
+  //     var numberOfIndexesToCompare = numberOfIndexesInArray - i - 1;
 
-      // Examine all indexes between currentIndex and the end of the array to see if the value at that index:
-      for (var j = 1; j <= numberOfIndexesToCompare; j++) {
-        var indexToCompare = currentIndex + j;
+  //     // Examine all indexes between currentIndex and the end of the array to see if the value at that index:
+  //     for (var j = 1; j <= numberOfIndexesToCompare; j++) {
+  //       var indexToCompare = currentIndex + j;
 
-        // Is less than any other value between currentIndex and the end of the array:
-        if (array[indexToCompare] < array[indexOfLowestValue]) {
-          indexOfLowestValue = indexToCompare;
-        }
-      }
+  //       // Is less than any other value between currentIndex and the end of the array:
+  //       if (array[indexToCompare] < array[indexOfLowestValue]) {
+  //         indexOfLowestValue = indexToCompare;
+  //       }
+  //     }
 
-      var lowestValue = array[indexOfLowestValue];
+  //     var lowestValue = array[indexOfLowestValue];
 
-      // Increase the index of all values stored before indexOfLowestValue by 1:
-      for (k = indexOfLowestValue; k > 0; k--) {
-        array[k] = array[k - 1];
-      }
+  //     // Increase the index of all values stored before indexOfLowestValue by 1:
+  //     for (k = indexOfLowestValue; k > 0; k--) {
+  //       array[k] = array[k - 1];
+  //     }
 
-      // Insert lowestValue at currentIndex.
-      array[currentIndex] = lowestValue;
-    }
+  //     // Insert lowestValue at currentIndex.
+  //     array[currentIndex] = lowestValue;
+  //   }
 
-    return array;
-  }
+  //   return array;
+  // }
 
-  sort(array);
+  // sort(array);
 
   // Function signature:
   // sort(optionalCallback);
@@ -152,6 +152,35 @@
   // It should then compare their sequences of UTF-16 code unit values.
 
   function sort(array) {
+    var numberOfIndexesInArray = array.length;
+
+    // For every index in array other than the last index:
+    for (var i = 0; i < numberOfIndexesInArray - 1; i++) {
+      var currentIndex = i;
+      var indexOfLowestValue = currentIndex;
+      var numberOfIndexesToCompare = numberOfIndexesInArray - i - 1;
+
+      // Examine all indexes between currentIndex and the end of the array to see if the value at that index:
+      for (var j = 1; j <= numberOfIndexesToCompare; j++) {
+        var indexToCompare = currentIndex + j;
+
+        // Is less than any other value between currentIndex and the end of the array:
+        if (array[indexToCompare] < array[indexOfLowestValue]) {
+          indexOfLowestValue = indexToCompare;
+        }
+      }
+
+      var lowestValue = array[indexOfLowestValue];
+
+      // Increase the index of all values stored before indexOfLowestValue by 1:
+      for (k = indexOfLowestValue; k > 0; k--) {
+        array[k] = array[k - 1];
+      }
+
+      // Insert lowestValue at currentIndex.
+      array[currentIndex] = lowestValue;
+    }
+
     return array;
   }
 
@@ -167,40 +196,35 @@
       var sortedArray = sort(array);
       eq(array, sortedArray);
     },
-
     // If no callback:
-
     // If array contains strings:
-    "4) If array indexes contains string with a length === 1, it should sort array indexes from the lowest UTF-16 code unit to the highest UTF-16 code unit of the first character.": function() {
-      fail();
-      // var array = ["b", "a"];
-      // var expected = ['a', 'b'];
-      // var sortedArray = array.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+    "3) If array indexes contains string with a length === 1, it should sort array indexes from the lowest UTF-16 code unit to the highest UTF-16 code unit of the first character.": function() {
+      var array = ["b", "a"];
+      var expected = ["a", "b"];
+      var sortedArray = sort(array);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
-    "5) If array indexes contain strings of equal length with a length > 1, it should sort array indexes from the lowest UTF-16 code unit to the highest UTF-16 code unit for each character after the first.": function() {
-      fail();
-      // var array = ["ab", "aa"];
-      // var expected = ['aa', 'ab'];
-      // var sortedArray = array.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+    "4) If array indexes contain strings of equal length with a length > 1, it should sort array indexes from the lowest UTF-16 code unit to the highest UTF-16 code unit for each character after the first.": function() {
+      var array = ["ab", "aa"];
+      var expected = ["aa", "ab"];
+      var sortedArray = sort(array);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
-    "6) If array indexes contain strings with the same characters up to the point at which one string ends, it should sort array indexes strings from the shortest string to the longest string.": function() {
-      fail();
-      // var array = ["aa", "a"];
-      // var expected = ['a', 'aa'];
-      // var sortedArray = array.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+    "5) If array indexes contain strings with the same characters up to the point at which one string ends, it should sort array indexes strings from the shortest string to the longest string.": function() {
+      var array = ["aa", "a"];
+      var expected = ["a", "aa"];
+      var sortedArray = sort(array);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
 
     // If array contains primitives that are not strings:
-    "7a) If array indexes contain numbers, it should convert the number index to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
+    "6a) If array indexes contain numbers, it should convert the number index to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
       fail();
       // var array = [9, 10];
       // var expected = [10, 9];
@@ -209,7 +233,7 @@
       //   eq(value, expected[i]);
       // });
     },
-    "7b) If array indexes contain booleans, it should convert the boolean index to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
+    "6b) If array indexes contain booleans, it should convert the boolean index to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
       fail();
       // var array = [true, false];
       // var expected = [false, true];
@@ -218,7 +242,7 @@
       //   eq(value, expected[i]);
       // });
     },
-    "7c) If array contains null indexes, it should convert the null indexes to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
+    "6c) If array contains null indexes, it should convert the null indexes to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
       fail();
       // var array = [null, 'nul'];
       // var expected = ['nul', null];
@@ -227,7 +251,7 @@
       //   eq(value, expected[i]);
       // });
     },
-    "7d) If array indexes contain arrays, it should convert the array index to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
+    "6d) If array indexes contain arrays, it should convert the array index to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
       fail();
       // var arrayWithContinuousCharacters = String(['ab']);
       // var arrayWithSeparatedCharacters = String(['a', 'b']);
@@ -238,7 +262,7 @@
       //   eq(value, expected[i]);
       // });
     },
-    "7e) If array indexes contain objects, it should convert objects to strings before sorting.": function() {
+    "6e) If array indexes contain objects, it should convert objects to strings before sorting.": function() {
       fail();
       // Order of indexes in array stays the same:
       // var object = {};
@@ -268,7 +292,7 @@
       // });
     },
 
-    "8a) If array indexes contain undefined, should locate undefined indexes after all defined indexes in array.": function() {
+    "7a) If array indexes contain undefined, should locate undefined indexes after all defined indexes in array.": function() {
       fail();
       // var array = [undefined,'a'];
       // var expected = ['a', undefined];
@@ -277,7 +301,7 @@
       //   eq(value, expected[i]);
       // });
     },
-    "8b) If array contains empty indexes, it should locate all empty indexes after undefined indexes in array.": function() {
+    "7b) If array contains empty indexes, it should locate all empty indexes after undefined indexes in array.": function() {
       fail();
       // var array = [, undefined];
       // var expected = [undefined, ];
