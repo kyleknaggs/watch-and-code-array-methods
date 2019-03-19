@@ -12,13 +12,13 @@
   // var array = [3, 2, 1];
 
   // function sort(array) {
-  //   var numberOfIndexesInArray = array.length;
+  //   var originalLength = array.length;
 
   //   // For every index in array other than the last index:
-  //   for (var i = 0; i < numberOfIndexesInArray - 1; i++) {
+  //   for (var i = 0; i < originalLength - 1; i++) {
   //     var currentIndex = i;
   //     var indexOfLowestValue = currentIndex;
-  //     var numberOfIndexesToCompare = numberOfIndexesInArray - i - 1;
+  //     var numberOfIndexesToCompare = originalLength - i - 1;
 
   //     // Examine all indexes between currentIndex and the end of the array to see if the value at that index:
   //     for (var j = 1; j <= numberOfIndexesToCompare; j++) {
@@ -152,13 +152,13 @@
   // It should then compare their sequences of UTF-16 code unit values.
 
   function sort(array) {
-    var numberOfIndexesInArray = array.length;
+    var originalLength = array.length;
 
     // For every index in array other than the last index:
-    for (var i = 0; i < numberOfIndexesInArray - 1; i++) {
+    for (var i = 0; i < originalLength - 1; i++) {
       var currentIndex = i;
       var indexOfLowestValue = currentIndex;
-      var numberOfIndexesToCompare = numberOfIndexesInArray - i - 1;
+      var numberOfIndexesToCompare = originalLength - i - 1;
 
       // Examine all indexes between currentIndex and the end of the array to see if the value at that index:
       for (var j = 1; j <= numberOfIndexesToCompare; j++) {
@@ -182,16 +182,23 @@
     }
 
     // Array has been sorted according to value UTC code unit values of String(array[i]).
-    // Go through every index of array other than the last one:
-    for (var i = 0; i < array.length - 1; i++) {
-      // If an index is undefined:
-      if (array[i] === undefined) {
-        var indexOfUndefined = i;
+    var numberOfUndefinedIndexes = 0;
+    var indexAfterUndefined;
 
-        // Decrease the index of all values stored above indexOfUndefined by 1:
-        for (var i = indexOfUndefined; i < array.length; i++) {
-          array[i] = array[i + 1];
-        }
+    // Count the number of undefined indexes and note the position of the last undefined index in array:
+    for (var i = 0; i < originalLength; i++) {
+      if (array[i] === undefined) {
+        numberOfUndefinedIndexes++;
+        indexAfterUndefined = i + 1;
+      }
+    }
+
+    // If there is an undefined index, move the undefined index to the end of the array:
+    if (numberOfUndefinedIndexes > 0) {
+      var i = numberOfUndefinedIndexes;
+      while (i < originalLength + numberOfUndefinedIndexes) {
+        array[i - numberOfUndefinedIndexes] = array[i];
+        i++;
       }
     }
 
@@ -304,7 +311,7 @@
       });
     },
 
-    "7a) If array contains a single undefined index, should locate undefined indexes after all defined indexes in array.": function() {
+    "7a) If array contains a single undefined index, it should locate undefined index after all defined indexes in array.": function() {
       var array = [undefined, "z"];
       var expected = ["z", undefined];
       var sortedArray = sort(array);
@@ -312,14 +319,13 @@
         eq(value, expected[i]);
       });
     },
-    "7b) If array multiple undefined indexes, should locate undefined indexes after all defined indexes in array.": function() {
-      fail();
-      // var array = [undefined, undefined, "y", "z"];
-      // var expected = ["y", "z", undefined, undefined];
-      // var sortedArray = sort(array);
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+    "7b) If array contains multiple undefined indexes, it should locate undefined indexes after all defined indexes in array.": function() {
+      var array = [undefined, "y", undefined, "z"];
+      var expected = ["y", "z", undefined, undefined];
+      var sortedArray = sort(array);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
 
     "8a) If array contains empty indexes, it should locate all empty indexes after undefined indexes in array.": function() {
