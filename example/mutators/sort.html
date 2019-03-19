@@ -181,6 +181,20 @@
       array[currentIndex] = lowestValue;
     }
 
+    // Array has been sorted according to value UTC code unit values of String(array[i]).
+    // Go through every index of array other than the last one:
+    for (var i = 0; i < array.length - 1; i++) {
+      // If an index is undefined:
+      if (array[i] === undefined) {
+        var indexOfUndefined = i;
+
+        // Decrease the index of all values stored above indexOfUndefined by 1:
+        for (var i = indexOfUndefined; i < array.length; i++) {
+          array[i] = array[i + 1];
+        }
+      }
+    }
+
     return array;
   }
 
@@ -290,16 +304,25 @@
       });
     },
 
-    "7a) If array indexes contain undefined, should locate undefined indexes after all defined indexes in array.": function() {
+    "7a) If array contains a single undefined index, should locate undefined indexes after all defined indexes in array.": function() {
+      var array = [undefined, "z"];
+      var expected = ["z", undefined];
+      var sortedArray = sort(array);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+    "7b) If array multiple undefined indexes, should locate undefined indexes after all defined indexes in array.": function() {
       fail();
-      // var array = [undefined,'a'];
-      // var expected = ['a', undefined];
-      // var sortedArray = array.sort();
+      // var array = [undefined, undefined, "y", "z"];
+      // var expected = ["y", "z", undefined, undefined];
+      // var sortedArray = sort(array);
       // sortedArray.forEach(function(value, i) {
       //   eq(value, expected[i]);
       // });
     },
-    "7b) If array contains empty indexes, it should locate all empty indexes after undefined indexes in array.": function() {
+
+    "8a) If array contains empty indexes, it should locate all empty indexes after undefined indexes in array.": function() {
       fail();
       // var array = [, undefined];
       // var expected = [undefined, ];
