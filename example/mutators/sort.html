@@ -165,7 +165,7 @@
         var indexToCompare = currentIndex + j;
 
         // Is less than any other value between currentIndex and the end of the array:
-        if (array[indexToCompare] < array[indexOfLowestValue]) {
+        if (String(array[indexToCompare]) < String(array[indexOfLowestValue])) {
           indexOfLowestValue = indexToCompare;
         }
       }
@@ -225,71 +225,69 @@
 
     // If array contains primitives that are not strings:
     "6a) If array indexes contain numbers, it should convert the number index to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
-      fail();
-      // var array = [9, 10];
-      // var expected = [10, 9];
-      // var sortedArray = array.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = [9, 10];
+      var expected = [10, 9];
+      var sortedArray = sort(array);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "6b) If array indexes contain booleans, it should convert the boolean index to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
-      fail();
-      // var array = [true, false];
-      // var expected = [false, true];
-      // var sortedArray = array.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = [true, false];
+      var expected = [false, true];
+      var sortedArray = sort(array);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "6c) If array contains null indexes, it should convert the null indexes to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
-      fail();
-      // var array = [null, 'nul'];
-      // var expected = ['nul', null];
-      // var sortedArray = array.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = [null, "nul"];
+      var expected = ["nul", null];
+      var sortedArray = sort(array);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "6d) If array indexes contain arrays, it should convert the array index to a string and then sort according to the UTF-16 code unit value of the resultant string.": function() {
-      fail();
-      // var arrayWithContinuousCharacters = String(['ab']);
-      // var arrayWithSeparatedCharacters = String(['a', 'b']);
-      // var array = [arrayWithContinuousCharacters, arrayWithSeparatedCharacters];
-      // var expected = [arrayWithSeparatedCharacters, arrayWithContinuousCharacters];
-      // var sortedArray = array.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var arrayWithContinuousCharacters = String(["ab"]);
+      var arrayWithSeparatedCharacters = String(["a", "b"]);
+      var array = [arrayWithContinuousCharacters, arrayWithSeparatedCharacters];
+      var expected = [
+        arrayWithSeparatedCharacters,
+        arrayWithContinuousCharacters
+      ];
+      var sortedArray = sort(array);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "6e) If array indexes contain objects, it should convert objects to strings before sorting.": function() {
-      fail();
       // Order of indexes in array stays the same:
-      // var object = {};
-      // var arrayWithObjects = [object, "[object Object]"];
-      // var expected = [object, "[object Object]"];
-      // var sortedArray = arrayWithObjects.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var object = {};
+      var arrayWithObjects = [object, "[object Object]"];
+      var expected = [object, "[object Object]"];
+      var sortedArray = sort(arrayWithObjects);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
 
       // Order of indexes in array stays the same:
-      // var object = {};
-      // var arrayWithObjects = ["[object Object]", object];
-      // var expected = ["[object Object]", object];
-      // var sortedArray = arrayWithObjects.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var object = {};
+      var arrayWithObjects = ["[object Object]", object];
+      var expected = ["[object Object]", object];
+      var sortedArray = sort(arrayWithObjects);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
 
       // Order of indexes in array changes:
-      // var object = {};
-      // var arrayWithObjects = ["[object Object]1", object];
-      // var expected = [object, "[object Object]1"];
-      // var sortedArray = arrayWithObjects.sort();
-      // sortedArray.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var object = {};
+      var arrayWithObjects = ["[object Object]1", object];
+      var expected = [object, "[object Object]1"];
+      var sortedArray = sort(arrayWithObjects);
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
 
     "7a) If array indexes contain undefined, should locate undefined indexes after all defined indexes in array.": function() {
@@ -311,7 +309,8 @@
       // 1 in sortedArray[0] === false;
     }
 
-    // TODO: What happens if values of indexes are exactly the same? Do these indexes stay in the same position or do they rearrange themsleves?
+    // TODO: 1) Write function to pass tests 7a and 7b.
+    // TODO: 2) What happens if values of indexes are exactly the same? Do these indexes stay in the same position or do they rearrange themsleves?
     // Test with arrays or objects as you can test using a reference address vs primitives where it would be impossible to tell if they switched location.
   });
 </script>
