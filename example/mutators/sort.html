@@ -151,6 +151,26 @@
   // The default sort should convert elements into strings.
   // It should then compare their sequences of UTF-16 code unit values.
 
+  // Attempt to solve holes 1:
+  // if (indexOfLowestValue in array) {
+  //   var lowestValue = array[indexOfLowestValue];
+
+  //   // Increase the index of all values stored before indexOfLowestValue by 1:
+  //   for (k = indexOfLowestValue; k > 0; k--) {
+  //     array[k] = array[k - 1];
+  //   }
+
+  //   // Insert lowestValue at currentIndex.
+  //   array[currentIndex] = lowestValue;
+  // } else {
+  //   // Increase the index of all values stored before indexOfLowestValue by 1:
+  //   for (k = indexOfLowestValue; k > 0; k--) {
+  //     array[k] = array[k - 1];
+  //   }
+
+  //   delete array[currentIndex];
+  // }
+
   function sort(array) {
     var originalLength = array.length;
 
@@ -170,15 +190,27 @@
         }
       }
 
-      var lowestValue = array[indexOfLowestValue];
+      // Check whether indexOfLowestValue is in array:
+      var lowestValue, isIndexOfLowestValueEmpty;
+
+      if (indexOfLowestValue in array) {
+        lowestValue = array[indexOfLowestValue];
+        isIndexOfLowestValueEmpty = false;
+      } else {
+        isIndexOfLowestValueEmpty = true;
+      }
 
       // Increase the index of all values stored before indexOfLowestValue by 1:
       for (k = indexOfLowestValue; k > 0; k--) {
         array[k] = array[k - 1];
       }
 
-      // Insert lowestValue at currentIndex.
-      array[currentIndex] = lowestValue;
+      // If indexOfLowestValue is in array, insert lowestValue at currentIndex, else delete currentIndex:
+      if (isIndexOfLowestValueEmpty) {
+        delete array[currentIndex];
+      } else {
+        array[currentIndex] = lowestValue;
+      }
     }
 
     // Array has been sorted according to value UTC code unit values of String(array[i]).
@@ -187,17 +219,27 @@
 
     // Count the number of undefined indexes and note the position of the last undefined index in array:
     for (var i = 0; i < originalLength; i++) {
-      if (array[i] === undefined) {
+      if (i in array && array[i] === undefined) {
         numberOfUndefinedIndexes++;
         indexAfterUndefined = i + 1;
       }
     }
 
-    // If there is an undefined index, move the undefined index to the end of the array:
+    // If there is an undefined index in array:
     if (numberOfUndefinedIndexes > 0) {
       var i = numberOfUndefinedIndexes;
+
+      // Go through all indexes in array:
       while (i < originalLength + numberOfUndefinedIndexes) {
-        array[i - numberOfUndefinedIndexes] = array[i];
+        // Copy the value from array[i] and insert it at array[i - numberOfUndefinedIndexes]
+        var indexToCopyTo = i - numberOfUndefinedIndexes;
+
+        if (i in array) {
+          array[indexToCopyTo] = array[i];
+        } else {
+          delete array[indexToCopyTo];
+        }
+
         i++;
       }
     }
@@ -217,6 +259,7 @@
       var sortedArray = sort(array);
       eq(array, sortedArray);
     },
+
     // If no callback:
     // If array contains strings:
     "3) If array indexes contains string with a length === 1, it should sort array indexes from the lowest UTF-16 code unit to the highest UTF-16 code unit of the first character.": function() {
@@ -319,7 +362,7 @@
         eq(value, expected[i]);
       });
     },
-    "7b) If array contains multiple undefined indexes, it should locate undefined indexes after all defined indexes in array.": function() {
+    "7b) If array contains multiple undefined indexes, it should place all undefined indexes after all defined indexes in array.": function() {
       var array = [undefined, "y", undefined, "z"];
       var expected = ["y", "z", undefined, undefined];
       var sortedArray = sort(array);
@@ -328,14 +371,23 @@
       });
     },
 
-    "8a) If array contains empty indexes, it should locate all empty indexes after undefined indexes in array.": function() {
-      fail();
-      // var array = [, undefined];
-      // var expected = [undefined, ];
-      // var sortedArray = array.sort();
-      // sortedArray.length === 2;
-      // sortedArray[0] === undefined;
-      // 1 in sortedArray[0] === false;
+    "8a) If empty indexes are the last indexes in array, it should preserve the location of empty indexes in array.": function() {
+      // Browser reads three commas at the end of array as a two empty indexes.
+      var array = [undefined, , ,];
+      var sortedArray = sort(array);
+      eq(sortedArray.length, 3);
+      eq(sortedArray[0], undefined);
+      eq(1 in sortedArray, false);
+      eq(2 in sortedArray, false);
+    },
+    "8b) If empty indexes are not the last indexes in array, it should place all empty indexes after undefined indexes in array.": function() {
+      var array = [, undefined];
+      // No expected array as ESLint keeps removing empty index from end of array
+      var sortedArray = sort(array);
+      eq(sortedArray.length, 2);
+      eq(sortedArray[0], undefined);
+      eq(0 in sortedArray, true);
+      eq(1 in sortedArray, false);
     }
 
     // TODO: 1) Write function to pass tests 7a and 7b.
