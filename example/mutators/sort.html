@@ -215,30 +215,25 @@
 
     // Array has been sorted according to value UTC code unit values of String(array[i]).
     var numberOfUndefinedIndexes = 0;
-    var indexAfterUndefined;
+    var numberOfEmptyIndexes = 0;
 
-    // Count the number of undefined indexes and note the position of the last undefined index in array:
+    // Go through all indexes in array and count the number of undefined and empty indexes in array:
     for (var i = 0; i < originalLength; i++) {
       if (i in array && array[i] === undefined) {
         numberOfUndefinedIndexes++;
-        indexAfterUndefined = i + 1;
+      }
+      if (i in array === false) {
+        numberOfEmptyIndexes++;
       }
     }
 
     // If there is one or more undefined indexes in array:
     if (numberOfUndefinedIndexes > 0) {
-      // Start at the index of the first undefined element,
+      // Move all undefined indexes from the middle to the end of the array:
       var i = numberOfUndefinedIndexes;
 
-      // And for all indexes in array, copy the value from array[i] to array[i - numberOfUndefinedIndexes]:
       while (i < originalLength + numberOfUndefinedIndexes) {
-        var indexToCopyTo = i - numberOfUndefinedIndexes;
-
-        if (i in array) {
-          array[indexToCopyTo] = array[i];
-        } else {
-          delete array[indexToCopyTo];
-        }
+        array[i - numberOfUndefinedIndexes] = array[i];
 
         i++;
       }
@@ -367,7 +362,7 @@
       // expected >>> ["y", "z", undefined, undefined];
       var sortedArray = sort(array);
       eq(sortedArray[0], "y");
-      eq(sortedArray[1], "y");
+      eq(sortedArray[1], "z");
       eq(2 in sortedArray, true);
       eq(sortedArray[2], undefined);
       eq(3 in sortedArray, true);
