@@ -149,11 +149,44 @@
   function sort(array) {
     var originalLength = array.length;
 
-    // For every index in array other than the last index:
-    for (var i = 0; i < originalLength - 1; i++) {
+    // 1) Examine all indexes in array and count the number of undefined indexes in array:
+    var numberOfUndefinedIndexes = 0;
+
+    for (var i = 0; i < originalLength; i++) {
+      if (i in array && array[i] === undefined) {
+        numberOfUndefinedIndexes++;
+      }
+    }
+
+    // If there are undefined indexes in array, move them from current location to end of array:
+    if (numberOfUndefinedIndexes > 0) {
+      var numberOfMoves = 0;
+
+      while (numberOfMoves < numberOfUndefinedIndexes) {
+        var indexToCheck = 0;
+        var hasBeenCopied = false;
+
+        while (hasBeenCopied === false && indexToCheck < originalLength) {
+          if (indexToCheck in array && array[indexToCheck] === undefined) {
+            for (var i = indexToCheck + 1; i < originalLength + 1; i++) {
+              array[i - 1] = array[i];
+            }
+            hasBeenCopied = true;
+            numberOfMoves++;
+          }
+          indexToCheck++;
+        }
+      }
+    }
+
+    var indexBeforeFirstUndefinedIndex =
+      originalLength - numberOfUndefinedIndexes - 1;
+
+    // 2) Examine all indexes in array other than the last index:
+    for (var i = 0; i < indexBeforeFirstUndefinedIndex; i++) {
       var currentIndex = i;
       var indexOfLowestValue = currentIndex;
-      var numberOfIndexesToCompare = originalLength - i - 1;
+      var numberOfIndexesToCompare = indexBeforeFirstUndefinedIndex - i;
 
       // Examine all indexes between currentIndex and the end of the array to see if the value at that index:
       for (var j = 1; j <= numberOfIndexesToCompare; j++) {
@@ -176,37 +209,11 @@
     }
 
     // Array has been sorted according to value UTC code unit values of String(array[i]).
-    var numberOfUndefinedIndexes = 0;
-    var lastUndefinedIndex;
 
-    // Go through all indexes in array and count the number of undefined indexes in array:
-    for (var i = 0; i < originalLength; i++) {
-      if (i in array && array[i] === undefined) {
-        numberOfUndefinedIndexes++;
-        lastUndefinedIndex = i;
-      }
-    }
-
-    // If there are undefined indexes in array, move them from current location to end of array:
-    if (numberOfUndefinedIndexes > 0) {
-      var indexToStart = lastUndefinedIndex + 1;
-      var indexToStopBefore = originalLength + numberOfUndefinedIndexes;
-
-      for (var i = indexToStart; i < indexToStopBefore; i++) {
-        if (i in array || i >= originalLength) {
-          array[i - numberOfUndefinedIndexes] = array[i];
-        } else {
-          delete array[i - numberOfUndefinedIndexes];
-        }
-      }
-    }
-
-    // If there were emptyIndexes in array, delete the indexes at the end of array:
-    // Array has been sorted according to value UTC code unit values of String(array[i]).
+    // 3) Examine all indexes in array and count the number of empty indexes in array:
     var numberOfEmptyIndexes = 0;
     var lastEmptyIndex;
 
-    // Go through all indexes in array and count the number of empty indexes in array:
     for (var i = 0; i < originalLength; i++) {
       if (i in array === false) {
         numberOfEmptyIndexes++;
