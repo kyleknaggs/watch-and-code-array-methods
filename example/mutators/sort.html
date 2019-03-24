@@ -148,49 +148,47 @@
 
   function sort(array) {
     var originalLength = array.length;
-
-    // 1) Examine all indexes in array and count the number of empty indexes in array:
     var numberOfEmptyIndexes = 0;
-    var lastEmptyIndex;
+    var numberOfUndefinedIndexes = 0;
 
+    // 1) Count the number of undefined and empty indexes in array:
     for (var i = 0; i < originalLength; i++) {
       if (i in array === false) {
         numberOfEmptyIndexes++;
-        lastEmptyIndex = i;
       }
-    }
-
-    // If there are empty indexes in array, move them from current location to end of array:
-    if (numberOfEmptyIndexes > 0) {
-      var indexToStart = lastEmptyIndex + 1;
-      var indexToStopBefore = originalLength + numberOfEmptyIndexes;
-
-      for (var i = indexToStart; i < indexToStopBefore; i++) {
-        array[i - numberOfEmptyIndexes] = array[i];
-      }
-
-      array.length = originalLength - numberOfEmptyIndexes;
-      array.length = originalLength;
-    }
-
-    // 2) Examine all indexes in array and count the number of undefined indexes in array:
-    var firstSortedIndex = originalLength - numberOfEmptyIndexes;
-    var numberOfUndefinedIndexes = 0;
-
-    for (var i = 0; i < firstSortedIndex; i++) {
-      if (array[i] === undefined) {
+      if (i in array && array[i] === undefined) {
         numberOfUndefinedIndexes++;
       }
     }
 
+    // 2) If there is more than 1 empty index, swap the empty index with a non-empty index:
+    if (numberOfEmptyIndexes > 0) {
+      for (var i = 0; i < originalLength; i++) {
+        if (i in array === false) {
+          var hasIndexMoved = false;
+          var j = originalLength - 1;
+
+          while (!hasIndexMoved && j > i) {
+            if (j in array) {
+              array[i] = array[j];
+              delete array[j];
+              hasIndexMoved = true;
+            }
+            j--;
+          }
+        }
+      }
+    }
+
+    // 3) Examine all indexes in array and count the number of undefined indexes in array:
+    var firstSortedIndex = originalLength - numberOfEmptyIndexes;
+
     // If there are undefined indexes in array, move them from current location to end of array:
     if (numberOfUndefinedIndexes > 0) {
       var numberOfMoves = 0;
-
       while (numberOfMoves < numberOfUndefinedIndexes) {
         var indexToCheck = 0;
         var hasBeenCopied = false;
-
         while (!hasBeenCopied && indexToCheck < firstSortedIndex) {
           if (array[indexToCheck] === undefined) {
             for (var i = indexToCheck + 1; i < firstSortedIndex + 1; i++) {
@@ -204,7 +202,7 @@
       }
     }
 
-    // 3) Sort all indexes in array before firstSortedIndex according to their UTF-16 code unit values:
+    // 4) Sort all indexes in array before firstSortedIndex according to their UTF-16 code unit values:
     firstSortedIndex -= numberOfUndefinedIndexes;
 
     for (var i = 0; i < firstSortedIndex; i++) {
@@ -229,7 +227,7 @@
       }
     }
 
-    // 4) Return array:
+    // 5) Return array:
     return array;
   }
 
@@ -393,6 +391,18 @@
       eq(sortedArray[0], undefined);
       eq(0 in sortedArray, true);
       eq(1 in sortedArray, false);
+
+      var array = [, "y", undefined, , "z"];
+      // No expected array as ESLint keeps removing empty index from end of array
+      // expected >>> ["y", "z", undefined, /*empty*/, /*empty*/];
+      var sortedArray = sort(array);
+      eq(sortedArray.length, 5);
+      eq(sortedArray[0], "y");
+      eq(sortedArray[1], "z");
+      eq(2 in sortedArray, true);
+      eq(sortedArray[2], undefined);
+      eq(3 in sortedArray, false);
+      eq(4 in sortedArray, false);
     }
 
     // TODO: 1) Write function to pass tests 7a and 7b.
