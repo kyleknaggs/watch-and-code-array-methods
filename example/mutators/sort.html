@@ -163,7 +163,7 @@
 
     // 2) If there are empty indexes, swap the empty index with a non-empty index:
     if (numberOfEmptyIndexes > 0) {
-      for (var i = 0; i < originalLength; i++) {
+      for (var i = 0; i < originalLength - numberOfEmptyIndexes; i++) {
         if (i in array === false) {
           var hasIndexMoved = false;
           var j = originalLength - 1;
@@ -184,7 +184,7 @@
     var firstSortedIndex = originalLength - numberOfEmptyIndexes;
 
     if (numberOfUndefinedIndexes > 0) {
-      for (var i = 0; i < firstSortedIndex; i++) {
+      for (var i = 0; i < firstSortedIndex - numberOfUndefinedIndexes; i++) {
         if (array[i] === undefined) {
           var hasIndexMoved = false;
           var j = firstSortedIndex - 1;
