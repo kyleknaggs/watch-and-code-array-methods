@@ -161,7 +161,7 @@
       }
     }
 
-    // 2) If there is more than 1 empty index, swap the empty index with a non-empty index:
+    // 2) If there are empty indexes, swap the empty index with a non-empty index:
     if (numberOfEmptyIndexes > 0) {
       for (var i = 0; i < originalLength; i++) {
         if (i in array === false) {
@@ -180,36 +180,35 @@
       }
     }
 
-    // 3) Examine all indexes in array and count the number of undefined indexes in array:
+    // 3) If there are undefined indexes, swamp the undefined index with a non-undefined index:
     var firstSortedIndex = originalLength - numberOfEmptyIndexes;
 
-    // If there are undefined indexes in array, move them from current location to end of array:
     if (numberOfUndefinedIndexes > 0) {
-      var numberOfMoves = 0;
-      while (numberOfMoves < numberOfUndefinedIndexes) {
-        var indexToCheck = 0;
-        var hasBeenCopied = false;
-        while (!hasBeenCopied && indexToCheck < firstSortedIndex) {
-          if (array[indexToCheck] === undefined) {
-            for (var i = indexToCheck + 1; i < firstSortedIndex + 1; i++) {
-              array[i - 1] = array[i];
+      for (var i = 0; i < firstSortedIndex; i++) {
+        if (array[i] === undefined) {
+          var hasIndexMoved = false;
+          var j = firstSortedIndex - 1;
+
+          while (!hasIndexMoved && j > i) {
+            if (array[j] !== undefined) {
+              array[i] = array[j];
+              array[j] = undefined;
+              hasIndexMoved = true;
             }
-            hasBeenCopied = true;
-            numberOfMoves++;
+            j--;
           }
-          indexToCheck++;
         }
       }
     }
 
-    // 4) Sort all indexes in array before firstSortedIndex according to their UTF-16 code unit values:
     firstSortedIndex -= numberOfUndefinedIndexes;
 
+    // 4) Sort all indexes in array before firstSortedIndex according to their UTF-16 code unit values:
     for (var i = 0; i < firstSortedIndex; i++) {
       var currentIndex = i;
       var indexOfLowestValue = currentIndex;
 
-      for (var j = i + 1; j < firstSortedIndex; j++) {
+      for (var j = currentIndex + 1; j < firstSortedIndex; j++) {
         var indexToCompare = j;
 
         if (String(array[indexToCompare]) < String(array[indexOfLowestValue])) {
@@ -217,7 +216,6 @@
         }
       }
 
-      // If array[currentIndex] is not the lowest value, swamp array[currentIndex] with array[indexOfLowestValue]:
       if (String(array[indexOfLowestValue]) !== String(array[currentIndex])) {
         var lowestValue = array[indexOfLowestValue];
         var currentValue = array[currentIndex];
