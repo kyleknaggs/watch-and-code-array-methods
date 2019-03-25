@@ -49,34 +49,33 @@
   // Function signature:
   // sort(optionalCallback);
 
-  // Optional callback parameters:
-  // firstElement - The first element to compare.
-  // secondElement - The second element to compare.
-
   // Arguments:
+  // optionalCompareFunction - Specifies a funciton that defines the sort order
+
+  // Callback arguments:
+  // firstElement - The first element to compare using optionalCompareFunction.
+  // secondElement - The second element to compare using optionalCompareFunction.
+
+  // Format of optionalCompareFunction():
+  // function(x,y){
+  //   if(x<y){
+  //     return -1;
+  //   }
+  //   if(x>y){
+  //     return 1;
+  //   }
+  //   return 0;
+  // }
 
   // Return value:
   // The sorted array.
 
-  // Requirements:
+  // Requirements Questions:
 
-  // 2) If compare function:
-  // All non-undefined array elements are sorted according to the return value of the compare function.
-  // All undefined elements are sorted to the end of the array, with no call to compareFunction.
+  // How does optionalCompareFunction handle undefined indexes?
+  // How does optionalCompareFunction handle empty indexes?
 
-  // 3) If a and b are two elements being compared:
-  // If compareFunction(a, b) is less than 0, sort a to an index lower than b (i.e. a comes first).
-  // If compareFunction(a, b) returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements.
-  // If compareFunction(a, b) is greater than 0, sort b to an index lower than a (i.e. b comes first).
-  // compareFunction(a, b) must always return the same value when given a specific pair of elements a and b as its two arguments. If inconsistent results are returned then the sort order is undefined.
-
-  // TODO: Review at end of docs:
-  // It should be able to compare strings.
-  // It should be able to compare numbers.
-  // It should be able to be used with function expressions.
-  // It should be able to sort objects given one of their properties.
-
-  // Questions:
+  // General Questions:
 
   // 1) What is in place?
   // https://en.wikipedia.org/wiki/In-place_algorithm
@@ -334,7 +333,7 @@
       });
     },
 
-    "7a) If array contains a single undefined index, it should locate undefined index after all defined indexes in array.": function() {
+    "7a) If no optionalCompareFunction, and array contains a single undefined index, it should locate undefined index after all defined indexes in array.": function() {
       var array = [undefined, "z"];
       // expected >>> ["z", undefined];
       var sortedArray = sort(array);
@@ -342,7 +341,7 @@
       eq(1 in sortedArray, true);
       eq(sortedArray.length, 2);
     },
-    "7b) If array contains multiple undefined indexes, it should place all undefined indexes after all defined indexes in array.": function() {
+    "7b) If no optionalCompareFunction, and array contains multiple undefined indexes, it should place all undefined indexes after all defined indexes in array.": function() {
       var array = [undefined, "y", undefined, "z"];
       // expected >>> ["y", "z", undefined, undefined];
       var sortedArray = sort(array);
@@ -368,7 +367,7 @@
       eq(sortedArray.length, 6);
     },
 
-    "8a) If empty indexes are the last indexes in array, it should preserve the location of empty indexes in array.": function() {
+    "8a) If no optionalCompareFunction, and empty indexes are the last indexes in array, it should preserve the location of empty indexes in array.": function() {
       // Browser reads three commas at the end of array as a two empty indexes.
       var array = [undefined, , ,];
       // expected >>> [undefined, /*empty*/, /*empty*/]
@@ -378,7 +377,7 @@
       eq(1 in sortedArray, false);
       eq(2 in sortedArray, false);
     },
-    "8b) If empty indexes are not the last indexes in array, it should place all empty indexes after undefined indexes in array.": function() {
+    "8b) If no optionalCompareFunction, and empty indexes are not the last indexes in array, it should place all empty indexes after undefined indexes in array.": function() {
       var array = [, undefined];
       // No expected array as ESLint keeps removing empty index from end of array
       // expected >>> [undefined, /*empty*/];
@@ -401,8 +400,48 @@
       eq(4 in sortedArray, false);
     }
 
-    // TODO: 1) Write function to pass tests 7a and 7b.
-    // TODO: 2) What happens if values of indexes are exactly the same? Do these indexes stay in the same position or do they rearrange themsleves?
     // Test with arrays or objects as you can test using a reference address vs primitives where it would be impossible to tell if they switched location.
+
+    // If optionalCompareFunction:
+
+    // Preserve how sort handles undefined and empty indexes:
+
+    // 1a) If optionalCompareFunction, it should still sort undefined indexes after defined indexes.
+    // var array = [undefined, 'a'];
+    // var expected = ['a', undefined];
+    // var sortedArray = array.sort(function () { });
+    // sortedArray.forEach(function (value, i) {
+    //   eq(value, expected[i]);
+    // });
+
+    // 1b) If optionalCompareFunction, it should still sort empty indexes after undefined indexes in array.
+    // var array = [,undefined];
+    // expected >>> [undefined, /*empty*/]
+    // var sortedArray = array.sort(function () {});
+    // sortedArray.forEach(function (value, i) {
+    //   eq(value, expected[i]);
+    // });
+    // eq(sortedArray.length, 2);
+    // eq(sortedArray[0], undefined);
+    // eq(0 in sortedArray, true);
+    // eq(sortedArray[1], undefined);
+    // eq(1 in sortedArray, false);
+
+    // Integrate optionalCompareFunction into the sorting of non-undefined and non-empty indexes:
+
+    // If optionalCompareFunction follows intended structure of callback it should sort indexes.
+    // If optionalCompareFunction does not follow intended structure of callback it should not sort indexes.
+
+    // How optionalCompareFunction handles different types of data:
+
+    // It should be able to sort strings.
+    // It should be able to sort numbers.
+    // It should be able to sort objects given one of their properties.
+    // It should be able to sort non-ASCII characters using String.localCompare().
+
+    // Not sure:
+
+    // It should be able to be used with function expressions.
+    // It should be able to sort using Array.prototype.map().
   });
 </script>
