@@ -165,14 +165,13 @@
     if (numberOfEmptyIndexes > 0) {
       for (var i = 0; i < originalLength - numberOfEmptyIndexes; i++) {
         if (i in array === false) {
-          var hasIndexMoved = false;
           var j = originalLength - 1;
 
-          while (!hasIndexMoved && j > i) {
+          while (j > i) {
             if (j in array) {
               array[i] = array[j];
               delete array[j];
-              hasIndexMoved = true;
+              break;
             }
             j--;
           }
@@ -186,14 +185,13 @@
     if (numberOfUndefinedIndexes > 0) {
       for (var i = 0; i < firstSortedIndex - numberOfUndefinedIndexes; i++) {
         if (array[i] === undefined) {
-          var hasIndexMoved = false;
           var j = firstSortedIndex - 1;
 
-          while (!hasIndexMoved && j > i) {
+          while (j > i) {
             if (array[j] !== undefined) {
               array[i] = array[j];
               array[j] = undefined;
-              hasIndexMoved = true;
+              break;
             }
             j--;
           }
