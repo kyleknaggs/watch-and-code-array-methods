@@ -401,10 +401,10 @@
       eq(4 in sortedArray, false);
     },
 
-    // TODO: Test with arrays or objects as you can test using a reference address vs primitives where it would be impossible to tell if they switched location.
+    // TODO: 3) Test with arrays or objects as you can test using a reference address vs primitives where it would be impossible to tell if they switched location.
 
     // If optionalCompareFunction:
-    // Preserve how sort handles undefined and empty indexes:
+    // TODO: 1) Remove original version of empty and undefined index test when optionalCompareFunction:
     "9a) If optionalCompareFunction, it should still move undefined indexes after all defined indexes in array.": function() {
       var array = [undefined, "a"];
       var expected = ["a", undefined];
@@ -425,12 +425,67 @@
       eq(sortedArray[2], undefined);
       eq(2 in sortedArray, false);
       eq(sortedArray.length, 3);
+    },
+
+    "10a) If optionalCompareFunction is not a function, it should throw TypeError that states: The comparison function must be either a function or undefined.": function() {
+      fail();
+      // var isTypeError = false;
+      // var errorMessage;
+      // try {
+      //   var array = ["b", "a"];
+      //   var sortedArray = sort(array, "cow");
+      // } catch (e) {
+      //   isTypeError = e instanceof TypeError;
+      //   errorMessage = e.message;
+      // }
+      // eq(isTypeError, true);
+      // eq(
+      //   errorMessage,
+      //   "The comparison function must be either a function or undefined"
+      // );
+    },
+
+    "11a) If optionalCompareFunction is an empty function it should swap undefined indexes with the last defined index in array.": function() {
+      fail();
+      // var array = [undefined, "a"];
+      // expected >>> ["a", undefined]
+      // var sortedArray = sort(array, function () { });
+      // eq(array[0], "a");
+      // eq(1 in array, true);
+      // eq(array[1], undefined);
+      // eq(array.length, 2);
+    },
+    "11b) If optionalCompareFunction is an empty function it should swap empty indexes with indexes at the end of the array.": function() {
+      fail();
+      // var array = [, undefined];
+      // expected >>> [undefined, empty]
+      // var sortedArray = array.sort(function () { });
+      // eq(0 in array, true);
+      // eq(array[1], undefined);
+      // eq(1 in array, false);
+      // eq(array[1], undefined);
+      // eq(array.length, 2);
+    },
+    "11c) If optionalCompareFunction is an empty function it should not sort any defined indexes in array.": function() {
+      fail();
+      // var array = [/*empty*/, undefined,"b","a","c","d"];
+      // expected >>> ["d", "c", "b", "a", undefined, empty]
+      // var sortedArray = array.sort(function () { });
+      // eq(array[0], "d");
+      // eq(array[1], "c");
+      // eq(array[2], "b");
+      // eq(array[3], "a");
+      // eq(4 in array, true);
+      // eq(array[4], undefined);
+      // eq(5 in array, false);
+      // eq(array[5], undefined);
+      // eq(array.length, 6);
     }
 
-    // TODO: Test the different forms of optionalCompareFunction:
-    // a) No logic
-    // b) Unintended logic
-    // c) Intended logic
+    // TODO: 2) Test the different forms of optionalCompareFunction:
+
+    // a) If optionalCompareFunction is a function with unintended logic
+    // b) If optionalCompareFunction is a function with intended logic
 
     // Integrate optionalCompareFunction into the sorting of non-undefined and non-empty indexes:
 
