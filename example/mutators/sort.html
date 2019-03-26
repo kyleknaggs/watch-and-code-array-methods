@@ -333,7 +333,18 @@
       });
     },
 
-    "7a) If no optionalCompareFunction, and array contains a single undefined index, it should locate undefined index after all defined indexes in array.": function() {
+    "7a) If no optionalCompareFunction, and undefined indexes are located at the end of the array, it should preserve the location of the undefined indexes in array.": function() {
+      var array = ["z", undefined, undefined];
+      // expected >>> ["z", undefined, undefined];
+      var sortedArray = sort(array);
+      eq(sortedArray[0], "z");
+      eq(1 in sortedArray, true);
+      eq(sortedArray[1], undefined);
+      eq(2 in sortedArray, true);
+      eq(sortedArray[2], undefined);
+      eq(sortedArray.length, 3);
+    },
+    "7b) If no optionalCompareFunction, and a single undefined index is not at the end of the array, it should move the undefined index after all defined indexes in array.": function() {
       var array = [undefined, "z"];
       // expected >>> ["z", undefined];
       var sortedArray = sort(array);
@@ -341,18 +352,7 @@
       eq(1 in sortedArray, true);
       eq(sortedArray.length, 2);
     },
-    "7b) If no optionalCompareFunction, and array contains multiple undefined indexes, it should place all undefined indexes after all defined indexes in array.": function() {
-      var array = [undefined, "y", undefined, "z"];
-      // expected >>> ["y", "z", undefined, undefined];
-      var sortedArray = sort(array);
-      eq(sortedArray[0], "y");
-      eq(sortedArray[1], "z");
-      eq(2 in sortedArray, true);
-      eq(sortedArray[2], undefined);
-      eq(3 in sortedArray, true);
-      eq(sortedArray[3], undefined);
-      eq(sortedArray.length, 4);
-
+    "7c) If no optionalCompareFunction, and there is more than one undefined indexes in array, it should move all undefined indexes after all defined indexes in array.": function() {
       var array = [undefined, "a", "b", undefined, "y", "z"];
       // expected >>> ["a", "b", "y", "z", undefined, undefined];
       var sortedArray = sort(array);
@@ -377,18 +377,19 @@
       eq(1 in sortedArray, false);
       eq(2 in sortedArray, false);
     },
-    "8b) If no optionalCompareFunction, and empty indexes are not the last indexes in array, it should place all empty indexes after undefined indexes in array.": function() {
+    "8b) If no optionalCompareFunction, and a single empty index is not the last indexes in array, it should move the empty index to the end of the array.": function() {
       var array = [, undefined];
-      // No expected array as ESLint keeps removing empty index from end of array
+      // No expected array as ESLint removes empty index from end of array
       // expected >>> [undefined, /*empty*/];
       var sortedArray = sort(array);
       eq(sortedArray.length, 2);
       eq(sortedArray[0], undefined);
       eq(0 in sortedArray, true);
       eq(1 in sortedArray, false);
-
+    },
+    "8c) If no optionalCompareFunction, there is more than one empty index in array, and empty indexes are not at the end of the array, it should move all empty indexes to the end of the array.": function() {
       var array = [, "y", undefined, , "z"];
-      // No expected array as ESLint keeps removing empty index from end of array
+      // No expected array as ESLint removes empty index from end of array
       // expected >>> ["y", "z", undefined, /*empty*/, /*empty*/];
       var sortedArray = sort(array);
       eq(sortedArray.length, 5);
@@ -398,34 +399,38 @@
       eq(sortedArray[2], undefined);
       eq(3 in sortedArray, false);
       eq(4 in sortedArray, false);
-    }
+    },
 
-    // Test with arrays or objects as you can test using a reference address vs primitives where it would be impossible to tell if they switched location.
+    // TODO: Test with arrays or objects as you can test using a reference address vs primitives where it would be impossible to tell if they switched location.
 
     // If optionalCompareFunction:
-
     // Preserve how sort handles undefined and empty indexes:
+    "9a) If optionalCompareFunction, it should still move undefined indexes after all defined indexes in array.": function() {
+      var array = [undefined, "a"];
+      var expected = ["a", undefined];
+      var sortedArray = sort(array, function() {});
+      sortedArray.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+    "9b) If optionalCompareFunction, it should still move empty indexes to the end of the array.": function() {
+      var array = [, , undefined];
+      // Two empty indexes at end of array as ESLint removes single empty index from end of array
+      // expected >>> [undefined, ,];
+      var sortedArray = sort(array, function() {});
+      eq(sortedArray[0], undefined);
+      eq(0 in sortedArray, true);
+      eq(sortedArray[1], undefined);
+      eq(1 in sortedArray, false);
+      eq(sortedArray[2], undefined);
+      eq(2 in sortedArray, false);
+      eq(sortedArray.length, 3);
+    }
 
-    // 1a) If optionalCompareFunction, it should still sort undefined indexes after defined indexes.
-    // var array = [undefined, 'a'];
-    // var expected = ['a', undefined];
-    // var sortedArray = array.sort(function () { });
-    // sortedArray.forEach(function (value, i) {
-    //   eq(value, expected[i]);
-    // });
-
-    // 1b) If optionalCompareFunction, it should still sort empty indexes after undefined indexes in array.
-    // var array = [,undefined];
-    // expected >>> [undefined, /*empty*/]
-    // var sortedArray = array.sort(function () {});
-    // sortedArray.forEach(function (value, i) {
-    //   eq(value, expected[i]);
-    // });
-    // eq(sortedArray.length, 2);
-    // eq(sortedArray[0], undefined);
-    // eq(0 in sortedArray, true);
-    // eq(sortedArray[1], undefined);
-    // eq(1 in sortedArray, false);
+    // TODO: Test the different forms of optionalCompareFunction:
+    // a) No logic
+    // b) Unintended logic
+    // c) Intended logic
 
     // Integrate optionalCompareFunction into the sorting of non-undefined and non-empty indexes:
 
