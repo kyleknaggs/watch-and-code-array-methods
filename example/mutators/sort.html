@@ -467,26 +467,24 @@
       );
     }
 
-    // TODO: 2) Test the different forms of optionalCompareFunction:
+    // TODO: 1) Test the different forms of optionalCompareFunction:
+    // Notes on optionalCompareFunction:
 
-    // a) If optionalCompareFunction is a function with unintended logic
-    // b) If optionalCompareFunction is a function with intended logic
+    // For optionalCompareFunction to work, optionalCompareFunction needs to be a consistent comparison function for the set of values.
 
-    // Integrate optionalCompareFunction into the sorting of non-undefined and non-empty indexes:
+    // A consistent comparisonFunction meets the following requirements:
+    // 1) All values returned by the function must be a number.
+    // 2) Exactly one of the following statements will be true for a given pair of values: a > b, a < b, a === b.
+    // 3) If (a < b) optionalCompareFunction(a,b) < 0, if(a > b) optionalCompareFunction(a,b) > 0 and if if(a === b) optionalCompareFunction(a,b) === 0.
 
-    // If optionalCompareFunction follows intended structure of callback it should sort indexes.
-    // If optionalCompareFunction does not follow intended structure of callback it should not sort indexes.
-
-    // How optionalCompareFunction handles different types of data:
-
+    // Tests:
+    // 1) Write tests for if optionalCompareFunction is a function with unintended logic
+    // 2) Write tests for if optionalCompareFunction is a function with intended logic
+    // 3) How optionalCompareFunction handles different types of data:
     // It should be able to sort strings.
     // It should be able to sort numbers.
     // It should be able to sort objects given one of their properties.
     // It should be able to sort non-ASCII characters using String.localCompare().
-
-    // Not sure:
-
-    // It should be able to be used with function expressions.
-    // It should be able to sort using Array.prototype.map().
+    // 4) It should be able to sort using Array.prototype.map().
   });
 </script>
