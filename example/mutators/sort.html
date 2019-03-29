@@ -210,9 +210,10 @@
     }
 
     // 4) If no optionalCompareFunction, sort indexes  before firstSortedIndex according to their UTF-16 code unit values:
-    if (numberOfArguments === 1) {
-      firstSortedIndex -= numberOfUndefinedIndexes;
+    firstSortedIndex -= numberOfUndefinedIndexes;
 
+    // Default sort
+    if (numberOfArguments === 1) {
       for (var i = 0; i < firstSortedIndex; i++) {
         var currentIndex = i;
         var indexOfLowestValue = currentIndex;
@@ -234,6 +235,13 @@
           array[currentIndex] = lowestValue;
           array[indexOfLowestValue] = currentValue;
         }
+      }
+    }
+
+    // Implementation defined sort:
+    if (numberOfArguments === 2) {
+      for (var i = 1; i < firstSortedIndex; i++) {
+        optionalCompareFunction(array[i], array[i - 1]);
       }
     }
 
@@ -489,40 +497,82 @@
     // It should be able to sort non-ASCII characters using String.localCompare().
     // 4) It should be able to sort using Array.prototype.map().
 
+    // BAD Tests Start -----------------
+
     "13a) If optionalCompareFunction, it should call optionalCompareFunction 1 less time than the number of defined indexes in array.": function() {
-      fail();
-      // var testArray = [1, 2, 3, 4];
-      // var numberOfTimesCallbackHasRun = 0;
-      // sort(testArray, function() {
-      //   numberOfTimesCallbackHasRun++;
-      // });
-      // eq(numberOfTimesCallbackHasRun, 3);
+      var testArray = ["a", 1, true, {}, [], null];
+      var numberOfTimesCallbackHasRun = 0;
+      sort(testArray, function() {
+        numberOfTimesCallbackHasRun++;
+      });
+      eq(numberOfTimesCallbackHasRun, 5);
     },
     "13b) If optionalCompareFunction, it should not call optionalCompareFunction on undefined indexes in array.": function() {
-      fail();
-      // var testArray = [, undefined];
-      // var numberOfTimesCallbackHasRun = 0;
-      // sort(testArray, function() {
-      //   numberOfTimesCallbackHasRun++;
-      // });
-      // eq(numberOfTimesCallbackHasRun, 0);
+      var testArray = [, undefined, "a", 1, true, {}, [], null];
+      var numberOfTimesCallbackHasRun = 0;
+      sort(testArray, function(a, b) {
+        numberOfTimesCallbackHasRun++;
+      });
+      eq(numberOfTimesCallbackHasRun, 5);
     },
 
     "14a) If optionalCompareFunction, the first argument passed into optionalCompareFunction is array[numberOfTimesCallbackHasRun + 1].": function() {
-      fail();
-      // var testArray = [3,2,1];
-      // var numberOfTimesCallbackHasRun = 0;
-      // sort(testArray, function(a,b) {
-      //   eq(a, testArray[numberOfTimesCallbackHasRun + 1])
-      // });
+      var testArray = [3, 2, 1];
+      var numberOfTimesCallbackHasRun = 0;
+      sort(testArray, function(a, b) {
+        eq(a, testArray[numberOfTimesCallbackHasRun + 1]);
+        numberOfTimesCallbackHasRun++;
+      });
     },
     "14b) If optionalCompareFunction, the second argument passed into optionalCompareFunction is array[numberOfTimesCallbackHasRun].": function() {
-      fail();
-      // var testArray = [3,2,1];
-      // var numberOfTimesCallbackHasRun = 0;
-      // sort(testArray, function(a,b) {
-      //   eq(b, testArray[numberOfTimesCallbackHasRun])
-      // });
+      var testArray = [3, 2, 1];
+      var numberOfTimesCallbackHasRun = 0;
+      sort(testArray, function(a, b) {
+        eq(b, testArray[numberOfTimesCallbackHasRun]);
+        numberOfTimesCallbackHasRun++;
+      });
     }
+
+    // BAD Tests End -----------------
+
+    // EXPERIMENTS:
+
+    // function compareFunction(a,b){
+    // iterationsOfCallback++;
+    //   if (a < b) {
+    //     return -1;
+    //   }
+    //   if (a > b) {
+    //     return 1;
+    //   }
+    //   return 0;
+    // }
+
+    // Exmperiment 1 -------------------------
+
+    // var iterationsOfCallback = 0;
+    // var testArray = [1, 2, 3];
+    // testArray.sort(compareFunction);
+    // >>> iterationsOfCallback = 2;
+
+    // Exmperiment 2 -------------------------
+
+    // var iterationsOfCallback = 0;
+    // var testArray = [3,2,1];
+    // testArray.sort(compareFunction);
+    // >>> iterationsOfCallback = 2;
+
+    // Exmperiment 3 -------------------------
+
+    // var iterationsOfCallback = 0;
+    // var testArray = [2,1,3];
+    // testArray.sort(compareFunction);
+    // >>> iterationsOfCallback = 3;
+
+    // Next Step:
+    // Go through compareFunction and evaluate the values of these variables every time compareFunction is run:
+    // i) a
+    // ii) b
+    // iii) testArray
   });
 </script>
