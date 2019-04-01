@@ -356,7 +356,7 @@
       });
     },
 
-    "7a) If no optionalCompareFunction, and undefined indexes are located at the end of the array, it should preserve the location of the undefined indexes in array.": function() {
+    "7a) If undefined indexes are located at the end of the array, it should preserve the location of the undefined indexes in array.": function() {
       var array = ["z", undefined, undefined];
       // expected >>> ["z", undefined, undefined];
       var sortedArray = sort(array);
@@ -367,7 +367,7 @@
       eq(sortedArray[2], undefined);
       eq(sortedArray.length, 3);
     },
-    "7b) If no optionalCompareFunction, and a single undefined index is not at the end of the array, it should move the undefined index after all defined indexes in array.": function() {
+    "7b) If a single undefined index is not at the end of the array, it should move the undefined index after all defined indexes in array.": function() {
       var array = [undefined, "z"];
       // expected >>> ["z", undefined];
       var sortedArray = sort(array);
@@ -375,7 +375,7 @@
       eq(1 in sortedArray, true);
       eq(sortedArray.length, 2);
     },
-    "7c) If no optionalCompareFunction, and there is more than one undefined indexes in array, it should move all undefined indexes after all defined indexes in array.": function() {
+    "7c) If there is more than one undefined indexes in array, it should move all undefined indexes after all defined indexes in array.": function() {
       var array = [undefined, "a", "b", undefined, "y", "z"];
       // expected >>> ["a", "b", "y", "z", undefined, undefined];
       var sortedArray = sort(array);
@@ -390,7 +390,7 @@
       eq(sortedArray.length, 6);
     },
 
-    "8a) If no optionalCompareFunction, and empty indexes are the last indexes in array, it should preserve the location of empty indexes in array.": function() {
+    "8a) If empty indexes are the last indexes in array, it should preserve the location of empty indexes in array.": function() {
       // Browser reads three commas at the end of array as a two empty indexes.
       var array = [undefined, , ,];
       // expected >>> [undefined, /*empty*/, /*empty*/]
@@ -400,7 +400,7 @@
       eq(1 in sortedArray, false);
       eq(2 in sortedArray, false);
     },
-    "8b) If no optionalCompareFunction, and a single empty index is not the last indexes in array, it should move the empty index to the end of the array.": function() {
+    "8b) If a single empty index is not the last indexes in array, it should move the empty index to the end of the array.": function() {
       var array = [, undefined];
       // No expected array as ESLint removes empty index from end of array
       // expected >>> [undefined, /*empty*/];
@@ -410,7 +410,7 @@
       eq(0 in sortedArray, true);
       eq(1 in sortedArray, false);
     },
-    "8c) If no optionalCompareFunction, there is more than one empty index in array, and empty indexes are not at the end of the array, it should move all empty indexes to the end of the array.": function() {
+    "8c) If there is more than one empty index in array, and empty indexes are not at the end of the array, it should move all empty indexes to the end of the array.": function() {
       var array = [, "y", undefined, , "z"];
       // No expected array as ESLint removes empty index from end of array
       // expected >>> ["y", "z", undefined, /*empty*/, /*empty*/];
@@ -425,9 +425,8 @@
     },
 
     // TODO: 3) Test with arrays or objects as you can test using a reference address vs primitives where it would be impossible to tell if they switched location.
-    // If optionalComareFunction:
 
-    "10a) If optionalCompareFunction is not a consistent comparison function it should not sort any defined indexes in array.": function() {
+    "9a) If optionalCompareFunction is not a consistent comparison function it should not sort any defined indexes in array.": function() {
       var array = ["b", "a"];
       // expected >>> ["b", "a"]
       var sortedArray = array.sort(function() {});
@@ -435,32 +434,7 @@
       eq(array[1], "a");
     },
 
-    // Empty and undefined indexes:
-    "11a) If optionalCompareFunction, it should swap undefined indexes with the last defined index in array.": function() {
-      var array = [undefined, "a", "b"];
-      // expected >>> ["a", "b", undefined]
-      var sortedArray = sort(array, function() {});
-      eq(array[0], "b");
-      eq(array[1], "a");
-      eq(2 in array, true);
-      eq(array[2], undefined);
-      eq(array.length, 3);
-    },
-    "11b) If optionalCompareFunction, it should swap empty indexes with indexes at the end of the array.": function() {
-      var array = [, "a", undefined, "b"];
-      // expected >>> ["b", "a", undefined, empty]
-      var sortedArray = array.sort(function() {});
-      eq(array[0], "b");
-      eq(array[1], "a");
-      eq(2 in array, true);
-      eq(array[2], undefined);
-      eq(3 in array, false);
-      eq(array[3], undefined);
-      eq(array.length, 4);
-    },
-
-    // If optionalCompareFunction is not a function:
-    "12a) If optionalCompareFunction is not a function, it should throw TypeError that states: The comparison function must be either a function or undefined.": function() {
+    "10a) If optionalCompareFunction is not a function, it should throw TypeError that states: The comparison function must be either a function or undefined.": function() {
       var isTypeError = false;
       var errorMessage;
       try {
@@ -497,39 +471,52 @@
     // It should be able to sort non-ASCII characters using String.localCompare().
     // 4) It should be able to sort using Array.prototype.map().
 
-    // BAD Tests Start -----------------
-
-    "13a) If optionalCompareFunction, it should call optionalCompareFunction 1 less time than the number of defined indexes in array.": function() {
-      var testArray = ["a", 1, true, {}, [], null];
-      var numberOfTimesCallbackHasRun = 0;
-      sort(testArray, function() {
-        numberOfTimesCallbackHasRun++;
+    "11a) If optionalCompareFunction, it should call optionalCompareFunction.": function() {
+      var array = [1, 2];
+      var hasCalledCallback = false;
+      sort(array, function() {
+        hasCalledCallback = true;
       });
-      eq(numberOfTimesCallbackHasRun, 5);
-    },
-    "13b) If optionalCompareFunction, it should not call optionalCompareFunction on undefined indexes in array.": function() {
-      var testArray = [, undefined, "a", 1, true, {}, [], null];
-      var numberOfTimesCallbackHasRun = 0;
-      sort(testArray, function(a, b) {
-        numberOfTimesCallbackHasRun++;
-      });
-      eq(numberOfTimesCallbackHasRun, 5);
+      eq(hasCalledCallback, true);
     },
 
-    "14a) If optionalCompareFunction, the first argument passed into optionalCompareFunction is array[numberOfTimesCallbackHasRun + 1].": function() {
-      var testArray = [3, 2, 1];
-      var numberOfTimesCallbackHasRun = 0;
-      sort(testArray, function(a, b) {
-        eq(a, testArray[numberOfTimesCallbackHasRun + 1]);
-        numberOfTimesCallbackHasRun++;
+    "12a) If there is an undefined index in array, it should not call optionalCompareFunction": function() {
+      var array = [, undefined, 1];
+      var hasCalledCallback = false;
+      sort(array, function() {
+        hasCalledCallback = true;
+      });
+      eq(hasCalledCallback, false);
+    },
+
+    "13a) It should pass array[i] as the second argument to optionalCompareFunction.": function() {
+      var array = [1, 2];
+      sort(array, function(a, b) {
+        eq(array[1], a);
       });
     },
-    "14b) If optionalCompareFunction, the second argument passed into optionalCompareFunction is array[numberOfTimesCallbackHasRun].": function() {
-      var testArray = [3, 2, 1];
-      var numberOfTimesCallbackHasRun = 0;
-      sort(testArray, function(a, b) {
-        eq(b, testArray[numberOfTimesCallbackHasRun]);
-        numberOfTimesCallbackHasRun++;
+    "13b) It should pass an index prior to array[i] the first argument to optionalCompareFunction.": function() {
+      var array = [1, 2];
+      sort(array, function(a, b) {
+        eq(array[0], b);
+      });
+    },
+
+    "14a) If optionalCompareFunction is a consistent comparison function, it should sort the indexes in array.": function() {
+      fail();
+      var array = [2, 4, 5, 3, 1];
+      sort(array, function(a, b) {
+        if (a < b) {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+        return 0;
+      });
+      var expected = [1, 2, 3, 4, 5];
+      array.forEach(function(element, index) {
+        eq(element, expected[index]);
       });
     }
 
@@ -538,7 +525,7 @@
     // EXPERIMENTS:
 
     // function compareFunction(a,b){
-    // iterationsOfCallback++;
+
     //   if (a < b) {
     //     return -1;
     //   }
@@ -546,6 +533,7 @@
     //     return 1;
     //   }
     //   return 0;
+
     // }
 
     // Exmperiment 1 -------------------------
@@ -568,6 +556,22 @@
     // var testArray = [2,1,3];
     // testArray.sort(compareFunction);
     // >>> iterationsOfCallback = 3;
+
+    // Exmperiment 4 -------------------------
+
+    // var iterationsOfCallback = 0;
+    // var testArray = [2,3,1];
+    // testArray.sort(compareFunction);
+    // >>> iterationsOfCallback = 4;
+
+    // Exmperiment 5 -------------------------
+
+    // var iterationsOfCallback = 0;
+    // var testArray = [2,3,4,1];
+    // testArray.sort(compareFunction);
+    // >>> iterationsOfCallback = 5;
+
+    // Look for notes in notebook explaining how this happens:
 
     // Next Step:
     // Go through compareFunction and evaluate the values of these variables every time compareFunction is run:
