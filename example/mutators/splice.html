@@ -1,18 +1,54 @@
 <script src="../../simpletest.js"></script>
 <script>
   // Summary:
+  // It should remove, replace or add new elements to an array in place.
 
   // Example:
+  // var testArray = ['a', 'b', 'c'];
+  // var returnedArray = testArray.splice(1, 1, "A");
+  // >>> returnedArray === ["b"];
+  // >>> testArray === ["a", "A", "c"];
 
   // Prototype implementation:
 
   // Function signature:
+  // splice(array, startingIndex, optionalDeleteCount, optionalItems);
 
   // Arguments:
+  // startingIndex - The index at which to start modifying array.
+  // optionalDeleteCount - The number of elements to remove from array. Elements are removed from array starting at startingIndex.
+  // optionalItems - The elements to add to the array. Elements are added to array beginning at startingIndex.
 
   // Return value:
+  // If no elements are removed from array, return an empty array.
+  // If elements are removed from array, return an array containing the deleted elements.
+
+  // Requirements:
+
+  // It should return an array.
+  // It should a new array instead of the same array.
+
+  // If startingIndex > 0 && startingIndex < array.length, begin modifying array at array[startingIndex].
+  // If startingIndex > array.length, begin modifying array at array[array.length].
+  // If startingIndex < 0 && computedIndex >= 0, begin modifying array at array[array.length - startingIndex]
+  // If startingIndex < 0 && computedIndex < 0, begin modifying array at array[0]
+
+  // If no optionalDeleteCount, delete all remaining elements in array.
+  // If optionalDeleteCount, optionalDeleteCount > 0, && optionalDeleteCount < (array.length - startingIndex), remove optionalDeleteCount number of elements from array, starting at startingIndex.
+  // If optionalDeleteCount, optionalDeleteCount > 0, && optionalDeleteCount > (array.length - startingIndex), remove all remaining elements from array, starting at startingIndex.
+  // If optionalDeleteCount <= 0, do not remove elements from array.
+
+  // If no optionalDeleteCount, it should return an array with a length of 0 .
+  // If optionalDeleteCount, it should return an array with a length that equals optionalDeleteCount.
+  // If optionalDeleteCount, it should return an array with the elements that were removed by optionalDeleteCount.
+
+  // If no optionalItems, no items will be added to array.
+  // If optionalItems, add items to array beginning at startingIndex.
 
   // Questions:
+  // 1) What does origin mean? Examples of use:
+  // "(with origin 0)"
+  // "(with origin -1, meaning -n is the index of the nth last element and is therefore equivalent to the index of array.length - n)"
 
   // Useful References:
   // 1) MDN Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
