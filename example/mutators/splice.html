@@ -12,12 +12,12 @@
   // Prototype implementation:
 
   // Function signature:
-  // splice(array, startingIndex, optionalDeleteCount, optionalItems);
+  // splice(array, indexToStart, optionalDelete, optionalAdd);
 
   // Arguments:
-  // startingIndex - The index at which to start modifying array.
-  // optionalDeleteCount - The number of elements to remove from array. Elements are removed from array starting at startingIndex.
-  // optionalItems - The elements to add to the array. Elements are added to array beginning at startingIndex.
+  // indexToStart - The index at which to start modifying array.
+  // optionalDelete - The number of elements to remove from array. Elements are removed from array starting at indexToStart.
+  // optionalAdd - The elements to add to the array. Elements are added to array beginning at indexToStart.
 
   // Return value:
   // If no elements are removed from array, return an empty array.
@@ -39,9 +39,9 @@
   // eq((array === spliced), false);
   // array >>> []; &&  spliced >>> [];
 
-  // startingIndex:
+  // indexToStart:
 
-  // a) If no startingIndex do not modify array.
+  // a) If no indexToStart do not modify array.
   // var array = ['a', 'b', 'c'];
   // var expected = ['a', 'b', 'c'];
   // array.splice();
@@ -49,7 +49,7 @@
   //   eq(value, expected[i]);
   // });
 
-  // a) If startingIndex > 0 && startingIndex < array.length, modify array starting at array[startingIndex].
+  // a) If indexToStart > 0 && indexToStart < array.length, modify array starting at array[indexToStart].
   // var array = ['a', 'b', 'c'];
   // var expected = ['a'];
   // array.splice(1);
@@ -57,7 +57,7 @@
   //   eq(value, expected[i]);
   // });
 
-  // b) If startingIndex >= array.length, do not modify existing elements in array.
+  // b) If indexToStart >= array.length, do not modify existing elements in array.
   // var array = ['a', 'b', 'c'];
   // var expected = ['a','b', 'c'];
   // array.splice(3);
@@ -65,7 +65,7 @@
   //   eq(value, expected[i]);
   // });
 
-  // c) If startingIndex < 0 && computedIndex >= 0, start modifying array at array[array.length - startingIndex].
+  // c) If indexToStart < 0 && computedIndex >= 0, start modifying array at array[array.length - indexToStart].
   // var array = ['a', 'b', 'c'];
   // var expected = ['c'];
   // array.splice(-1);
@@ -73,7 +73,7 @@
   //   eq(value, expected[i]);
   // });
 
-  // d) If startingIndex < 0 && computedIndex =< 0, start modifying array at array[0].
+  // d) If indexToStart < 0 && computedIndex =< 0, start modifying array at array[0].
   // var array = ['a', 'b', 'c'];
   // var expected = [];
   // array.splice(-3);
@@ -81,7 +81,7 @@
   //   eq(value, expected[i]);
   // });
 
-  // a) If startingIndex is not a number, start modifying array at array[0].
+  // a) If indexToStart is not a number, start modifying array at array[0].
   // var array = ['a', 'b', 'c'];
   // var expected = [];
   // array.splice('test');
@@ -89,9 +89,9 @@
   //   eq(value, expected[i]);
   // });
 
-  // optionalDeleteCount:
+  // optionalDelete:
 
-  // a) If no optionalDeleteCount, delete all remaining elements in array.
+  // a) If no optionalDelete, delete all remaining elements in array.
   // var array = ['a', 'b', 'c'];
   // var expected = ['a'];
   // array.splice(1);
@@ -99,7 +99,7 @@
   //   eq(value, expected[i]);
   // });
 
-  // b) If optionalDeleteCount > 0, && optionalDeleteCount < (array.length - startingIndex), delete optionalDeleteCount number of elements from array, starting at startingIndex.
+  // b) If optionalDelete > 0, && optionalDelete < (array.length - indexToStart), delete optionalDelete number of elements from array, starting at indexToStart.
   // var array = ['a', 'b', 'c'];
   // var expected = ['a', 'c'];
   // array.splice(1, 1);
@@ -107,7 +107,7 @@
   //   eq(value, expected[i]);
   // });
 
-  // c) If optionalDeleteCount > 0, && optionalDeleteCount > (array.length - startingIndex), delete all remaining elements from array, starting at startingIndex.
+  // c) If optionalDelete > 0, && optionalDelete > (array.length - indexToStart), delete all remaining elements from array, starting at indexToStart.
   // var array = ['a', 'b', 'c'];
   // var expected = ['a'];
   // array.splice(1, 2);
@@ -115,7 +115,7 @@
   //   eq(value, expected[i]);
   // });
 
-  // d) If optionalDeleteCount <= 0, do not delete elements from array.
+  // d) If optionalDelete <= 0, do not delete elements from array.
   // var array = ['a', 'b', 'c'];
   // var expected = ['a', 'b', 'c'];
   // array.splice(1, 0);
@@ -123,7 +123,7 @@
   //   eq(value, expected[i]);
   // });
 
-  // e) If optionalDeleteCount is not a number, do not delete elements from array.
+  // e) If optionalDelete is not a number, do not delete elements from array.
   // var array = ['a', 'b', 'c'];
   // var expected = ['a', 'b', 'c'];
   // array.splice(1, 'test');
@@ -154,9 +154,9 @@
   //   eq(value, expected[i]);
   // });
 
-  // optionalItems:
+  // optionalAdd:
 
-  // a) If no optionalItems, do not add elements to array.
+  // a) If no optionalAdd, do not add elements to array.
   // var array = ['a', 'b', 'c'];
   // var expected = ['a','b','c'];
   // var spliced = array.splice(0,0);
@@ -172,13 +172,62 @@
   //   eq(value, expected[i]);
   // });
 
-  // c) If optionalItems.length > 1, it should add optionalItems.length elements to array.
+  // c) If optionalAdd.length > 1, it should add optionalAdd.length elements to array.
   // var array = ['a', 'b', 'c'];
   // var expected = [1,2,'a','b','c'];
   // var spliced = array.splice(0,0,1,2);
   // spliced.forEach(function(value, i) {
   //   eq(value, expected[i]);
   // });
+
+  // Holes:
+
+  // a) If there are holes outside of the modified segment of the array, array should maintain holes.
+  // var array = [, , "c", "d", "e"];
+  // var expected = [, ,'c',1,'e'];
+  // array.splice(3, 1, 1);
+  // eq(0 in array, === false);
+  // eq(1 in array, === false);
+  // array.forEach(function(value, i) {
+  //   eq(value, expected[i]);
+  // });
+
+  // a) If optionalDelete includes holes, holes should be removed from array.
+  // var array = ["a", , "c", , , "f", , "h"];
+  // var expected = ["a",1,"h"];
+  // array.splice(1, 6, 1);
+  // array.forEach(function(value, i) {
+  //   eq(value, expected[i]);
+  // });
+
+  // b) If optionalDelete includes holes, holes should be included in returned array.
+  // var array = ["a", , "c", , , "f", , "h"];
+  // var expected = [,"c",,,"f",];
+  // var spliced = array.splice(1, 6, 1);
+  // spliced.forEach(function(value, i) {
+  //   eq(value, expected[i]);
+  // });
+
+  // Note: Test doesn't work properly. Figure out how to run test. "VM4150:5 Uncaught SyntaxError: Unexpected token , at<anonymous>: 8: 1" is the error that gets thrown whenever there is a hole optionalAdd.
+  // a) If optionalAdd includes holes, it should throw a Syntax Error.
+  // var isSyntaxError = false;
+  // try {
+  //   var array = ['a','b','c'];
+  //   array.splice(1, 1, 1, , 3);
+  // } catch (e) {
+  //   isSyntaxError = e instanceof SyntaxError;
+  //   errorMessage = e.message;
+  // }
+  // eq(isSyntaxError, true);
+
+  // Call() and Apply():
+
+  // a) Does it work with .call().
+  // b) Does it work with .apply().
+
+  // Array-like objects:
+
+  // a) Does it work with objects? If so which ones? ....
 
   // Questions:
   // 1) What does origin mean? Examples of use:
