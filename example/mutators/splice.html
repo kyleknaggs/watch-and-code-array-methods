@@ -36,22 +36,14 @@
 
   // Function Syntax:
 
-  // function splice(array, start) {
-  //   var numberOfArguments = arguments.length;
-
-  //   if (numberOfArguments > 1) {
-  //     array.length = start;
-  //   }
-
-  //   return [];
-  // }
-
-  function splice(array, start) {
+  function splice(array, start, deleteCount) {
     var numberOfArguments = arguments.length;
     var originalLength = array.length;
     var computedStart;
+    var computedDeleteCount = 0;
+    var computedLength = originalLength;
 
-    // 1) Calculate computedStart:
+    // Calculate computedStart:
     if (numberOfArguments > 1) {
       computedStart = start;
 
@@ -61,18 +53,35 @@
       if (start >= originalLength) {
         computedStart = originalLength;
       }
+
+      computedDeleteCount = originalLength - computedStart;
+      computedLength = originalLength - computedDeleteCount;
     }
 
-    var computedDeleteCount = originalLength - computedStart - 1;
-
-    // 2) Calculate computedDeleteCount:
+    // Calculate computedDeleteCount:
     if (numberOfArguments > 2) {
-      // do something
+      if (deleteCount < computedDeleteCount) {
+        computedDeleteCount = deleteCount;
+      }
+      if (deleteCount < 0) {
+        computedDeleteCount = 0;
+      }
+
+      computedLength = originalLength - computedDeleteCount;
     }
 
-    // 3) Delete items from array:
+    // Modify array:
     if (numberOfArguments > 1) {
-      array.length = computedStart;
+      if (numberOfArguments > 2) {
+        var computedEnd = computedStart + computedDeleteCount;
+
+        // Copy value to index that is being deleted;
+        for (var i = computedStart; i < computedEnd; i++) {
+          array[i] = array[i + computedDeleteCount];
+        }
+      }
+
+      array.length = computedLength;
     }
 
     return [];
@@ -153,49 +162,37 @@
       var array = ["a", "b", "c"];
       var expected = ["a", "c"];
       splice(array, 1, 1);
-      eq(array.length, spliced.length);
+      eq(array.length, 2);
       array.forEach(function(value, i) {
         eq(value, expected[i]);
       });
     },
     "6b) If deleteCount > 0, && deleteCount > (array.length - start), delete all remaining elements from array, starting at start.": function() {
-      fail();
-      // var array = ['a', 'b', 'c'];
-      // var expected = ['a'];
-      // splice(array, 1, 2);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c"];
+      var expected = ["a"];
+      splice(array, 1, 2);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "6c) If deleteCount <= 0, do not delete elements from array.": function() {
-      fail();
-      // var array = ['a', 'b', 'c'];
-      // var expected = ['a', 'b', 'c'];
-      // splice(array, 1, 0);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
-    },
-
-    "7a) If deleteCount is not a number, do not delete elements from array.": function() {
-      fail();
-      // var array = ['a', 'b', 'c'];
-      // var expected = ['a', 'b', 'c'];
-      // splice(array, 1, 'test');
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c"];
+      var expected = ["a", "b", "c"];
+      splice(array, 1, 0);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
 
     // returnedArray:
 
-    "8a) If no elements have been deleted from array, it should return an empty array.": function() {
+    "7a) If no elements have been deleted from array, it should return an empty array.": function() {
       fail();
       // var array = ['a', 'b', 'c'];
       // var spliced = splice(array, 0, 0);
       // eq(spliced.length, 0);
     },
-    "8b) If one element has been deleted from array, it should return an array with the deleted element.": function() {
+    "7b) If one element has been deleted from array, it should return an array with the deleted element.": function() {
       fail();
       // var array = ['a', 'b', 'c'];
       // var expected = ['b'];
@@ -204,7 +201,7 @@
       //   eq(value, expected[i]);
       // });
     },
-    "8c) If more than one elements has been deleted from array, it should return an array with all the deleted elements.": function() {
+    "7c) If more than one elements has been deleted from array, it should return an array with all the deleted elements.": function() {
       fail();
       // var array = ['a', 'b', 'c'];
       // var expected = ['b', 'c'];
@@ -216,7 +213,7 @@
 
     // itemsToAdd:
 
-    "9a) If no itemsToAdd, do not add elements to array.": function() {
+    "8a) If no itemsToAdd, do not add elements to array.": function() {
       fail();
       // var array = ['a', 'b', 'c'];
       // var expected = ['a','b','c'];
@@ -225,7 +222,7 @@
       //   eq(value, expected[i]);
       // });
     },
-    "9b) If optionalItem.length === 1, it should add one element to array.": function() {
+    "8b) If optionalItem.length === 1, it should add one element to array.": function() {
       fail();
       // var array = ['a', 'b', 'c'];
       // var expected = [1,'a','b','c'];
@@ -234,7 +231,7 @@
       //   eq(value, expected[i]);
       // });
     },
-    "9c) If itemsToAdd.length > 1, it should add itemsToAdd.length elements to array.": function() {
+    "8c) If itemsToAdd.length > 1, it should add itemsToAdd.length elements to array.": function() {
       fail();
       // var array = ['a', 'b', 'c'];
       // var expected = [1,2,'a','b','c'];
@@ -246,7 +243,7 @@
 
     // Edge case for start that can't be tested until itemsToAdd:
 
-    "10a) If start < 0 && computedIndex =< 0, start modifying array at array[0].": function() {
+    "9a) If start < 0 && computedIndex =< 0, start modifying array at array[0].": function() {
       fail();
       // var array = ["a", "b", "c"];
       // var expected = [];
@@ -255,11 +252,23 @@
       //   eq(value, expected[i]);
       // });
     },
-    "10b) If start is not a number, start modifying array at array[0].": function() {
+    "9b) If start is not a number, start modifying array at array[0].": function() {
       fail();
       // var array = ['a', 'b', 'c'];
       // var expected = [];
       // splice(array, 'test');
+      // array.forEach(function(value, i) {
+      //   eq(value, expected[i]);
+      // });
+    },
+
+    // Edge cases for deleteCount:
+
+    "10a) If deleteCount is not a number, do not delete elements from array.": function() {
+      fail();
+      // var array = ['a', 'b', 'c'];
+      // var expected = ['a', 'b', 'c'];
+      // splice(array, 1, 'test');
       // array.forEach(function(value, i) {
       //   eq(value, expected[i]);
       // });
