@@ -53,6 +53,9 @@
       if (start >= originalLength) {
         computedStart = originalLength;
       }
+      if (typeof start !== "number") {
+        computedStart = 0;
+      }
 
       computedDeleteCount = originalLength - computedStart;
       computedLength = originalLength - computedDeleteCount;
@@ -66,6 +69,9 @@
       if (deleteCount < 0) {
         computedDeleteCount = 0;
       }
+      if (typeof deleteCount !== "number") {
+        computedDeleteCount = 0;
+      }
 
       computedLength = originalLength - computedDeleteCount;
     }
@@ -77,12 +83,10 @@
       if (numberOfArguments > 2) {
         var computedEnd = computedLength + computedDeleteCount;
 
-        // Copy deleted items into array:
         for (var i = 0; i < computedDeleteCount; i++) {
           deleted[i] = array[computedStart + i];
         }
 
-        // Reduce index of all indexes after computedStart by 1;
         for (var i = computedStart; i < computedEnd; i++) {
           array[i] = array[i + computedDeleteCount];
         }
@@ -91,12 +95,17 @@
       array.length = computedLength;
 
       if (numberOfArguments > 3) {
-        // Increase the index of all items at or above array[computedStart] by 1:
-        for (var i = computedLength; i > computedStart - 1; i--) {
-          array[i + 1] = array[i];
+        var numberOfItemsToAdd = arguments.length - 3;
+
+        for (i = computedLength - 1; i >= computedStart; i--) {
+          array[i + numberOfItemsToAdd] = array[i];
         }
-        // Copy value in itemsToAdd to array[computedStart]:
-        array[computedStart] = itemsToAdd;
+
+        var computedEnd = computedStart + numberOfItemsToAdd;
+
+        for (var i = computedStart; i < computedEnd; i++) {
+          array[i] = arguments[2 + i];
+        }
       }
     }
 
@@ -234,61 +243,61 @@
       var array = ["a", "b", "c", "d"];
       var expected = ["a", "b", "c", "d"];
       splice(array, 0, 0);
-      eq(array.length, 4);
+      eq(array.length, expected.length);
       array.forEach(function(value, i) {
         eq(value, expected[i]);
       });
     },
     "8b) If optionalItem.length === 1, it should add one element to array.": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var expected = ["a", 1, "c", "d"];
-      // var spliced = splice(array, 1, 1, 1);
-      // spliced.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", 1, "c", "d"];
+      var spliced = splice(array, 1, 1, 1);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "8c) If itemsToAdd.length > 1, it should add itemsToAdd.length elements to array.": function() {
-      fail();
-      // var array = ['a', 'b', 'c'];
-      // var expected = [1,2,'a','b','c'];
-      // var spliced = splice(array,0,0,1,2);
-      // spliced.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", 1, 2, "c", "d"];
+      splice(array, 1, 1, 1, 2);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
 
     // Edge case for start that can't be tested until itemsToAdd:
 
     "9a) If start < 0 && computedIndex =< 0, start modifying array at array[0].": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var expected = [];
-      // splice(array, -3);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c"];
+      var expected = ["b", "c"];
+      splice(array, -3, 1);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "9b) If start is not a number, start modifying array at array[0].": function() {
-      fail();
-      // var array = ['a', 'b', 'c'];
-      // var expected = [];
-      // splice(array, 'test');
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c"];
+      var expected = ["b", "c"];
+      splice(array, "test", 1);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
 
     // Edge cases for deleteCount:
 
     "10a) If deleteCount is not a number, do not delete elements from array.": function() {
-      fail();
-      // var array = ['a', 'b', 'c'];
-      // var expected = ['a', 'b', 'c'];
-      // splice(array, 1, 'test');
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c"];
+      var expected = ["a", 1, "b", "c"];
+      splice(array, 1, "test", 1);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
 
     // Holes:
@@ -341,9 +350,7 @@
 
     // -----------------------------
 
-    // TODO: 1) Investigate how splice() works with .call() and .apply().
-    // TODO: 2) Investigate how splice() works with objects via call() and apply().
-    // TODO: 3) Investigate additional edge cases using array testing guidelines as outline.
-    // TODO: 4) Any additional edge cases that you can think of?.
+    // TODO: 1) Investigate additional edge cases using array testing guidelines as outline.
+    // TODO: 2) Any additional edge cases that you can think of?.
   });
 </script>
