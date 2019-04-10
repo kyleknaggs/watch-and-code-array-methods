@@ -113,8 +113,11 @@
   // }
 
   function splice(array, start, deleteCount, itemsToAdd) {
-    if (start) {
-      var originalLength = array.length;
+    var numberOfArguments = arguments.length;
+    var originalLength = array.length;
+    var deleted = [];
+
+    if (numberOfArguments > 1) {
       var computedStart = start;
 
       if (isNaN(Number(start))) {
@@ -133,10 +136,48 @@
         computedStart = 0;
       }
 
-      array.length = computedStart;
+      var computedDeleteCount = originalLength - computedStart;
+
+      if (numberOfArguments > 2) {
+        if (deleteCount < 0 || isNaN(Number(deleteCount))) {
+          computedDeleteCount = 0;
+        }
+
+        if (deleteCount >= 0 && deleteCount < computedDeleteCount) {
+          computedDeleteCount = Number(deleteCount);
+        }
+      }
+
+      var computedLength = originalLength - computedDeleteCount;
+
+      if (computedDeleteCount > 0) {
+        // Copy deleted elements into deleted array:
+        for (var i = 0; i < computedDeleteCount; i++) {
+          var indexToCopy = computedStart + i;
+
+          if (indexToCopy in array) {
+            deleted[i] = array[computedStart + i];
+          }
+        }
+
+        deleted.length = computedDeleteCount;
+
+        // Modify array:
+        for (var i = computedStart; i < computedLength; i++) {
+          var indexToModify = i + computedDeleteCount;
+
+          array[i] = array[indexToModify];
+
+          if (indexToModify in array === false) {
+            delete array[i];
+          }
+        }
+      }
+
+      array.length = computedLength;
     }
 
-    return [];
+    return deleted;
   }
 
   tests({
@@ -225,215 +266,138 @@
     // 5) deleteCount conventional cases:
 
     "5a) If no deleteCount remove all elements starting at array[start].": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var expected = ["a"];
-      // splice(array);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a"];
+      splice(array, 1);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "5b) If deleteCount === 0, do not remove any elements from array.": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var deleteCount = 0;
-      // var expected = ["a", "b", "c", "d"];
-      // splice(array, deleteCount);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", "b", "c", "d"];
+      splice(array, 1, 0);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "5c) If deleteCount === 1, remove one element from array.": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var deleteCount = 1;
-      // var expected = ["a", "c", "d"];
-      // splice(array, deleteCount);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", "c", "d"];
+      splice(array, 1, 1);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "5d) If deleteCount > 1, remove deleteCount number of elements from array.": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var deleteCount = 2;
-      // var expected = ["a", "d"];
-      // splice(array, deleteCount);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", "d"];
+      splice(array, 1, 2);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
 
     // 6) deleteCount edge cases:
 
     "6a) If deleteCount > 1, but (deleteCount + start) > array.length, remove all remaining elements from array.": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var deleteCount = 4;
-      // var expected = ["a"];
-      // splice(array, deleteCount);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a"];
+      splice(array, 1, 4);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "6b) If deleteCount < 0, do not remove any elements from array.": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var deleteCount = -1;
-      // var expected = ["a", "b", "c", "d"];
-      // splice(array, deleteCount);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", "b", "c", "d"];
+      splice(array, 1, -1);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "6c) If deleteCount is not a number, but can be converted to a number, behave as if deleteCount is Number(deleteCount).": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var deleteCount = "1";
-      // var expected = ["a", "c", "d"];
-      // splice(array, deleteCount);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", "c", "d"];
+      splice(array, 1, "1");
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     },
     "6d) If deleteCount is not a number, and cannot be converted to a number, do not delete any elements from array.": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var deleteCount = "cow";
-      // var expected = ["a", "b", "c", "d"];
-      // splice(array, deleteCount);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", "b", "c", "d"];
+      splice(array, 1, "cow");
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+    "6e) If there is a hole whose index is after computedStart + computedDeleteCount, move hole from array[i] to array[i - computedDeleteCount].": function() {
+      var array = ["a", "b", , "d"];
+      var expected = ["a", , "d"];
+      splice(array, 1, 1);
+      eq(array.length, expected.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+      eq(1 in array, false);
+    },
+
+    // ReturnedArray primitives:
+
+    "7a) If no elements are deleted from array, then it should return an empty array.": function() {
+      var array = ["a", "b", "c", "d"];
+      var spliced = splice(array, 1, 0);
+      eq(spliced.length, 0);
+    },
+    "7b) If one element is deleted from array, then it should return an array with the deleted element.": function() {
+      var array = ["a", "b", "c", "d"];
+      var expected = ["b"];
+      var spliced = splice(array, 1, 1);
+      eq(expected.length, spliced.length);
+      spliced.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+    "7c) If more than one elements is deleted from array, then it should return an array with all of the deleted elements.": function() {
+      var array = ["a", "b", "c", "d"];
+      var expected = ["b", "c"];
+      var spliced = splice(array, 1, 2);
+      eq(expected.length, spliced.length);
+      spliced.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+
+    // ReturnedArray objects:
+
+    "8a) If an object is deleted from array, it should return an array with that object.": function() {
+      var object = {};
+      var array = ["a", object, "c", "d"];
+      var expected = [object];
+      var spliced = splice(array, 1, 1);
+      eq(expected.length, spliced.length);
+      eq(object, spliced[0]);
+    },
+
+    // ReturnedArray holes:
+
+    "9a) If a hole is deleted from array, it should return an array with a hole.": function() {
+      var array = ["a", , "c", "d"];
+      var spliced = splice(array, 1, 1);
+      eq(spliced.length, 1);
+      eq(0 in spliced, false);
     }
+
+    // TODO: 1) Add tests for itemsToAdd.
+    // TODO: 2) Investigate additional edge cases after all previous requirements have been thoroghly researched and implemented.
   });
-
-  /*
-
-
-
-
-
-
-
-
-
-
-
-
-  // IGNORE START ----------------------------
-
-    // TODO: 1) Look at tests from here on. Rewrite where appropriate:
-    // itemToAdd:
-
-    "6a) If no itemsToAdd, do not add elements to array.": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var expected = ["a", "c"];
-      // splice(array, 1, 1);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
-    },
-    "6b) If 1 itemToAdd, add itemToAdd to array[start].": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var expected = ["a", 1, "c"];
-      // var spliced = splice(array, 1, 1, 1);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
-    },
-    "6c) If > 1 itemToAdd, add elements starting at array[start].": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var expected = ["a", 1, 2, "c"];
-      // splice(array, 1, 1, 1, 2);
-      // eq(array.length, expected.length);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
-    },
-
-    // TODO: 2) Investigate if itemsToAdd are different data types:
-
-    // start && itemsToAdd:
-
-    // returnedArray:
-
-    "8a) If no elements have been deleted from array, it should return an empty array.": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var spliced = splice(array, 0, 0);
-      // eq(spliced.length, 0);
-    },
-    "8b) If one element has been deleted from array, it should return an array with the deleted element.": function() {
-      fail();
-      // var array = ["a", "b", "c"];
-      // var expected = ["b"];
-      // var spliced = splice(array, 1, 1);
-      // eq(spliced.length, 1);
-      // spliced.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
-    },
-    "8c) If more than one elements has been deleted from array, it should return an array with all the deleted elements.": function() {
-      fail();
-      // var array = ["a", "b", "c", "d"];
-      // var expected = ["b", "c"];
-      // var spliced = splice(array, 1, 2);
-      // eq(spliced.length, 2);
-      // spliced.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
-    },
-
-    // Holes:
-
-    "9a) If there are holes outside of the modified segment of the array, array should maintain holes.": function() {
-      fail();
-      // var array = [, , "c", "d", "e"];
-      // var expected = [, ,'c',1,'e'];
-      // splice(array, 3, 1, 1);
-      // eq(0 in array, === false);
-      // eq(1 in array, === false);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
-    },
-
-    "9b) If deleteCount includes holes, holes should be removed from array.": function() {
-      fail();
-      // var array = ["a", , "c", , , "f", , "h"];
-      // var expected = ["a",1,"h"];
-      // splice(array, 1, 6, 1);
-      // array.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
-    },
-
-    "9c) If deleteCount includes holes, holes should be included in returned array.": function() {
-      fail();
-      // var array = ["a", , "c", , , "f", , "h"];
-      // var expected = [,"c",,,"f",];
-      // var spliced = splice(array, 1, 6, 1);
-      // spliced.forEach(function(value, i) {
-      //   eq(value, expected[i]);
-      // });
-    }
-
-    // TODO: 1) Investigate additional edge cases using array testing guidelines as outline.
-    // TODO: 2) Any additional edge cases that you can think of?.
-
-    */
 </script>
