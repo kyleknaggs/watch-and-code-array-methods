@@ -162,16 +162,37 @@
 
         deleted.length = computedDeleteCount;
 
-        // Modify array:
+        // Move elements in array by computedDeleteCount:
         for (var i = computedStart; i < computedLength; i++) {
-          var indexToModify = i + computedDeleteCount;
+          var indexToCopy = i + computedDeleteCount;
 
-          array[i] = array[indexToModify];
-
-          if (indexToModify in array === false) {
+          if (indexToCopy in array) {
+            array[i] = array[indexToCopy];
+          } else {
             delete array[i];
           }
         }
+      }
+
+      if (itemsToAdd) {
+        // Get elementsToAdd from arguments;
+        var elementsToAdd = [];
+        for (var i = 0; i < numberOfArguments - 3; i++) {
+          elementsToAdd[i] = arguments[i + 3];
+        }
+
+        // Move index of elements presently in array by numberOfElementsToAdd:
+        var numberOfItemsToAdd = elementsToAdd.length;
+        for (var i = array.length - 1; i >= computedStart; i--) {
+          array[i + numberOfItemsToAdd] = array[i];
+        }
+
+        // Add itemsToAdd to array:
+        for (var i = 0; i < numberOfItemsToAdd; i++) {
+          array[computedStart + i] = elementsToAdd[i];
+        }
+
+        computedLength = computedLength + numberOfItemsToAdd;
       }
 
       array.length = computedLength;
@@ -179,6 +200,9 @@
 
     return deleted;
   }
+
+  // TODO: Consolidate logic that modifies array into single section of code.
+  // TODO: Tests for what happens if holes are moved by itemsToAdd?
 
   tests({
     // Basic:
@@ -395,6 +419,47 @@
       var spliced = splice(array, 1, 1);
       eq(spliced.length, 1);
       eq(0 in spliced, false);
+    },
+
+    // itemsToAdd:
+
+    "10a) If no itemsToAdd, do not add elements to array.": function() {
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", "c", "d"];
+      splice(array, 1, 1);
+      eq(expected.length, array.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+
+    "11a) If one itemsToAdd, and deleteCount === 0, add one element to array at indexToModify without deleting elements from array.": function() {
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", 1, "b", "c", "d"];
+      splice(array, 1, 0, 1);
+      eq(expected.length, array.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+    "11b) If one itemsToAdd, and deleteCount > 0, add one element to array at and delete deleteCount number of elements from array.": function() {
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", 1, "c", "d"];
+      splice(array, 1, 1, 1);
+      eq(expected.length, array.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+
+    "12a) If more than one itemsToAdd, add more than one elements to array.": function() {
+      var array = ["a", "b", "c", "d"];
+      var expected = ["a", 1, 2, "c", "d"];
+      splice(array, 1, 1, 1, 2);
+      eq(expected.length, array.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
     }
 
     // TODO: 1) Add tests for itemsToAdd.
