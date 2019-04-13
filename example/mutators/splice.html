@@ -36,89 +36,24 @@
 
   // Function Syntax:
 
-  // function splice(array, start, deleteCount, itemsToAdd) {
-  //   var numberOfArguments = arguments.length;
-  //   var originalLength = array.length;
-  //   var computedStart;
-  //   var computedDeleteCount = 0;
-  //   var computedLength = originalLength;
-
-  //   // Calculate computedStart:
-  //   if (numberOfArguments > 1) {
-  //     computedStart = start;
-
-  //     if (start < 0) {
-  //       computedStart = originalLength + start;
-  //     }
-  //     if (start >= originalLength) {
-  //       computedStart = originalLength;
-  //     }
-  //     if (typeof start !== "number") {
-  //       computedStart = 0;
-  //     }
-
-  //     computedDeleteCount = originalLength - computedStart;
-  //     computedLength = originalLength - computedDeleteCount;
-  //   }
-
-  //   // Calculate computedDeleteCount:
-  //   if (numberOfArguments > 2) {
-  //     if (deleteCount < computedDeleteCount) {
-  //       computedDeleteCount = deleteCount;
-  //     }
-  //     if (deleteCount < 0) {
-  //       computedDeleteCount = 0;
-  //     }
-  //     if (typeof deleteCount !== "number") {
-  //       computedDeleteCount = 0;
-  //     }
-
-  //     computedLength = originalLength - computedDeleteCount;
-  //   }
-
-  //   var deleted = [];
-
-  //   // Modify array:
-  //   if (numberOfArguments > 1) {
-  //     if (numberOfArguments > 2) {
-  //       var computedEnd = computedLength + computedDeleteCount;
-
-  //       for (var i = 0; i < computedDeleteCount; i++) {
-  //         deleted[i] = array[computedStart + i];
-  //       }
-
-  //       for (var i = computedStart; i < computedEnd; i++) {
-  //         array[i] = array[i + computedDeleteCount];
-  //       }
-  //     }
-
-  //     array.length = computedLength;
-
-  //     if (numberOfArguments > 3) {
-  //       var numberOfItemsToAdd = arguments.length - 3;
-
-  //       for (i = computedLength - 1; i >= computedStart; i--) {
-  //         array[i + numberOfItemsToAdd] = array[i];
-  //       }
-
-  //       var computedEnd = computedStart + numberOfItemsToAdd;
-
-  //       for (var i = computedStart; i < computedEnd; i++) {
-  //         array[i] = arguments[2 + i];
-  //       }
-  //     }
-  //   }
-
-  //   return deleted;
-  // }
-
   function splice(array, start, deleteCount, itemsToAdd) {
     var numberOfArguments = arguments.length;
-    var originalLength = array.length;
     var deleted = [];
 
     if (numberOfArguments > 1) {
+      function swapElementsInArray(currentElement) {
+        if (currentElement in array) {
+          array[i + difference] = array[currentElement];
+        } else {
+          delete array[currentElement + difference];
+        }
+      }
+
+      var originalLength = array.length;
       var computedStart = start;
+      var computedDeleteCount = 0;
+      var numberOfItemsToAdd = 0;
+      var computedLength = originalLength;
 
       if (isNaN(Number(start))) {
         computedStart = 0;
@@ -136,7 +71,7 @@
         computedStart = 0;
       }
 
-      var computedDeleteCount = originalLength - computedStart;
+      computedDeleteCount = originalLength - computedStart;
 
       if (numberOfArguments > 2) {
         if (deleteCount < 0 || isNaN(Number(deleteCount))) {
@@ -146,53 +81,51 @@
         if (deleteCount >= 0 && deleteCount < computedDeleteCount) {
           computedDeleteCount = Number(deleteCount);
         }
-      }
 
-      var computedLength = originalLength - computedDeleteCount;
-
-      if (computedDeleteCount > 0) {
         // Copy deleted elements into deleted array:
-        for (var i = 0; i < computedDeleteCount; i++) {
-          var indexToCopy = computedStart + i;
+        if (computedDeleteCount > 0) {
+          for (var i = 0; i < computedDeleteCount; i++) {
+            var indexToCopy = computedStart + i;
 
-          if (indexToCopy in array) {
-            deleted[i] = array[computedStart + i];
+            if (indexToCopy in array) {
+              deleted[i] = array[computedStart + i];
+            }
           }
-        }
 
-        deleted.length = computedDeleteCount;
-
-        // Move elements in array by computedDeleteCount:
-        for (var i = computedStart; i < computedLength; i++) {
-          var indexToCopy = i + computedDeleteCount;
-
-          if (indexToCopy in array) {
-            array[i] = array[indexToCopy];
-          } else {
-            delete array[i];
-          }
+          deleted.length = computedDeleteCount;
         }
       }
 
       if (itemsToAdd) {
-        // Get elementsToAdd from arguments;
         var elementsToAdd = [];
         for (var i = 0; i < numberOfArguments - 3; i++) {
           elementsToAdd[i] = arguments[i + 3];
         }
 
-        // Move index of elements presently in array by numberOfElementsToAdd:
-        var numberOfItemsToAdd = elementsToAdd.length;
-        for (var i = array.length - 1; i >= computedStart; i--) {
-          array[i + numberOfItemsToAdd] = array[i];
-        }
+        numberOfItemsToAdd = elementsToAdd.length;
+      }
 
-        // Add itemsToAdd to array:
+      computedLength -= computedDeleteCount;
+      computedLength += numberOfItemsToAdd;
+      var difference = computedLength - originalLength;
+
+      // Modify array:
+      if (difference < 0) {
+        for (var i = computedStart - difference; i < originalLength; i++) {
+          swapElementsInArray(i);
+        }
+      }
+
+      if (difference > 0) {
+        for (var i = originalLength - 1; i >= computedStart; i--) {
+          swapElementsInArray(i);
+        }
+      }
+
+      if (itemsToAdd) {
         for (var i = 0; i < numberOfItemsToAdd; i++) {
-          array[computedStart + i] = elementsToAdd[i];
+          array[i + computedStart] = elementsToAdd[i];
         }
-
-        computedLength = computedLength + numberOfItemsToAdd;
       }
 
       array.length = computedLength;
@@ -200,9 +133,6 @@
 
     return deleted;
   }
-
-  // TODO: Consolidate logic that modifies array into single section of code.
-  // TODO: Tests for what happens if holes are moved by itemsToAdd?
 
   tests({
     // Basic:
@@ -364,16 +294,6 @@
         eq(value, expected[i]);
       });
     },
-    "6e) If there is a hole whose index is after computedStart + computedDeleteCount, move hole from array[i] to array[i - computedDeleteCount].": function() {
-      var array = ["a", "b", , "d"];
-      var expected = ["a", , "d"];
-      splice(array, 1, 1);
-      eq(array.length, expected.length);
-      array.forEach(function(value, i) {
-        eq(value, expected[i]);
-      });
-      eq(1 in array, false);
-    },
 
     // ReturnedArray primitives:
 
@@ -455,6 +375,26 @@
     "12a) If more than one itemsToAdd, add more than one elements to array.": function() {
       var array = ["a", "b", "c", "d"];
       var expected = ["a", 1, 2, "c", "d"];
+      splice(array, 1, 1, 1, 2);
+      eq(expected.length, array.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+
+    // Holes after computedStart + deleteCount:
+    "13a) If computedLength < originalLength and there is a hole after computedStart + computedDeleteCount, preserve hole in array.": function() {
+      var array = ["a", "b", , "d"];
+      var expected = ["a", , "d"];
+      splice(array, 1, 1);
+      eq(expected.length, array.length);
+      array.forEach(function(value, i) {
+        eq(value, expected[i]);
+      });
+    },
+    "13b) If computedLength > originalLength and there is a hole after computedStart + computedDeleteCount, preserve hole in array.": function() {
+      var array = ["a", "b", , "d"];
+      var expected = ["a", 1, 2, , "d"];
       splice(array, 1, 1, 1, 2);
       eq(expected.length, array.length);
       array.forEach(function(value, i) {
