@@ -54,6 +54,7 @@
       var computedDeleteCount = 0;
       var numberOfItemsToAdd = 0;
       var computedLength = originalLength;
+      var difference = 0;
 
       if (isNaN(Number(start))) {
         computedStart = 0;
@@ -96,18 +97,13 @@
         }
       }
 
-      if (itemsToAdd) {
-        var elementsToAdd = [];
-        for (var i = 0; i < numberOfArguments - 3; i++) {
-          elementsToAdd[i] = arguments[i + 3];
-        }
-
-        numberOfItemsToAdd = elementsToAdd.length;
+      if (numberOfArguments > 3) {
+        numberOfItemsToAdd = numberOfArguments - 3;
       }
 
       computedLength -= computedDeleteCount;
       computedLength += numberOfItemsToAdd;
-      var difference = computedLength - originalLength;
+      difference = computedLength - originalLength;
 
       // Modify array:
       if (difference < 0) {
@@ -122,9 +118,9 @@
         }
       }
 
-      if (itemsToAdd) {
+      if (numberOfArguments > 3) {
         for (var i = 0; i < numberOfItemsToAdd; i++) {
-          array[i + computedStart] = elementsToAdd[i];
+          array[i + computedStart] = arguments[i + 3];
         }
       }
 
